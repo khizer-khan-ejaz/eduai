@@ -1,0 +1,506 @@
+{
+  "biology": [
+    {
+      "question": "What is the powerhouse of the cell?",
+      "options": ["Nucleus", "Mitochondria", "Ribosome", "Golgi apparatus"],
+      "correct": 1,
+      "explanation": "Mitochondria are called the powerhouse of the cell because they generate most of the cell's supply of ATP (adenosine triphosphate), which is used as a source of chemical energy.",
+      "difficulty": "easy"
+    },
+    {
+      "question": "Which blood cells are responsible for carrying oxygen?",
+      "options": ["White blood cells", "Platelets", "Red blood cells", "Plasma cells"],
+      "correct": 2,
+      "explanation": "Red blood cells (erythrocytes) contain hemoglobin, a protein that binds to oxygen in the lungs and transports it to tissues throughout the body.",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What is the basic structural and functional unit of life?",
+      "options": ["Tissue", "Organ", "Cell", "Organism"],
+      "correct": 2,
+      "explanation": "The cell is the basic structural and functional unit of all living organisms. All living things are composed of one or more cells.",
+      "difficulty": "easy"
+    },
+    {
+      "question": "Which organelle is responsible for protein synthesis?",
+      "options": ["Lysosome", "Ribosome", "Vacuole", "Centriole"],
+      "correct": 1,
+      "explanation": "Ribosomes are the molecular machines that synthesize proteins by translating mRNA sequences into polypeptide chains.",
+      "difficulty": "medium"
+    },
+    {
+      "question": "What is the process by which plants make their food?",
+      "options": ["Respiration", "Transpiration", "Photosynthesis", "Fermentation"],
+      "correct": 2,
+      "explanation": "Photosynthesis is the process by which green plants use sunlight, water, and carbon dioxide to produce glucose and oxygen. The equation is: 6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂",
+      "difficulty": "easy"
+    },
+    {
+      "question": "DNA stands for:",
+      "options": ["Deoxyribonucleic Acid", "Dinitrogen Acid", "Deoxyribose Nucleic Atom", "Dynamic Nucleic Acid"],
+      "correct": 0,
+      "explanation": "DNA stands for Deoxyribonucleic Acid. It is the molecule that carries genetic instructions for the development and functioning of all known living organisms.",
+      "difficulty": "easy"
+    },
+    {
+      "question": "Which part of the human brain controls balance and coordination?",
+      "options": ["Cerebrum", "Cerebellum", "Medulla oblongata", "Hypothalamus"],
+      "correct": 1,
+      "explanation": "The cerebellum is located at the back of the brain and is responsible for coordinating voluntary movements, balance, posture, and motor learning.",
+      "difficulty": "medium"
+    },
+    {
+      "question": "What is the largest organ in the human body?",
+      "options": ["Liver", "Brain", "Skin", "Lungs"],
+      "correct": 2,
+      "explanation": "Skin is the largest organ of the human body, covering about 1.5-2 square meters in adults. It serves as a protective barrier against pathogens and regulates body temperature.",
+      "difficulty": "medium"
+    },
+    {
+      "question": "Which type of cell division results in four haploid cells?",
+      "options": ["Mitosis", "Meiosis", "Binary fission", "Budding"],
+      "correct": 1,
+      "explanation": "Meiosis is the type of cell division that produces four genetically different haploid cells (gametes) from one diploid cell. It involves two rounds of division.",
+      "difficulty": "hard"
+    },
+    {
+      "question": "Which enzyme breaks down starch into sugars?",
+      "options": ["Pepsin", "Lipase", "Amylase", "Trypsin"],
+      "correct": 2,
+      "explanation": "Amylase is a digestive enzyme that breaks down starch into simple sugars (maltose). It is found in saliva (salivary amylase) and pancreatic juice (pancreatic amylase).",
+      "difficulty": "hard"
+    }
+  ],
+  "physics": [
+    {
+      "question": "What is the SI unit of force?",
+      "options": ["Joule", "Watt", "Newton", "Pascal"],
+      "correct": 2,
+      "explanation": "The Newton (N) is the SI unit of force. One Newton is the force needed to accelerate a mass of one kilogram at a rate of one meter per second squared (F = ma).",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What is the speed of light in vacuum?",
+      "options": ["3 × 10⁶ m/s", "3 × 10⁸ m/s", "3 × 10¹⁰ m/s", "3 × 10⁴ m/s"],
+      "correct": 1,
+      "explanation": "The speed of light in a vacuum is approximately 3 × 10⁸ meters per second (299,792,458 m/s). It is the maximum speed at which all matter and information can travel.",
+      "difficulty": "easy"
+    },
+    {
+      "question": "Which law states that every action has an equal and opposite reaction?",
+      "options": ["Newton's First Law", "Newton's Second Law", "Newton's Third Law", "Law of Gravitation"],
+      "correct": 2,
+      "explanation": "Newton's Third Law of Motion states that for every action, there is an equal and opposite reaction. When one body exerts a force on another, the second body exerts an equal force in the opposite direction.",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What phenomenon causes a straw to appear bent in water?",
+      "options": ["Reflection", "Diffraction", "Refraction", "Dispersion"],
+      "correct": 2,
+      "explanation": "Refraction is the bending of light as it passes from one medium to another (e.g., from air to water). This change in speed causes the straw to appear bent at the surface.",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What is the formula for kinetic energy?",
+      "options": ["KE = mgh", "KE = ½mv²", "KE = Fd", "KE = mv"],
+      "correct": 1,
+      "explanation": "Kinetic energy is given by KE = ½mv², where m is mass and v is velocity. It represents the energy an object possesses due to its motion.",
+      "difficulty": "medium"
+    },
+    {
+      "question": "What is the wavelength of a wave with frequency 500 Hz and speed 340 m/s?",
+      "options": ["0.68 m", "1.47 m", "170000 m", "6.8 m"],
+      "correct": 0,
+      "explanation": "Using the wave equation v = fλ, we get λ = v/f = 340/500 = 0.68 m. This is the distance between two consecutive crests or troughs.",
+      "difficulty": "medium"
+    },
+    {
+      "question": "Which type of wave needs a medium to travel?",
+      "options": ["Electromagnetic wave", "Light wave", "Mechanical wave", "Radio wave"],
+      "correct": 2,
+      "explanation": "Mechanical waves require a material medium (solid, liquid, or gas) to propagate. Sound waves are a common example. Unlike electromagnetic waves, they cannot travel through a vacuum.",
+      "difficulty": "medium"
+    },
+    {
+      "question": "What is the unit of electrical resistance?",
+      "options": ["Ampere", "Volt", "Ohm", "Farad"],
+      "correct": 2,
+      "explanation": "The Ohm (Ω) is the SI unit of electrical resistance. It is defined by Ohm's Law: R = V/I, where V is voltage and I is current.",
+      "difficulty": "easy"
+    },
+    {
+      "question": "In a projectile motion, what remains constant (ignoring air resistance)?",
+      "options": ["Vertical velocity", "Horizontal velocity", "Total velocity", "Acceleration"],
+      "correct": 1,
+      "explanation": "In projectile motion (without air resistance), the horizontal component of velocity remains constant because there is no horizontal force acting on the object. Only gravity acts vertically.",
+      "difficulty": "hard"
+    },
+    {
+      "question": "What is the principle behind hydraulic machines?",
+      "options": ["Archimedes' principle", "Pascal's law", "Bernoulli's principle", "Boyle's law"],
+      "correct": 1,
+      "explanation": "Pascal's Law states that pressure applied to a confined fluid is transmitted undiminished in all directions. Hydraulic machines like brakes and lifts work on this principle.",
+      "difficulty": "hard"
+    }
+  ],
+  "chemistry": [
+    {
+      "question": "What is the chemical formula for water?",
+      "options": ["HO₂", "H₂O", "OH", "H₂O₂"],
+      "correct": 1,
+      "explanation": "Water has the chemical formula H₂O, meaning each molecule consists of two hydrogen atoms covalently bonded to one oxygen atom.",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What is the atomic number of Carbon?",
+      "options": ["4", "6", "8", "12"],
+      "correct": 1,
+      "explanation": "Carbon has an atomic number of 6, meaning it has 6 protons in its nucleus. Its mass number is approximately 12 (6 protons + 6 neutrons).",
+      "difficulty": "easy"
+    },
+    {
+      "question": "Which gas is most abundant in Earth's atmosphere?",
+      "options": ["Oxygen", "Carbon dioxide", "Nitrogen", "Hydrogen"],
+      "correct": 2,
+      "explanation": "Nitrogen (N₂) makes up approximately 78% of Earth's atmosphere by volume, followed by oxygen at about 21%.",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What is the pH of a neutral solution?",
+      "options": ["0", "7", "14", "1"],
+      "correct": 1,
+      "explanation": "A neutral solution has a pH of 7. Solutions with pH < 7 are acidic, and those with pH > 7 are basic/alkaline. Pure water at 25°C has a pH of exactly 7.",
+      "difficulty": "easy"
+    },
+    {
+      "question": "Which type of bond involves the sharing of electron pairs?",
+      "options": ["Ionic bond", "Covalent bond", "Metallic bond", "Hydrogen bond"],
+      "correct": 1,
+      "explanation": "A covalent bond involves the sharing of electron pairs between atoms. It typically occurs between non-metal atoms. Example: H₂, O₂, H₂O.",
+      "difficulty": "medium"
+    },
+    {
+      "question": "What is Avogadro's number?",
+      "options": ["6.022 × 10²³", "6.022 × 10²⁰", "3.14 × 10²³", "1.602 × 10⁻¹⁹"],
+      "correct": 0,
+      "explanation": "Avogadro's number is 6.022 × 10²³. It represents the number of atoms, molecules, or ions in one mole of a substance.",
+      "difficulty": "medium"
+    },
+    {
+      "question": "Which element is a noble gas?",
+      "options": ["Chlorine", "Neon", "Sodium", "Sulfur"],
+      "correct": 1,
+      "explanation": "Neon (Ne) is a noble gas belonging to Group 18 of the periodic table. Noble gases have a complete outer electron shell, making them extremely stable and unreactive.",
+      "difficulty": "medium"
+    },
+    {
+      "question": "What is the molar mass of CO₂?",
+      "options": ["28 g/mol", "32 g/mol", "44 g/mol", "18 g/mol"],
+      "correct": 2,
+      "explanation": "CO₂ molar mass = C(12) + 2×O(16) = 12 + 32 = 44 g/mol. This is the mass of one mole of carbon dioxide molecules.",
+      "difficulty": "medium"
+    },
+    {
+      "question": "Which reaction is exothermic?",
+      "options": ["Photosynthesis", "Electrolysis", "Combustion of methane", "Dissolving ammonium nitrate"],
+      "correct": 2,
+      "explanation": "Combustion of methane (CH₄ + 2O₂ → CO₂ + 2H₂O) is exothermic because it releases heat energy. The products have lower energy than the reactants.",
+      "difficulty": "hard"
+    },
+    {
+      "question": "What is the hybridization of carbon in methane (CH₄)?",
+      "options": ["sp", "sp²", "sp³", "sp³d"],
+      "correct": 2,
+      "explanation": "In methane, carbon undergoes sp³ hybridization, forming four equivalent sp³ hybrid orbitals arranged tetrahedrally at 109.5° angles.",
+      "difficulty": "hard"
+    }
+  ],
+  "maths": [
+    {
+      "question": "What is the derivative of x²?",
+      "options": ["x", "2x", "x³/3", "2"],
+      "correct": 1,
+      "explanation": "Using the power rule: d/dx(xⁿ) = nxⁿ⁻¹. So d/dx(x²) = 2x²⁻¹ = 2x.",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What is the value of sin(90°)?",
+      "options": ["0", "0.5", "1", "-1"],
+      "correct": 2,
+      "explanation": "sin(90°) = 1. On the unit circle, 90° corresponds to the point (0, 1), and the y-coordinate gives the sine value.",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What is the integral of 2x dx?",
+      "options": ["x²", "x² + C", "2x² + C", "x + C"],
+      "correct": 1,
+      "explanation": "∫2x dx = 2 × (x²/2) + C = x² + C. The constant of integration C is added because the derivative of any constant is zero.",
+      "difficulty": "medium"
+    },
+    {
+      "question": "What is the sum of interior angles of a hexagon?",
+      "options": ["360°", "540°", "720°", "900°"],
+      "correct": 2,
+      "explanation": "Sum of interior angles = (n-2) × 180° = (6-2) × 180° = 4 × 180° = 720°.",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What is the value of log₁₀(1000)?",
+      "options": ["2", "3", "4", "10"],
+      "correct": 1,
+      "explanation": "log₁₀(1000) = 3, because 10³ = 1000. The logarithm base 10 asks: 'To what power must 10 be raised to get 1000?'",
+      "difficulty": "easy"
+    },
+    {
+      "question": "If f(x) = 3x³ - 2x + 1, what is f'(x)?",
+      "options": ["9x² - 2", "3x² - 2", "9x² + 1", "6x - 2"],
+      "correct": 0,
+      "explanation": "Using power rule: f'(x) = 3(3x²) - 2(1) + 0 = 9x² - 2. Each term is differentiated separately.",
+      "difficulty": "medium"
+    },
+    {
+      "question": "What is the area of a circle with radius 7 cm?",
+      "options": ["44 cm²", "154 cm²", "22 cm²", "49 cm²"],
+      "correct": 1,
+      "explanation": "Area = πr² = π × 7² = 49π ≈ 153.94 ≈ 154 cm² (using π ≈ 22/7).",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What is the limit of (sin x)/x as x → 0?",
+      "options": ["0", "1", "∞", "Undefined"],
+      "correct": 1,
+      "explanation": "lim(x→0) sin(x)/x = 1. This is a fundamental limit in calculus, proven using the squeeze theorem.",
+      "difficulty": "hard"
+    },
+    {
+      "question": "What is the determinant of matrix [[1,2],[3,4]]?",
+      "options": ["-2", "2", "10", "-10"],
+      "correct": 0,
+      "explanation": "det = (1×4) - (2×3) = 4 - 6 = -2. For a 2×2 matrix [[a,b],[c,d]], determinant = ad - bc.",
+      "difficulty": "hard"
+    },
+    {
+      "question": "What is the Pythagorean theorem?",
+      "options": ["a + b = c", "a² + b² = c²", "a² - b² = c²", "2a + 2b = c"],
+      "correct": 1,
+      "explanation": "The Pythagorean theorem states that in a right triangle, the square of the hypotenuse (c) equals the sum of squares of the other two sides: a² + b² = c².",
+      "difficulty": "easy"
+    }
+  ],
+  "english": [
+    {
+      "question": "Which is a synonym for 'benevolent'?",
+      "options": ["Cruel", "Kind", "Indifferent", "Hostile"],
+      "correct": 1,
+      "explanation": "'Benevolent' means well-meaning and kindly. It comes from Latin 'bene' (well) + 'volent' (wishing). Synonyms include: kind, charitable, generous, philanthropic.",
+      "difficulty": "easy"
+    },
+    {
+      "question": "Identify the correct sentence:",
+      "options": ["He don't know nothing.", "He doesn't know anything.", "He don't know anything.", "He doesn't knows anything."],
+      "correct": 1,
+      "explanation": "'He doesn't know anything' is correct. 'Doesn't' is used with third person singular (he/she/it), and 'anything' is used with negatives instead of 'nothing' (to avoid double negative).",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What is an antonym of 'ephemeral'?",
+      "options": ["Temporary", "Lasting", "Brief", "Fleeting"],
+      "correct": 1,
+      "explanation": "'Ephemeral' means lasting for a very short time. Its antonym is 'lasting' or 'permanent'. Other antonyms include: enduring, eternal, perpetual.",
+      "difficulty": "medium"
+    },
+    {
+      "question": "Which figure of speech is: 'The world is a stage'?",
+      "options": ["Simile", "Metaphor", "Personification", "Hyperbole"],
+      "correct": 1,
+      "explanation": "This is a metaphor — a direct comparison without using 'like' or 'as'. Shakespeare wrote 'All the world's a stage' in 'As You Like It'. A simile would say 'The world is LIKE a stage'.",
+      "difficulty": "easy"
+    },
+    {
+      "question": "Choose the correct past participle: 'She has ___ the letter.'",
+      "options": ["wrote", "writen", "written", "writing"],
+      "correct": 2,
+      "explanation": "The correct past participle of 'write' is 'written'. Write → wrote (past) → written (past participle). Past participles are used with has/have/had.",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What is the plural of 'phenomenon'?",
+      "options": ["Phenomenons", "Phenomena", "Phenomenas", "Phenomenae"],
+      "correct": 1,
+      "explanation": "'Phenomena' is the correct plural of 'phenomenon'. It follows Greek pluralization rules. Other examples: criterion/criteria, datum/data.",
+      "difficulty": "medium"
+    },
+    {
+      "question": "Which word is an adverb in: 'She sings beautifully'?",
+      "options": ["She", "sings", "beautifully", "None"],
+      "correct": 2,
+      "explanation": "'Beautifully' is an adverb that modifies the verb 'sings', telling us HOW she sings. Most adverbs ending in '-ly' modify verbs, adjectives, or other adverbs.",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What type of clause is: 'because it was raining'?",
+      "options": ["Independent clause", "Subordinate clause", "Relative clause", "Main clause"],
+      "correct": 1,
+      "explanation": "This is a subordinate (dependent) clause. It begins with the subordinating conjunction 'because' and cannot stand alone as a complete sentence.",
+      "difficulty": "medium"
+    },
+    {
+      "question": "Fill in the blank: 'Neither the teacher ___ the students were present.'",
+      "options": ["or", "nor", "and", "but"],
+      "correct": 1,
+      "explanation": "'Neither...nor' is a correlative conjunction pair. 'Neither' is always paired with 'nor', just as 'either' is paired with 'or'.",
+      "difficulty": "medium"
+    },
+    {
+      "question": "What does the prefix 'anti-' mean?",
+      "options": ["Before", "Against", "After", "With"],
+      "correct": 1,
+      "explanation": "The prefix 'anti-' means 'against' or 'opposite of'. Examples: antibacterial (against bacteria), antisocial (against social norms), antidote (against poison).",
+      "difficulty": "easy"
+    }
+  ],
+  "geography": [
+    {
+      "question": "What is the largest continent by area?",
+      "options": ["Africa", "North America", "Asia", "Europe"],
+      "correct": 2,
+      "explanation": "Asia is the largest continent, covering approximately 44.58 million km² — about 30% of Earth's total land area. It is also the most populous continent.",
+      "difficulty": "easy"
+    },
+    {
+      "question": "Which is the longest river in the world?",
+      "options": ["Amazon", "Nile", "Yangtze", "Mississippi"],
+      "correct": 1,
+      "explanation": "The Nile River is approximately 6,650 km long, making it the longest river in the world. It flows through 11 countries in northeastern Africa.",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What are the three layers of the Earth?",
+      "options": ["Crust, Mantle, Core", "Lithosphere, Hydrosphere, Atmosphere", "Surface, Middle, Bottom", "Rock, Water, Air"],
+      "correct": 0,
+      "explanation": "The Earth has three main layers: the Crust (outermost, 5-70 km thick), Mantle (middle, ~2,900 km thick), and Core (innermost, ~3,400 km radius).",
+      "difficulty": "easy"
+    },
+    {
+      "question": "Which ocean is the largest?",
+      "options": ["Atlantic Ocean", "Indian Ocean", "Pacific Ocean", "Arctic Ocean"],
+      "correct": 2,
+      "explanation": "The Pacific Ocean is the largest and deepest ocean, covering about 165.25 million km² — more than all the land area on Earth combined.",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What causes earthquakes?",
+      "options": ["Wind patterns", "Tectonic plate movement", "Ocean currents", "Temperature changes"],
+      "correct": 1,
+      "explanation": "Earthquakes are caused by the sudden release of energy when tectonic plates move, collide, or slide past each other along fault lines.",
+      "difficulty": "medium"
+    },
+    {
+      "question": "What is the capital of Australia?",
+      "options": ["Sydney", "Melbourne", "Canberra", "Brisbane"],
+      "correct": 2,
+      "explanation": "Canberra is the capital of Australia. It was purpose-built as the capital in 1913 as a compromise between the rival cities of Sydney and Melbourne.",
+      "difficulty": "medium"
+    },
+    {
+      "question": "Which climate zone has the highest biodiversity?",
+      "options": ["Tundra", "Desert", "Tropical rainforest", "Temperate"],
+      "correct": 2,
+      "explanation": "Tropical rainforests have the highest biodiversity of any biome, hosting over 50% of the world's plant and animal species despite covering only about 6% of Earth's surface.",
+      "difficulty": "medium"
+    },
+    {
+      "question": "What is the Tropic of Cancer's latitude?",
+      "options": ["0°", "23.5°N", "23.5°S", "66.5°N"],
+      "correct": 1,
+      "explanation": "The Tropic of Cancer is at approximately 23.5°N latitude. It is the northernmost latitude where the Sun can appear directly overhead at noon (during June solstice).",
+      "difficulty": "medium"
+    },
+    {
+      "question": "Which Indian state has the longest coastline?",
+      "options": ["Kerala", "Tamil Nadu", "Gujarat", "Maharashtra"],
+      "correct": 2,
+      "explanation": "Gujarat has the longest coastline of any Indian state, stretching approximately 1,596 km along the Arabian Sea.",
+      "difficulty": "hard"
+    },
+    {
+      "question": "What is a peninsula?",
+      "options": ["An island", "Land surrounded by water on 3 sides", "A volcanic mountain", "A deep ocean trench"],
+      "correct": 1,
+      "explanation": "A peninsula is a landform that is surrounded by water on three sides but connected to the mainland on one side. India is called a peninsula because it is flanked by the Arabian Sea, Indian Ocean, and Bay of Bengal.",
+      "difficulty": "easy"
+    }
+  ],
+  "history": [
+    {
+      "question": "Who was the first Emperor of the Maurya dynasty?",
+      "options": ["Ashoka", "Bindusara", "Chandragupta Maurya", "Brihadratha"],
+      "correct": 2,
+      "explanation": "Chandragupta Maurya founded the Maurya Empire in 322 BCE with the help of his mentor Chanakya (Kautilya). The empire became one of the largest in Indian history.",
+      "difficulty": "easy"
+    },
+    {
+      "question": "In which year did India gain independence?",
+      "options": ["1942", "1945", "1947", "1950"],
+      "correct": 2,
+      "explanation": "India gained independence from British rule on August 15, 1947. The Indian Independence Act was passed by the British Parliament, creating two independent dominions: India and Pakistan.",
+      "difficulty": "easy"
+    },
+    {
+      "question": "Who built the Taj Mahal?",
+      "options": ["Akbar", "Shah Jahan", "Aurangzeb", "Jahangir"],
+      "correct": 1,
+      "explanation": "Shah Jahan, the fifth Mughal emperor, commissioned the Taj Mahal in 1632 as a mausoleum for his wife Mumtaz Mahal. It was completed around 1653.",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What was the ancient name of the Indus Valley Civilization's major city?",
+      "options": ["Varanasi", "Mohenjo-daro", "Pataliputra", "Ujjain"],
+      "correct": 1,
+      "explanation": "Mohenjo-daro (meaning 'Mound of the Dead Men') was one of the largest cities of the Indus Valley Civilization, flourishing around 2500 BCE in present-day Sindh, Pakistan.",
+      "difficulty": "medium"
+    },
+    {
+      "question": "The French Revolution began in which year?",
+      "options": ["1776", "1789", "1799", "1804"],
+      "correct": 1,
+      "explanation": "The French Revolution began in 1789 with the storming of the Bastille on July 14. It led to the end of the monarchy and the rise of democratic ideals in France.",
+      "difficulty": "easy"
+    },
+    {
+      "question": "Who wrote the 'Arthashastra'?",
+      "options": ["Kalidasa", "Chanakya", "Valmiki", "Vedavyasa"],
+      "correct": 1,
+      "explanation": "Chanakya (also known as Kautilya or Vishnugupta) wrote the Arthashastra, an ancient Indian treatise on statecraft, economic policy, and military strategy, in the 4th century BCE.",
+      "difficulty": "medium"
+    },
+    {
+      "question": "World War I started in which year?",
+      "options": ["1912", "1914", "1916", "1918"],
+      "correct": 1,
+      "explanation": "World War I began on July 28, 1914, triggered by the assassination of Archduke Franz Ferdinand of Austria-Hungary. It lasted until November 11, 1918.",
+      "difficulty": "easy"
+    },
+    {
+      "question": "The Battle of Plassey was fought in:",
+      "options": ["1757", "1764", "1857", "1947"],
+      "correct": 0,
+      "explanation": "The Battle of Plassey was fought on June 23, 1757, between the British East India Company (led by Robert Clive) and the Nawab of Bengal. It marked the beginning of British rule in India.",
+      "difficulty": "medium"
+    },
+    {
+      "question": "Which civilization is known for building pyramids?",
+      "options": ["Greek", "Roman", "Egyptian", "Persian"],
+      "correct": 2,
+      "explanation": "Ancient Egypt is renowned for building pyramids as tombs for their pharaohs. The Great Pyramid of Giza, built for Pharaoh Khufu around 2560 BCE, is the oldest of the Seven Wonders of the Ancient World.",
+      "difficulty": "easy"
+    },
+    {
+      "question": "Who led the Salt March (Dandi March) in 1930?",
+      "options": ["Jawaharlal Nehru", "Subhas Chandra Bose", "Mahatma Gandhi", "Sardar Patel"],
+      "correct": 2,
+      "explanation": "Mahatma Gandhi led the Salt March (Dandi March) from March 12 to April 6, 1930, walking 240 miles from Sabarmati Ashram to Dandi to protest the British salt tax. It was an act of nonviolent civil disobedience.",
+      "difficulty": "easy"
+    }
+  ]
+}

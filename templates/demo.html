@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Interactive AI education demos — Biology, Physics, Chemistry, Maths, Languages, Geography, History. Try live 3D simulations, quizzes, and AI chatbot.">
+    <title>Live Demos — EduAI Pro</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <!-- ═══ NAVIGATION ═══ -->
+    <nav class="navbar" id="mainNav">
+        <a href="/" class="nav-logo">
+            <div class="nav-logo-icon">E</div>
+            <span class="nav-logo-text">EduAI Pro</span>
+        </a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="/">← Back to Home</a></li>
+            <li><a href="#" class="nav-cta" onclick="scrollToContact()">Get Access →</a></li>
+        </ul>
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">☰</button>
+    </nav>
+
+    <!-- ═══ DEMO PAGE ═══ -->
+    <div class="demo-page">
+        <!-- Tab Navigation -->
+        <div class="demo-tabs" id="demoTabs">
+            <button class="demo-tab active" data-tab="biology" onclick="switchDemoTab('biology')">🧬 Biology</button>
+            <button class="demo-tab" data-tab="physics" onclick="switchDemoTab('physics')">⚛️ Physics</button>
+            <button class="demo-tab" data-tab="chemistry" onclick="switchDemoTab('chemistry')">🧪 Chemistry</button>
+            <button class="demo-tab" data-tab="maths" onclick="switchDemoTab('maths')">📐 Maths</button>
+            <button class="demo-tab" data-tab="languages" onclick="switchDemoTab('languages')">📖 Languages</button>
+            <button class="demo-tab" data-tab="geography" onclick="switchDemoTab('geography')">🌍 Geography</button>
+            <button class="demo-tab" data-tab="history" onclick="switchDemoTab('history')">🏛️ History</button>
+            <button class="demo-tab" data-tab="chatbot" onclick="switchDemoTab('chatbot')">🤖 AI Chatbot</button>
+        </div>
+
+        <!-- ═══ BIOLOGY PANEL ═══ -->
+        <div class="demo-panel active" id="panel-biology">
+            <div class="demo-panel-header">
+                <h2>🧬 Biology Interactive Lab</h2>
+                <p>Explore life sciences through 3D simulations and interactive quizzes</p>
+            </div>
+            <div class="imagine-banner">💡 Imagine this inside your institute's app — students exploring biology with AI assistance</div>
+            <div class="demo-grid">
+                <div class="glass-card">
+                    <h3>🔬 Blood Flow Simulation</h3>
+                    <div class="demo-visual" id="biologyCanvas" style="min-height:300px; border:none;">
+                        <canvas id="bio-demo-canvas"></canvas>
+                        <div class="demo-visual-overlay"><strong>Interactive:</strong> Red blood cells flowing through a blood vessel</div>
+                    </div>
+                </div>
+                <div class="glass-card mcq-container">
+                    <h3>🎯 Biology Quiz</h3>
+                    <div class="mcq-score">
+                        <span>Score: <strong id="bioScore">0/0</strong></span>
+                        <span id="bioDifficulty" style="color: #00b894;">Loading...</span>
+                    </div>
+                    <div id="bioQuizContent"><div class="spinner"></div></div>
+                </div>
+                <div class="glass-card">
+                    <h3>📇 Biology Flashcards</h3>
+                    <div class="flashcard-container">
+                        <div class="flashcard" id="bioFlashcard" onclick="flipFlashcard('bio')">
+                            <div class="flashcard-front">
+                                <span class="card-emoji" id="bioFlashEmoji">🫀</span>
+                                <h4 id="bioFlashTitle">Human Heart</h4>
+                                <span class="flip-hint">Click to reveal →</span>
+                            </div>
+                            <div class="flashcard-back">
+                                <p id="bioFlashBack">The human heart has 4 chambers: Right Atrium, Right Ventricle, Left Atrium, and Left Ventricle. It pumps ~5L of blood per minute.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flashcard-nav">
+                        <button onclick="prevFlashcard('bio')">← Previous</button>
+                        <button onclick="nextFlashcard('bio')">Next →</button>
+                    </div>
+                </div>
+                <div class="glass-card concept-panel">
+                    <h3>📚 Concept: Photosynthesis</h3>
+                    <h4>What is Photosynthesis?</h4>
+                    <p>Photosynthesis is the process by which green plants convert light energy into chemical energy (glucose).</p>
+                    <div class="concept-formula">6CO₂ + 6H₂O + Light → C₆H₁₂O₆ + 6O₂</div>
+                    <p style="margin-top:0.5rem;">Occurs in <strong>chloroplasts</strong> using <strong>chlorophyll</strong> to capture sunlight.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ PHYSICS PANEL ═══ -->
+        <div class="demo-panel" id="panel-physics">
+            <div class="demo-panel-header">
+                <h2>⚛️ Physics Interactive Lab</h2>
+                <p>Visualize wave mechanics, projectile motion, and more</p>
+            </div>
+            <div class="imagine-banner">💡 Imagine students controlling physics simulations right from their phones</div>
+            <div class="demo-grid">
+                <div class="glass-card">
+                    <h3>🌊 Wave Interference Simulation</h3>
+                    <div class="demo-visual" id="physicsCanvas" style="min-height:300px; border:none;">
+                        <canvas id="physics-demo-canvas"></canvas>
+                        <div class="demo-visual-overlay"><strong>Interactive:</strong> Wave interference pattern — adjust with sliders below</div>
+                    </div>
+                    <div style="padding: 1rem;">
+                        <div class="control-group">
+                            <label>Wave Frequency <span class="value-display" id="freqValue">1.0 Hz</span></label>
+                            <input type="range" id="waveFrequency" min="0.5" max="5" step="0.1" value="1.0" oninput="updatePhysicsParam('frequency', this.value)">
+                        </div>
+                        <div class="control-group">
+                            <label>Amplitude <span class="value-display" id="ampValue">1.0</span></label>
+                            <input type="range" id="waveAmplitude" min="0.2" max="3" step="0.1" value="1.0" oninput="updatePhysicsParam('amplitude', this.value)">
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-card mcq-container">
+                    <h3>🎯 Physics Quiz</h3>
+                    <div class="mcq-score">
+                        <span>Score: <strong id="physicsScore">0/0</strong></span>
+                        <span id="physicsDifficulty" style="color: #00b894;">Loading...</span>
+                    </div>
+                    <div id="physicsQuizContent"><div class="spinner"></div></div>
+                </div>
+                <div class="glass-card concept-panel">
+                    <h3>📚 Newton's Second Law</h3>
+                    <h4>F = m × a</h4>
+                    <p>Acceleration is directly proportional to net force and inversely proportional to mass.</p>
+                    <div class="concept-formula">F = m × a</div>
+                </div>
+                <div class="glass-card">
+                    <h3>🎯 Projectile Motion Calculator</h3>
+                    <div class="control-group">
+                        <label>Launch Angle <span class="value-display" id="angleValue">45°</span></label>
+                        <input type="range" id="launchAngle" min="10" max="80" step="1" value="45" oninput="updateProjectile()">
+                    </div>
+                    <div class="control-group">
+                        <label>Initial Velocity <span class="value-display" id="velValue">20 m/s</span></label>
+                        <input type="range" id="launchVelocity" min="5" max="50" step="1" value="20" oninput="updateProjectile()">
+                    </div>
+                    <div style="margin-top:1rem; padding:1rem; background:rgba(255,255,255,0.03); border-radius:8px;">
+                        <p style="font-size:0.85rem; color: var(--text-secondary);">
+                            <strong>Max Height:</strong> <span id="maxHeight" style="color:#00b894;">10.2 m</span><br>
+                            <strong>Range:</strong> <span id="projRange" style="color:#74b9ff;">40.8 m</span><br>
+                            <strong>Time of Flight:</strong> <span id="flightTime" style="color:#fdcb6e;">2.88 s</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ CHEMISTRY PANEL ═══ -->
+        <div class="demo-panel" id="panel-chemistry">
+            <div class="demo-panel-header">
+                <h2>🧪 Chemistry Interactive Lab</h2>
+                <p>Visualize molecular structures, reactions, and explore the periodic table</p>
+            </div>
+            <div class="imagine-banner">💡 Interactive 3D molecules that students can rotate and explore</div>
+            <div class="demo-grid">
+                <div class="glass-card">
+                    <h3>🔬 3D Molecule Viewer — Water (H₂O)</h3>
+                    <div class="demo-visual" id="chemistryCanvas" style="min-height:300px; border:none;">
+                        <canvas id="chem-demo-canvas"></canvas>
+                        <div class="demo-visual-overlay"><strong>Interactive:</strong> 3D water molecule — rotate with mouse</div>
+                    </div>
+                </div>
+                <div class="glass-card mcq-container">
+                    <h3>🎯 Chemistry Quiz</h3>
+                    <div class="mcq-score">
+                        <span>Score: <strong id="chemScore">0/0</strong></span>
+                        <span id="chemDifficulty" style="color: #00b894;">Loading...</span>
+                    </div>
+                    <div id="chemQuizContent"><div class="spinner"></div></div>
+                </div>
+                <div class="glass-card">
+                    <h3>⚗️ Periodic Table — Key Elements</h3>
+                    <div class="periodic-mini" id="periodicTable"></div>
+                    <div id="elementInfo" style="margin-top:1rem; padding:1rem; background:rgba(255,255,255,0.03); border-radius:8px; display:none;">
+                        <h4 id="elInfoTitle" style="color:var(--accent-secondary); font-size:1rem;"></h4>
+                        <p id="elInfoDesc" style="color:var(--text-secondary); font-size:0.85rem; margin-top:0.3rem;"></p>
+                    </div>
+                </div>
+                <div class="glass-card concept-panel">
+                    <h3>⚡ Combustion of Methane</h3>
+                    <div class="concept-formula">CH₄ + 2O₂ → CO₂ + 2H₂O</div>
+                    <p style="margin-top:0.75rem;">An <strong>exothermic reaction</strong> that releases energy as heat and light.</p>
+                    <div id="reactionAnimation" style="margin-top:1rem; text-align:center; padding:1.5rem; background: rgba(255,150,0,0.05); border-radius:8px;">
+                        <div style="font-size:2rem;" id="reactionEmoji">🧊</div>
+                        <button class="mcq-next-btn" onclick="playReaction()" style="max-width:200px; margin:0.5rem auto;">▶ Play Reaction</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ MATHS PANEL ═══ -->
+        <div class="demo-panel" id="panel-maths">
+            <div class="demo-panel-header">
+                <h2>📐 Mathematics Interactive Lab</h2>
+                <p>Plot functions, visualize calculus, and solve equations step-by-step</p>
+            </div>
+            <div class="imagine-banner">💡 Students can type any function and instantly see the graph</div>
+            <div class="demo-grid">
+                <div class="glass-card graph-container">
+                    <h3>📈 Function Graph Plotter</h3>
+                    <div class="graph-canvas-wrapper">
+                        <canvas id="graphCanvas"></canvas>
+                    </div>
+                    <div class="graph-controls">
+                        <input type="text" id="functionInput" value="Math.sin(x)" placeholder="Enter function e.g. Math.sin(x)">
+                        <button onclick="plotGraph()">Plot</button>
+                    </div>
+                    <div style="margin-top:0.5rem;">
+                        <span style="font-size:0.75rem; color: var(--text-muted);">Try: Math.sin(x) • Math.cos(x) • x*x • Math.tan(x) • Math.exp(-x*x)</span>
+                    </div>
+                </div>
+                <div class="glass-card mcq-container">
+                    <h3>🎯 Maths Quiz</h3>
+                    <div class="mcq-score">
+                        <span>Score: <strong id="mathsScore">0/0</strong></span>
+                        <span id="mathsDifficulty" style="color: #00b894;">Loading...</span>
+                    </div>
+                    <div id="mathsQuizContent"><div class="spinner"></div></div>
+                </div>
+                <div class="glass-card">
+                    <h3>📊 3D Surface Plot</h3>
+                    <div class="demo-visual" id="mathsCanvas" style="min-height:300px; border:none;">
+                        <canvas id="maths-demo-canvas"></canvas>
+                        <div class="demo-visual-overlay"><strong>3D:</strong> z = sin(x) × cos(y) — animated surface</div>
+                    </div>
+                </div>
+                <div class="glass-card concept-panel">
+                    <h3>📝 Step-by-Step: ∫ x² dx</h3>
+                    <div style="margin-top:0.75rem;">
+                        <div style="padding:0.5rem 0; border-bottom:1px solid var(--border-glass);"><span style="color:#00b894; font-weight:600;">Step 1:</span> <span style="color:var(--text-secondary);">Apply power rule: ∫xⁿ dx = xⁿ⁺¹/(n+1) + C</span></div>
+                        <div style="padding:0.5rem 0; border-bottom:1px solid var(--border-glass);"><span style="color:#74b9ff; font-weight:600;">Step 2:</span> <span style="color:var(--text-secondary);">n = 2, so ∫x² dx = x³/3 + C</span></div>
+                        <div style="padding:0.5rem 0;"><span style="color:#a29bfe; font-weight:600;">Answer:</span> <div class="concept-formula">∫x² dx = x³/3 + C</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ LANGUAGES PANEL ═══ -->
+        <div class="demo-panel" id="panel-languages">
+            <div class="demo-panel-header">
+                <h2>📖 Language Learning Lab</h2>
+                <p>Build vocabulary, practice grammar, and improve pronunciation</p>
+            </div>
+            <div class="imagine-banner">💡 AI-powered language learning integrated into your platform</div>
+            <div class="demo-grid">
+                <div class="glass-card">
+                    <h3>📚 Vocabulary Builder</h3>
+                    <div class="vocab-card" id="vocabCard">
+                        <div class="vocab-word" id="vocabWord">Ephemeral</div>
+                        <div class="vocab-pronunciation" id="vocabPron">/ɪˈfem.ər.əl/</div>
+                        <div class="vocab-type" id="vocabType">adjective</div>
+                        <div class="vocab-meaning" id="vocabMeaning">Lasting for a very short time; transitory.</div>
+                        <div class="vocab-example" id="vocabExample">"The ephemeral beauty of cherry blossoms makes them all the more precious."</div>
+                    </div>
+                    <div class="vocab-nav">
+                        <button onclick="prevVocab()">← Previous</button>
+                        <button onclick="nextVocab()">Next →</button>
+                    </div>
+                </div>
+                <div class="glass-card">
+                    <h3>✏️ Fill in the Blank</h3>
+                    <div id="fillBlankContent">
+                        <div class="fill-blank-sentence" id="fillSentence"></div>
+                        <div class="fill-options" id="fillOptions"></div>
+                        <div class="mcq-explanation" id="fillExplanation"></div>
+                    </div>
+                    <button class="mcq-next-btn" onclick="nextFillBlank()" style="margin-top:1rem;">Next Question →</button>
+                </div>
+                <div class="glass-card">
+                    <h3>🎮 Synonym Matching Game</h3>
+                    <p style="color:var(--text-muted); font-size:0.8rem; margin-bottom:1rem;">Match words with their synonyms.</p>
+                    <div class="synonym-game" id="synonymGame"></div>
+                    <div id="synonymResult" style="text-align:center; margin-top:1rem; font-weight:600;"></div>
+                    <button class="mcq-next-btn" onclick="resetSynonymGame()" style="margin-top:0.5rem;">New Game</button>
+                </div>
+                <div class="glass-card mcq-container">
+                    <h3>🎯 Language Quiz</h3>
+                    <div class="mcq-score">
+                        <span>Score: <strong id="langScore">0/0</strong></span>
+                        <span id="langDifficulty" style="color: #00b894;">Loading...</span>
+                    </div>
+                    <div id="langQuizContent"><div class="spinner"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ GEOGRAPHY PANEL ═══ -->
+        <div class="demo-panel" id="panel-geography">
+            <div class="demo-panel-header">
+                <h2>🌍 Geography Interactive Lab</h2>
+                <p>Explore climate zones, tectonic plates, and world geography</p>
+            </div>
+            <div class="imagine-banner">💡 Interactive maps and geographic simulations</div>
+            <div class="demo-grid">
+                <div class="glass-card">
+                    <h3>🗺️ Climate Zones Map</h3>
+                    <div class="map-container"><canvas id="geoMapCanvas" class="map-canvas" width="600" height="300"></canvas></div>
+                    <div style="padding:0.75rem 0;">
+                        <div style="display:flex; gap:0.75rem; flex-wrap:wrap; font-size:0.75rem;">
+                            <span style="display:flex;align-items:center;gap:0.3rem;"><span style="width:12px;height:12px;background:#e74c3c;border-radius:2px;display:inline-block;"></span> Tropical</span>
+                            <span style="display:flex;align-items:center;gap:0.3rem;"><span style="width:12px;height:12px;background:#f39c12;border-radius:2px;display:inline-block;"></span> Dry</span>
+                            <span style="display:flex;align-items:center;gap:0.3rem;"><span style="width:12px;height:12px;background:#27ae60;border-radius:2px;display:inline-block;"></span> Temperate</span>
+                            <span style="display:flex;align-items:center;gap:0.3rem;"><span style="width:12px;height:12px;background:#2980b9;border-radius:2px;display:inline-block;"></span> Cold</span>
+                            <span style="display:flex;align-items:center;gap:0.3rem;"><span style="width:12px;height:12px;background:#ecf0f1;border-radius:2px;display:inline-block;"></span> Polar</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-card mcq-container">
+                    <h3>🎯 Geography Quiz</h3>
+                    <div class="mcq-score">
+                        <span>Score: <strong id="geoScore">0/0</strong></span>
+                        <span id="geoDifficulty" style="color: #00b894;">Loading...</span>
+                    </div>
+                    <div id="geoQuizContent"><div class="spinner"></div></div>
+                </div>
+                <div class="glass-card">
+                    <h3>📇 Countries & Capitals</h3>
+                    <div class="flashcard-container">
+                        <div class="flashcard" id="geoFlashcard" onclick="flipFlashcard('geo')">
+                            <div class="flashcard-front">
+                                <span class="card-emoji" id="geoFlashEmoji">🇮🇳</span>
+                                <h4 id="geoFlashTitle">India</h4>
+                                <span class="flip-hint">Click to see capital →</span>
+                            </div>
+                            <div class="flashcard-back">
+                                <p id="geoFlashBack">Capital: New Delhi | Continent: Asia | Population: ~1.4 billion</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flashcard-nav">
+                        <button onclick="prevFlashcard('geo')">← Previous</button>
+                        <button onclick="nextFlashcard('geo')">Next →</button>
+                    </div>
+                </div>
+                <div class="glass-card concept-panel">
+                    <h3>📚 Plate Tectonics</h3>
+                    <p>Earth's lithosphere is broken into tectonic plates floating on the asthenosphere.</p>
+                    <ul style="margin-top:0.5rem; padding-left:1.2rem; color:var(--text-secondary); font-size:0.85rem;">
+                        <li>Convergent — plates collide</li>
+                        <li>Divergent — plates separate</li>
+                        <li>Transform — plates slide past</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ HISTORY PANEL ═══ -->
+        <div class="demo-panel" id="panel-history">
+            <div class="demo-panel-header">
+                <h2>🏛️ History Interactive Lab</h2>
+                <p>Travel through time with animated timelines and historical explorations</p>
+            </div>
+            <div class="imagine-banner">💡 Animated timelines bringing history to life</div>
+            <div class="demo-grid">
+                <div class="glass-card">
+                    <h3>📅 Historical Timeline</h3>
+                    <div class="timeline" id="historyTimeline">
+                        <div class="timeline-item"><div class="timeline-dot"></div><span class="timeline-year">3000 BCE</span><h4>Rise of Indus Valley</h4><p>Advanced urban civilization with drainage and planning.</p></div>
+                        <div class="timeline-item"><div class="timeline-dot"></div><span class="timeline-year">322 BCE</span><h4>Maurya Empire</h4><p>Chandragupta Maurya established the largest Indian empire.</p></div>
+                        <div class="timeline-item"><div class="timeline-dot"></div><span class="timeline-year">1526 CE</span><h4>Mughal Empire</h4><p>Babur defeated Ibrahim Lodi at the First Battle of Panipat.</p></div>
+                        <div class="timeline-item"><div class="timeline-dot"></div><span class="timeline-year">1857 CE</span><h4>First War of Independence</h4><p>Major uprising against British East India Company rule.</p></div>
+                        <div class="timeline-item"><div class="timeline-dot"></div><span class="timeline-year">1947 CE</span><h4>Indian Independence</h4><p>India gained independence on August 15, 1947.</p></div>
+                    </div>
+                </div>
+                <div class="glass-card mcq-container">
+                    <h3>🎯 History Quiz</h3>
+                    <div class="mcq-score">
+                        <span>Score: <strong id="histScore">0/0</strong></span>
+                        <span id="histDifficulty" style="color: #00b894;">Loading...</span>
+                    </div>
+                    <div id="histQuizContent"><div class="spinner"></div></div>
+                </div>
+                <div class="glass-card">
+                    <h3>🗺️ Empire Expansion Map</h3>
+                    <div class="map-container"><canvas id="empireMapCanvas" class="map-canvas" width="600" height="300"></canvas></div>
+                    <div style="margin-top:0.75rem; display:flex; gap:0.5rem; flex-wrap:wrap;">
+                        <button class="fill-option" onclick="showEmpire('maurya')">Maurya Empire</button>
+                        <button class="fill-option" onclick="showEmpire('mughal')">Mughal Empire</button>
+                        <button class="fill-option" onclick="showEmpire('british')">British India</button>
+                    </div>
+                </div>
+                <div class="glass-card concept-panel">
+                    <h3>📚 World War II</h3>
+                    <p>The largest conflict in history (1939-1945).</p>
+                    <ul style="margin-top:0.75rem; padding-left:1.2rem; color:var(--text-secondary); font-size:0.85rem; line-height:1.8;">
+                        <li>1939 — Germany invades Poland</li>
+                        <li>1941 — Pearl Harbor, US enters war</li>
+                        <li>1944 — D-Day: Allied invasion of Normandy</li>
+                        <li>1945 — Atomic bombs; Germany and Japan surrender</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ CHATBOT PANEL ═══ -->
+        <div class="demo-panel" id="panel-chatbot">
+            <div class="demo-panel-header">
+                <h2>🤖 AI Education Chatbot</h2>
+                <p>Ask any academic question — our AI explains concepts simply</p>
+            </div>
+            <div class="imagine-banner">💡 This AI chatbot can be embedded directly into your institute's app</div>
+            <div style="max-width:700px; margin:0 auto;">
+                <div style="display:flex; gap:0.5rem; margin-bottom:1rem; flex-wrap:wrap; justify-content:center;">
+                    <button class="fill-option" onclick="setChatSubject('biology')" id="chatCtx-biology">🧬 Biology</button>
+                    <button class="fill-option" onclick="setChatSubject('physics')" id="chatCtx-physics">⚛️ Physics</button>
+                    <button class="fill-option" onclick="setChatSubject('chemistry')" id="chatCtx-chemistry">🧪 Chemistry</button>
+                    <button class="fill-option" onclick="setChatSubject('maths')" id="chatCtx-maths">📐 Maths</button>
+                    <button class="fill-option" onclick="setChatSubject('geography')" id="chatCtx-geography">🌍 Geography</button>
+                    <button class="fill-option" onclick="setChatSubject('history')" id="chatCtx-history">🏛️ History</button>
+                </div>
+                <div class="chat-container">
+                    <div class="chat-header">
+                        <div class="chat-avatar">🤖</div>
+                        <div class="chat-header-info">
+                            <h4>EduAI Assistant</h4>
+                            <span>● Online</span>
+                        </div>
+                    </div>
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="chat-message bot">
+                            <div class="msg-content">👋 Hi! I'm the EduAI Assistant. Ask me anything!
+
+Try: "Explain photosynthesis", "Newton's laws", "What is DNA?", "Explain calculus"</div>
+                        </div>
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" id="chatInput" placeholder="Type your question..." onkeydown="if(event.key==='Enter')sendChat()">
+                        <button onclick="sendChat()">Send</button>
+                    </div>
+                </div>
+                <div style="text-align:center; margin-top:1.5rem;">
+                    <p style="color:var(--text-muted); font-size:0.8rem;">
+                        💡 Quick:
+                        <span style="cursor:pointer; color:var(--accent-secondary);" onclick="quickChat('Explain photosynthesis')">Photosynthesis</span> •
+                        <span style="cursor:pointer; color:var(--accent-secondary);" onclick="quickChat('Tell me about Newton\\'s laws')">Newton's Laws</span> •
+                        <span style="cursor:pointer; color:var(--accent-secondary);" onclick="quickChat('What is DNA?')">DNA</span> •
+                        <span style="cursor:pointer; color:var(--accent-secondary);" onclick="quickChat('Explain gravity')">Gravity</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ FOOTER ═══ -->
+    <footer class="footer">
+        <div class="footer-content">
+            <a href="/" class="nav-logo">
+                <div class="nav-logo-icon">E</div>
+                <span class="nav-logo-text">EduAI Pro</span>
+            </a>
+            <ul class="footer-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/demo">Demos</a></li>
+            </ul>
+            <span class="footer-copy">© 2026 EduAI Pro. All rights reserved.</span>
+        </div>
+    </footer>
+
+    <!-- ═══ SCRIPTS ═══ -->
+    <script src="/static/js/three-scenes.js"></script>
+    <script src="/static/js/demo.js"></script>
+    <script src="/static/js/force-simulation.js"></script>
+    <script src="/static/js/carbon-structure.js"></script>
+    <script src="/static/js/compound-builder.js"></script>
+</body>
+</html>

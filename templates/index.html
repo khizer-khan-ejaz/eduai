@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="India's First AI Content Integration Partner for Educational Institutes. Make your institute AI-enabled in 30 days with interactive demos for Biology, Physics, Chemistry, Maths, and more.">
+    <title>EduAI Pro — AI-Powered Education Platform</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <!-- ═══ NAVIGATION ═══ -->
+    <nav class="navbar" id="mainNav">
+        <a href="/" class="nav-logo">
+            <div class="nav-logo-icon">E</div>
+            <span class="nav-logo-text">EduAI Pro</span>
+        </a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#demos">Live Demos</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="/demo" class="nav-cta">Try Full Demo →</a></li>
+        </ul>
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">☰</button>
+    </nav>
+
+    <!-- ═══ HERO SECTION ═══ -->
+    <section class="hero" id="home">
+        <canvas id="hero-canvas"></canvas>
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="pulse-dot"></span>
+                India's First AI Content Integration Partner
+            </div>
+            <h1>
+                Make Your Institute<br>
+                <span class="gradient-text">AI-Enabled in 30 Days</span>
+            </h1>
+            <p>Transform education with interactive 3D simulations, AI-powered quizzes, and personalized learning — all integrated into your existing platform.</p>
+            <div class="hero-buttons">
+                <a href="#demos" class="btn btn-primary">
+                    <span class="btn-icon">🚀</span> Explore Live Demos
+                </a>
+                <a href="/demo" class="btn btn-secondary">
+                    <span class="btn-icon">▶</span> Try Full Platform
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ STATS BAR ═══ -->
+    <div class="stats-bar">
+        <div class="stat-item">
+            <div class="stat-number" data-count="200">0+</div>
+            <div class="stat-label">Institutes Onboarded</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number" data-count="50000">0+</div>
+            <div class="stat-label">Students Learning</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number" data-count="7">0</div>
+            <div class="stat-label">Subjects Covered</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number" data-count="10000">0+</div>
+            <div class="stat-label">AI-Powered Questions</div>
+        </div>
+    </div>
+
+    <!-- ═══ LIVE DEMO SECTION ═══ -->
+    <section class="subject-selector" id="demos">
+        <div class="section-header">
+            <span class="section-tag">Interactive Demos</span>
+            <h2>Select a Subject, Experience <span class="gradient-text">AI Learning</span></h2>
+            <p>Click on any subject below to instantly see AI-powered demos in action</p>
+        </div>
+
+        <!-- Subject Cards Grid -->
+        <div class="subjects-grid" id="subjectsGrid">
+            <div class="subject-card active" data-subject="biology" onclick="selectSubject('biology')">
+                <span class="subject-icon">🧬</span>
+                <span class="subject-name">Biology</span>
+            </div>
+            <div class="subject-card" data-subject="physics" onclick="selectSubject('physics')">
+                <span class="subject-icon">⚛️</span>
+                <span class="subject-name">Physics</span>
+            </div>
+            <div class="subject-card" data-subject="chemistry" onclick="selectSubject('chemistry')">
+                <span class="subject-icon">🧪</span>
+                <span class="subject-name">Chemistry</span>
+            </div>
+            <div class="subject-card" data-subject="maths" onclick="selectSubject('maths')">
+                <span class="subject-icon">📐</span>
+                <span class="subject-name">Mathematics</span>
+            </div>
+            <div class="subject-card" data-subject="languages" onclick="selectSubject('languages')">
+                <span class="subject-icon">📖</span>
+                <span class="subject-name">Languages</span>
+            </div>
+            <div class="subject-card" data-subject="geography" onclick="selectSubject('geography')">
+                <span class="subject-icon">🌍</span>
+                <span class="subject-name">Geography</span>
+            </div>
+            <div class="subject-card" data-subject="history" onclick="selectSubject('history')">
+                <span class="subject-icon">🏛️</span>
+                <span class="subject-name">History</span>
+            </div>
+        </div>
+
+        <!-- Dynamic Demo Preview Area -->
+        <div class="demo-preview">
+            <div class="demo-preview-grid">
+                <!-- 3D Visual Panel -->
+                <div class="demo-visual" id="demoVisualPanel">
+                    <canvas id="demo-canvas"></canvas>
+                    <div class="demo-visual-overlay" id="demoOverlayLabel">
+                        <strong>🧬 Biology:</strong> Red blood cell flow simulation — Observe how RBCs travel through blood vessels
+                    </div>
+                </div>
+
+                <!-- Interaction Panel -->
+                <div class="demo-interaction" id="demoInteractionPanel">
+                    <!-- MCQ Quiz -->
+                    <div class="glass-card mcq-container" id="homeMcq">
+                        <h3>🎯 Quick Quiz</h3>
+                        <div class="mcq-score">
+                            <span>Score: <strong id="homeScore">0/0</strong></span>
+                            <span id="homeDifficulty" style="color: #00b894;">Easy</span>
+                        </div>
+                        <div id="homeQuizContent">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+
+                    <!-- Flashcard -->
+                    <div class="glass-card" id="homeFlashcardSection">
+                        <h3>📇 Flashcard</h3>
+                        <div class="flashcard-container">
+                            <div class="flashcard" id="homeFlashcard" onclick="flipFlashcard('home')">
+                                <div class="flashcard-front">
+                                    <span class="card-emoji" id="homeFlashEmoji">❤️</span>
+                                    <h4 id="homeFlashTitle">Human Heart</h4>
+                                    <span class="flip-hint">Click to flip →</span>
+                                </div>
+                                <div class="flashcard-back">
+                                    <p id="homeFlashBack">The human heart has 4 chambers: 2 atria and 2 ventricles. It pumps about 5 liters of blood per minute and beats ~100,000 times daily.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flashcard-nav">
+                            <button onclick="prevFlashcard('home')">← Previous</button>
+                            <button onclick="nextFlashcard('home')">Next →</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ SERVICES SECTION ═══ -->
+    <section class="services" id="services">
+        <div class="section-header">
+            <span class="section-tag">Our Services</span>
+            <h2>Three Pillars of <span class="gradient-text">AI Education</span></h2>
+            <p>Everything your institute needs to transform into an AI-powered learning hub</p>
+        </div>
+
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">🧠</div>
+                <h3>AI Content Engine</h3>
+                <p>Our AI generates and curates educational content tailored to your curriculum, board, and student level.</p>
+                <ul class="service-features">
+                    <li>Auto-generated MCQs with explanations</li>
+                    <li>Adaptive difficulty algorithms</li>
+                    <li>Multi-language support</li>
+                    <li>Board-wise content alignment</li>
+                </ul>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">🎮</div>
+                <h3>3D Interactive Labs</h3>
+                <p>Replace static diagrams with immersive 3D simulations that students can manipulate and explore.</p>
+                <ul class="service-features">
+                    <li>Three.js powered visualizations</li>
+                    <li>Real-time physics simulations</li>
+                    <li>Molecular structure viewers</li>
+                    <li>Interactive graph plotters</li>
+                </ul>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">📊</div>
+                <h3>Analytics Dashboard</h3>
+                <p>Track student performance with AI-driven insights and personalized learning recommendations.</p>
+                <ul class="service-features">
+                    <li>Real-time progress tracking</li>
+                    <li>Weakness identification</li>
+                    <li>Performance predictions</li>
+                    <li>Parent & teacher portals</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ PRICING SECTION ═══ -->
+    <section class="pricing" id="pricing">
+        <div class="section-header">
+            <span class="section-tag">Pricing</span>
+            <h2>Simple, Transparent <span class="gradient-text">Pricing</span></h2>
+            <p>Plans designed for educational institutions of every size</p>
+        </div>
+
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <div class="pricing-name">Starter</div>
+                <div class="pricing-price"><span class="currency">₹</span>9,999</div>
+                <div class="pricing-period">per month / per institute</div>
+                <ul class="pricing-features">
+                    <li><span class="check">✓</span> Up to 500 students</li>
+                    <li><span class="check">✓</span> 3 subjects included</li>
+                    <li><span class="check">✓</span> MCQ engine</li>
+                    <li><span class="check">✓</span> Basic analytics</li>
+                    <li><span class="check">✓</span> Email support</li>
+                </ul>
+                <button class="btn btn-secondary pricing-btn" onclick="scrollToContact()">Get Started</button>
+            </div>
+
+            <div class="pricing-card featured">
+                <div class="pricing-name">Professional</div>
+                <div class="pricing-price"><span class="currency">₹</span>24,999</div>
+                <div class="pricing-period">per month / per institute</div>
+                <ul class="pricing-features">
+                    <li><span class="check">✓</span> Up to 2,000 students</li>
+                    <li><span class="check">✓</span> All 7 subjects</li>
+                    <li><span class="check">✓</span> 3D interactive labs</li>
+                    <li><span class="check">✓</span> AI chatbot</li>
+                    <li><span class="check">✓</span> Advanced analytics</li>
+                    <li><span class="check">✓</span> Priority support</li>
+                </ul>
+                <button class="btn btn-primary pricing-btn" onclick="scrollToContact()">Get Started</button>
+            </div>
+
+            <div class="pricing-card">
+                <div class="pricing-name">Enterprise</div>
+                <div class="pricing-price"><span class="currency">₹</span>49,999</div>
+                <div class="pricing-period">per month / per institute</div>
+                <ul class="pricing-features">
+                    <li><span class="check">✓</span> Unlimited students</li>
+                    <li><span class="check">✓</span> All subjects + custom</li>
+                    <li><span class="check">✓</span> White-label solution</li>
+                    <li><span class="check">✓</span> API access</li>
+                    <li><span class="check">✓</span> Dedicated manager</li>
+                    <li><span class="check">✓</span> On-premise option</li>
+                </ul>
+                <button class="btn btn-secondary pricing-btn" onclick="scrollToContact()">Contact Sales</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ CTA SECTION ═══ -->
+    <section class="cta-section" id="contact">
+        <div class="cta-content">
+            <h2>Ready to <span class="gradient-text">Transform</span> Your Institute?</h2>
+            <p>Book a free demo call and see how EduAI Pro can revolutionize learning at your institute</p>
+
+            <div class="glass-card contact-form" style="text-align: left; margin-top: 2rem;">
+                <form id="contactForm" onsubmit="submitContact(event)">
+                    <div class="form-group">
+                        <label for="contactName">Full Name</label>
+                        <input type="text" id="contactName" placeholder="Your name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactEmail">Email</label>
+                        <input type="email" id="contactEmail" placeholder="you@institute.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactInstitute">Institute Name</label>
+                        <input type="text" id="contactInstitute" placeholder="Your institute name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactMessage">Message</label>
+                        <textarea id="contactMessage" placeholder="Tell us about your needs..." rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%;">
+                        <span class="btn-icon">📩</span> Book Free Demo
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ FOOTER ═══ -->
+    <footer class="footer">
+        <div class="footer-content">
+            <a href="/" class="nav-logo">
+                <div class="nav-logo-icon">E</div>
+                <span class="nav-logo-text">EduAI Pro</span>
+            </a>
+            <ul class="footer-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#demos">Demos</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="/demo">Full Demo</a></li>
+            </ul>
+            <span class="footer-copy">© 2026 EduAI Pro. All rights reserved.</span>
+        </div>
+    </footer>
+
+    <!-- ═══ SCRIPTS ═══ -->
+    <script src="/static/js/three-scenes.js"></script>
+    <script src="/static/js/main.js"></script>
+    <script src="/static/js/force-simulation.js"></script>
+</body>
+</html>
