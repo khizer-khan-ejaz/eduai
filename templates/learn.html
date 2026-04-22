@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Class 9 Maths & Science — Learn concepts visually with interactive 3D models, experiments, and simulations. Make learning fun with visual education.">
+    <title>EduVerse — Class 9 Interactive Learning</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="/static/css/learn.css">
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════
+     LOADING SCREEN
+     ═══════════════════════════════════════════════════ -->
+<div class="loading-screen" id="loadingScreen">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Initializing EduVerse...</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     NAVBAR
+     ═══════════════════════════════════════════════════ -->
+<nav class="learn-navbar" id="learnNav">
+    <div style="display:flex; align-items:center; gap:1rem;">
+        <a class="nav-brand" href="#landing" onclick="navigate('landing')">
+            <div class="nav-brand-icon">E</div>
+            <span class="nav-brand-text">EduVerse</span>
+        </a>
+        <button class="nav-back-btn" id="navBackBtn" onclick="goBack()">
+            <i data-lucide="arrow-left" style="width:14px;height:14px;"></i>
+            Back
+        </button>
+    </div>
+    <div class="nav-actions">
+        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle theme">
+            🌙
+        </button>
+        <button class="mobile-menu-toggle" id="mobileMenuBtn" onclick="toggleSidebar()" aria-label="Toggle menu">
+            ☰
+        </button>
+    </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════
+     LANDING PAGE
+     ═══════════════════════════════════════════════════ -->
+<section class="page-section active" id="page-landing">
+    <!-- Hero Section -->
+    <div class="landing-hero">
+        <canvas id="hero-three-canvas"></canvas>
+        <div class="hero-content">
+            <div class="hero-badge">✨ Class 9 Maths & Science</div>
+            <h1 class="hero-title">Learn Concepts Visually</h1>
+            <p class="hero-subtitle">
+                Experience education through interactive 3D models, real experiments, 
+                and visual simulations. See, play, and truly understand every concept.
+            </p>
+            <button class="hero-cta" onclick="navigate('dashboard')">
+                Start Learning
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="features-section">
+        <h2 class="features-title">Why EduVerse?</h2>
+        <p class="features-subtitle">Three powerful ways to understand any concept</p>
+        <div class="features-grid">
+            <div class="feature-card animate-in animate-delay-1">
+                <div class="feature-icon purple">🔬</div>
+                <h3>Interactive Experiments</h3>
+                <p>Toss coins, plot graphs, simulate motion — learn by doing, not just reading. Every concept has a hands-on experiment.</p>
+            </div>
+            <div class="feature-card animate-in animate-delay-2">
+                <div class="feature-icon teal">🧊</div>
+                <h3>3D Visual Learning</h3>
+                <p>Rotate atoms, explore cell structures, visualize geometry shapes — all in interactive 3D with realistic lighting.</p>
+            </div>
+            <div class="feature-card animate-in animate-delay-3">
+                <div class="feature-icon pink">🌍</div>
+                <h3>Real-life Examples</h3>
+                <p>Every formula and concept is connected to real-world applications — from sports to space, cooking to construction.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     DASHBOARD
+     ═══════════════════════════════════════════════════ -->
+<section class="page-section" id="page-dashboard">
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-label">Main</div>
+                <button class="sidebar-item active" onclick="showDashboard('overview')" data-dash="overview">
+                    <span class="sidebar-item-icon">📊</span> Overview
+                </button>
+            </div>
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-section">
+                <div class="sidebar-label">Subjects</div>
+                <button class="sidebar-item" onclick="showDashboard('maths')" data-dash="maths">
+                    <span class="sidebar-item-icon">📐</span> Mathematics
+                </button>
+                <button class="sidebar-item" onclick="showDashboard('science')" data-dash="science">
+                    <span class="sidebar-item-icon">🔬</span> Science
+                </button>
+            </div>
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-section">
+                <div class="sidebar-label">Tools</div>
+                <button class="sidebar-item" onclick="showDashboard('experiments')" data-dash="experiments">
+                    <span class="sidebar-item-icon">⚗️</span> Experiments
+                </button>
+                <button class="sidebar-item" onclick="showDashboard('progress')" data-dash="progress">
+                    <span class="sidebar-item-icon">📈</span> Progress Tracker
+                </button>
+            </div>
+        </aside>
+
+        <!-- Sidebar Overlay (mobile) -->
+        <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- OVERVIEW -->
+            <div id="dash-overview">
+                <div class="content-header">
+                    <h1>Welcome back, Student! 👋</h1>
+                    <p>Pick a subject to start learning visually</p>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="progress-overview">
+                    <div class="progress-stat-card">
+                        <h4>Topics Explored</h4>
+                        <div class="big-number" id="statTopics">0</div>
+                    </div>
+                    <div class="progress-stat-card">
+                        <h4>Experiments Done</h4>
+                        <div class="big-number" id="statExperiments">0</div>
+                    </div>
+                    <div class="progress-stat-card">
+                        <h4>Quizzes Passed</h4>
+                        <div class="big-number" id="statQuizzes">0</div>
+                    </div>
+                    <div class="progress-stat-card">
+                        <h4>Overall Score</h4>
+                        <div class="big-number" id="statScore">0%</div>
+                    </div>
+                </div>
+
+                <!-- All Chapters -->
+                <div class="content-header" style="margin-top:1rem;">
+                    <h1 style="font-size:1.4rem;">All Chapters</h1>
+                    <p>Click any card to dive into interactive learning</p>
+                </div>
+                <div class="chapters-grid" id="allChaptersGrid">
+                    <!-- Filled by JS -->
+                </div>
+            </div>
+
+            <!-- MATHS -->
+            <div id="dash-maths" style="display:none;">
+                <div class="content-header">
+                    <h1>📐 Mathematics</h1>
+                    <p>Explore numbers, shapes, and patterns visually</p>
+                </div>
+                <div class="chapters-grid" id="mathsChaptersGrid"></div>
+            </div>
+
+            <!-- SCIENCE -->
+            <div id="dash-science" style="display:none;">
+                <div class="content-header">
+                    <h1>🔬 Science</h1>
+                    <p>Physics, Chemistry, and Biology — brought to life</p>
+                </div>
+                <div class="chapters-grid" id="scienceChaptersGrid"></div>
+            </div>
+
+            <!-- EXPERIMENTS -->
+            <div id="dash-experiments" style="display:none;">
+                <div class="content-header">
+                    <h1>⚗️ Experiments Lab</h1>
+                    <p>Hands-on simulations for every concept</p>
+                </div>
+                <div class="chapters-grid" id="experimentsGrid"></div>
+            </div>
+
+            <!-- PROGRESS -->
+            <div id="dash-progress" style="display:none;">
+                <div class="content-header">
+                    <h1>📈 Your Progress</h1>
+                    <p>Track your learning journey</p>
+                </div>
+                <div class="progress-overview" id="progressDetails">
+                    <!-- Filled by JS -->
+                </div>
+                <div id="progressChaptersList"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     MODULE PAGES (dynamically filled)
+     ═══════════════════════════════════════════════════ -->
+
+<!-- LINEAR EQUATIONS -->
+<section class="page-section" id="page-linear-equations">
+    <div class="module-layout">
+        <div class="module-container">
+            <div class="module-breadcrumb">
+                <a href="#dashboard" onclick="navigate('dashboard')">Dashboard</a> › 
+                <a href="#dashboard" onclick="showDashboard('maths'); navigate('dashboard');">Maths</a> › 
+                <span>Linear Equations</span>
+            </div>
+            <div class="module-header">
+                <h1>📈 Linear Equations — Graph Visualizer</h1>
+                <p>Plot y = mx + b and see how slope and intercept change the line</p>
+            </div>
+
+            <div class="real-life-box">
+                <h4>🌍 Real-life Example</h4>
+                <p>When you travel in a taxi, the fare = base fare + (rate × distance). That's a linear equation! The meter reading follows y = mx + b where m is the per-km rate and b is the base fare.</p>
+            </div>
+
+            <div class="experiment-card">
+                <div class="experiment-card-header">
+                    <h3>📊 Interactive Graph Plotter</h3>
+                    <span class="chapter-card-tag tag-interactive">Live</span>
+                </div>
+                <div class="experiment-canvas-wrapper">
+                    <canvas id="linearGraphCanvas"></canvas>
+                </div>
+                <div class="experiment-controls" style="flex-direction:column; align-items:stretch;">
+                    <div class="control-row">
+                        <span class="control-label">Slope (m)</span>
+                        <input type="range" class="control-slider" id="slopeSlider" min="-5" max="5" step="0.1" value="1">
+                        <span class="control-value" id="slopeValue">1.0</span>
+                    </div>
+                    <div class="control-row">
+                        <span class="control-label">Intercept (b)</span>
+                        <input type="range" class="control-slider" id="interceptSlider" min="-5" max="5" step="0.1" value="0">
+                        <span class="control-value" id="interceptValue">0.0</span>
+                    </div>
+                    <div class="formula-box" id="linearFormula">y = 1.0x + 0.0</div>
+                </div>
+            </div>
+
+            <div class="info-panel">
+                <h3>📝 Step-by-step</h3>
+                <div class="steps-list">
+                    <div class="step-item"><div class="step-number">1</div><div class="step-text"><strong>Slope (m)</strong> tells you how steep the line is. Positive = goes up, Negative = goes down.</div></div>
+                    <div class="step-item"><div class="step-number">2</div><div class="step-text"><strong>Y-intercept (b)</strong> is where the line crosses the Y-axis (when x = 0).</div></div>
+                    <div class="step-item"><div class="step-number">3</div><div class="step-text">Try changing both sliders to see how the line moves. A slope of 0 gives a horizontal line!</div></div>
+                </div>
+            </div>
+
+            <!-- Quiz -->
+            <div class="quiz-container" id="quiz-linear-equations">
+                <div class="quiz-score-bar">
+                    <span>📝 Quick Quiz</span>
+                    <span>Score: <strong id="quizScore-linear">0/0</strong></span>
+                </div>
+                <div id="quizContent-linear"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- GEOMETRY - 3D SHAPES -->
+<section class="page-section" id="page-geometry">
+    <div class="module-layout">
+        <div class="module-container">
+            <div class="module-breadcrumb">
+                <a href="#dashboard" onclick="navigate('dashboard')">Dashboard</a> › 
+                <a href="#dashboard" onclick="showDashboard('maths'); navigate('dashboard');">Maths</a> › 
+                <span>Geometry</span>
+            </div>
+            <div class="module-header">
+                <h1>🧊 3D Geometry — Shape Explorer</h1>
+                <p>Rotate, zoom, and explore 3D shapes — see volume and surface area formulas come alive</p>
+            </div>
+
+            <div class="real-life-box">
+                <h4>🌍 Real-life Example</h4>
+                <p>A football is a sphere, a can of Coke is a cylinder, an ice cream cone is a cone! Understanding 3D shapes helps architects, engineers, and game designers every day.</p>
+            </div>
+
+            <div class="experiment-card">
+                <div class="experiment-card-header">
+                    <h3>🧊 3D Shape Viewer</h3>
+                    <span class="chapter-card-tag tag-3d">Three.js</span>
+                </div>
+                <div class="experiment-canvas-wrapper">
+                    <div class="three-container" id="geometryThreeContainer"></div>
+                    <div class="three-label">🖱️ Drag to rotate • Scroll to zoom</div>
+                </div>
+                <div class="experiment-controls">
+                    <button class="exp-btn primary" onclick="changeShape('cube')" id="shapeBtn-cube">Cube</button>
+                    <button class="exp-btn" onclick="changeShape('sphere')" id="shapeBtn-sphere">Sphere</button>
+                    <button class="exp-btn" onclick="changeShape('cone')" id="shapeBtn-cone">Cone</button>
+                    <button class="exp-btn" onclick="changeShape('cylinder')" id="shapeBtn-cylinder">Cylinder</button>
+                    <button class="exp-btn" onclick="changeShape('torus')" id="shapeBtn-torus">Torus</button>
+                </div>
+            </div>
+
+            <div class="info-panel" id="shapeInfoPanel">
+                <h3>📐 Cube</h3>
+                <div class="formula-box" id="shapeFormula">Volume = a³ &nbsp;|&nbsp; Surface Area = 6a²</div>
+                <p class="mt-2" id="shapeDescription">A cube has 6 equal square faces, 12 edges, and 8 vertices. All edges are equal in length.</p>
+            </div>
+
+            <div class="quiz-container" id="quiz-geometry">
+                <div class="quiz-score-bar">
+                    <span>📝 Quick Quiz</span>
+                    <span>Score: <strong id="quizScore-geometry">0/0</strong></span>
+                </div>
+                <div id="quizContent-geometry"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- STATISTICS -->
+<section class="page-section" id="page-statistics">
+    <div class="module-layout">
+        <div class="module-container">
+            <div class="module-breadcrumb">
+                <a href="#dashboard" onclick="navigate('dashboard')">Dashboard</a> › 
+                <a href="#dashboard" onclick="showDashboard('maths'); navigate('dashboard');">Maths</a> › 
+                <span>Statistics</span>
+            </div>
+            <div class="module-header">
+                <h1>📊 Statistics — Interactive Charts</h1>
+                <p>Create bar charts, understand mean, median, and mode with live data</p>
+            </div>
+
+            <div class="real-life-box">
+                <h4>🌍 Real-life Example</h4>
+                <p>Cricket scores, class test marks, weather data — statistics helps us make sense of numbers around us. The average (mean) of your exam marks tells you your overall performance!</p>
+            </div>
+
+            <div class="experiment-card">
+                <div class="experiment-card-header">
+                    <h3>📊 Interactive Bar Chart</h3>
+                    <span class="chapter-card-tag tag-interactive">Live</span>
+                </div>
+                <div class="experiment-canvas-wrapper">
+                    <canvas id="statsCanvas"></canvas>
+                </div>
+                <div class="experiment-controls" style="flex-direction:column; align-items:stretch;">
+                    <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                        <button class="exp-btn primary" onclick="randomizeStats()">🎲 Randomize Data</button>
+                        <button class="exp-btn" onclick="addStatBar()">+ Add Bar</button>
+                        <button class="exp-btn" onclick="removeStatBar()">− Remove Bar</button>
+                    </div>
+                    <div class="results-panel" style="margin-top:0.5rem;">
+                        <div class="result-stat"><div class="result-stat-value" id="statMean">0</div><div class="result-stat-label">Mean</div></div>
+                        <div class="result-stat"><div class="result-stat-value" id="statMedian">0</div><div class="result-stat-label">Median</div></div>
+                        <div class="result-stat"><div class="result-stat-value" id="statMode">0</div><div class="result-stat-label">Mode</div></div>
+                        <div class="result-stat"><div class="result-stat-value" id="statRange">0</div><div class="result-stat-label">Range</div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-panel">
+                <h3>📝 Key Concepts</h3>
+                <div class="steps-list">
+                    <div class="step-item"><div class="step-number">1</div><div class="step-text"><strong>Mean</strong> = Sum of all values ÷ Number of values. It's the "average".</div></div>
+                    <div class="step-item"><div class="step-number">2</div><div class="step-text"><strong>Median</strong> = Middle value when data is sorted. For even count, average the two middle values.</div></div>
+                    <div class="step-item"><div class="step-number">3</div><div class="step-text"><strong>Mode</strong> = Most frequently occurring value. A dataset can have more than one mode.</div></div>
+                    <div class="step-item"><div class="step-number">4</div><div class="step-text"><strong>Range</strong> = Largest value − Smallest value. Measures the spread of data.</div></div>
+                </div>
+            </div>
+
+            <div class="quiz-container" id="quiz-statistics">
+                <div class="quiz-score-bar">
+                    <span>📝 Quick Quiz</span>
+                    <span>Score: <strong id="quizScore-statistics">0/0</strong></span>
+                </div>
+                <div id="quizContent-statistics"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- PROBABILITY -->
+<section class="page-section" id="page-probability">
+    <div class="module-layout">
+        <div class="module-container">
+            <div class="module-breadcrumb">
+                <a href="#dashboard" onclick="navigate('dashboard')">Dashboard</a> › 
+                <a href="#dashboard" onclick="showDashboard('maths'); navigate('dashboard');">Maths</a> › 
+                <span>Probability</span>
+            </div>
+            <div class="module-header">
+                <h1>🎲 Probability — Coin Toss Experiment</h1>
+                <p>Flip coins, track outcomes, and see probability in action</p>
+            </div>
+
+            <div class="real-life-box">
+                <h4>🌍 Real-life Example</h4>
+                <p>When a cricket captain tosses a coin, there's a 50% chance of heads and 50% chance of tails. Weather forecasts use probability too — "70% chance of rain" means out of 100 similar days, it rained on 70.</p>
+            </div>
+
+            <div class="experiment-card">
+                <div class="experiment-card-header">
+                    <h3>🪙 Coin Toss Simulator</h3>
+                    <span class="chapter-card-tag tag-interactive">Live Experiment</span>
+                </div>
+                <div style="padding:2rem; text-align:center;">
+                    <div class="coin" id="theCoin" onclick="tossCoin()">H</div>
+                    <p style="color:var(--text-muted); font-size:0.8rem; margin-top:0.5rem;">Click the coin or press the button</p>
+                    
+                    <div class="coin-result-bar">
+                        <div class="coin-result-item">
+                            <div class="count" style="color:var(--accent-success);" id="headsCount">0</div>
+                            <div class="label">Heads</div>
+                        </div>
+                        <div class="coin-result-item">
+                            <div class="count" style="color:var(--accent-primary);" id="tailsCount">0</div>
+                            <div class="label">Tails</div>
+                        </div>
+                        <div class="coin-result-item">
+                            <div class="count" style="color:var(--accent-warning);" id="totalTosses">0</div>
+                            <div class="label">Total</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="experiment-canvas-wrapper" style="min-height:250px;">
+                    <canvas id="coinChartCanvas"></canvas>
+                </div>
+                <div class="experiment-controls">
+                    <button class="exp-btn primary" onclick="tossCoin()">🪙 Toss Coin</button>
+                    <button class="exp-btn" onclick="tossMultiple(10)">Toss 10x</button>
+                    <button class="exp-btn" onclick="tossMultiple(100)">Toss 100x</button>
+                    <button class="exp-btn" onclick="resetCoinToss()">🔄 Reset</button>
+                </div>
+            </div>
+
+            <div class="info-panel">
+                <h3>📝 Understanding Probability</h3>
+                <div class="formula-box">P(Event) = Favorable Outcomes / Total Outcomes</div>
+                <div class="steps-list">
+                    <div class="step-item"><div class="step-number">1</div><div class="step-text">For a fair coin: P(Heads) = 1/2 = 0.5 = 50%</div></div>
+                    <div class="step-item"><div class="step-number">2</div><div class="step-text">More tosses → Results get closer to 50/50 (Law of Large Numbers)</div></div>
+                    <div class="step-item"><div class="step-number">3</div><div class="step-text">Try tossing 100 times and see how close the ratio gets to 50%!</div></div>
+                </div>
+            </div>
+
+            <div class="quiz-container" id="quiz-probability">
+                <div class="quiz-score-bar">
+                    <span>📝 Quick Quiz</span>
+                    <span>Score: <strong id="quizScore-probability">0/0</strong></span>
+                </div>
+                <div id="quizContent-probability"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- MOTION -->
+<section class="page-section" id="page-motion">
+    <div class="module-layout">
+        <div class="module-container">
+            <div class="module-breadcrumb">
+                <a href="#dashboard" onclick="navigate('dashboard')">Dashboard</a> › 
+                <a href="#dashboard" onclick="showDashboard('science'); navigate('dashboard');">Science</a> › 
+                <span>Motion</span>
+            </div>
+            <div class="module-header">
+                <h1>🚀 Motion — Object Simulation</h1>
+                <p>Watch how velocity and acceleration affect a moving object</p>
+            </div>
+
+            <div class="real-life-box">
+                <h4>🌍 Real-life Example</h4>
+                <p>A car speeding up from a traffic light, a ball rolling down a slope, a rocket launching into space — all are examples of motion with acceleration!</p>
+            </div>
+
+            <div class="experiment-card">
+                <div class="experiment-card-header">
+                    <h3>🏎️ Motion Simulator</h3>
+                    <span class="chapter-card-tag tag-interactive">Physics Simulation</span>
+                </div>
+                <div class="experiment-canvas-wrapper">
+                    <canvas id="motionCanvas"></canvas>
+                </div>
+                <div class="experiment-controls" style="flex-direction:column; align-items:stretch;">
+                    <div class="control-row">
+                        <span class="control-label">Velocity</span>
+                        <input type="range" class="control-slider" id="velocitySlider" min="0" max="10" step="0.5" value="2">
+                        <span class="control-value" id="velocityValue">2.0 m/s</span>
+                    </div>
+                    <div class="control-row">
+                        <span class="control-label">Acceleration</span>
+                        <input type="range" class="control-slider" id="accelSlider" min="-2" max="5" step="0.1" value="0.5">
+                        <span class="control-value" id="accelValue">0.5 m/s²</span>
+                    </div>
+                    <div style="display:flex; gap:0.75rem; margin-top:0.5rem;">
+                        <button class="exp-btn primary" onclick="toggleMotion()" id="motionPlayBtn">▶ Play</button>
+                        <button class="exp-btn" onclick="resetMotion()">🔄 Reset</button>
+                    </div>
+                    <div class="results-panel">
+                        <div class="result-stat"><div class="result-stat-value" id="motionTime">0.0</div><div class="result-stat-label">Time (s)</div></div>
+                        <div class="result-stat"><div class="result-stat-value" id="motionDist">0.0</div><div class="result-stat-label">Distance (m)</div></div>
+                        <div class="result-stat"><div class="result-stat-value" id="motionVel">2.0</div><div class="result-stat-label">Current Vel</div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-panel">
+                <h3>📝 Equations of Motion</h3>
+                <div class="formula-box">v = u + at &nbsp;&nbsp;|&nbsp;&nbsp; s = ut + ½at² &nbsp;&nbsp;|&nbsp;&nbsp; v² = u² + 2as</div>
+                <div class="steps-list">
+                    <div class="step-item"><div class="step-number">1</div><div class="step-text"><strong>u</strong> = initial velocity, <strong>v</strong> = final velocity, <strong>a</strong> = acceleration, <strong>t</strong> = time, <strong>s</strong> = distance</div></div>
+                    <div class="step-item"><div class="step-number">2</div><div class="step-text">Positive acceleration → object speeds up. Negative → it slows down (deceleration).</div></div>
+                    <div class="step-item"><div class="step-number">3</div><div class="step-text">Set acceleration to 0 to see uniform motion (constant speed, no speeding up).</div></div>
+                </div>
+            </div>
+
+            <div class="quiz-container" id="quiz-motion">
+                <div class="quiz-score-bar"><span>📝 Quick Quiz</span><span>Score: <strong id="quizScore-motion">0/0</strong></span></div>
+                <div id="quizContent-motion"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FORCE -->
+<section class="page-section" id="page-force">
+    <div class="module-layout">
+        <div class="module-container">
+            <div class="module-breadcrumb">
+                <a href="#dashboard" onclick="navigate('dashboard')">Dashboard</a> › 
+                <a href="#dashboard" onclick="showDashboard('science'); navigate('dashboard');">Science</a> › 
+                <span>Force</span>
+            </div>
+            <div class="module-header">
+                <h1>💪 Force — Push & Pull</h1>
+                <p>Apply force to a box and see Newton's Second Law (F = ma) in real time</p>
+            </div>
+
+            <div class="real-life-box">
+                <h4>🌍 Real-life Example</h4>
+                <p>Pushing a shopping cart, kicking a football, pulling a door — every push or pull is a force! Heavier objects need more force to accelerate (that's why trucks are harder to push than bicycles).</p>
+            </div>
+
+            <div class="experiment-card">
+                <div class="experiment-card-header">
+                    <h3>📦 Force Simulator (F = ma)</h3>
+                    <span class="chapter-card-tag tag-interactive">Newton's Law</span>
+                </div>
+                <div class="experiment-canvas-wrapper">
+                    <canvas id="forceCanvas"></canvas>
+                </div>
+                <div class="experiment-controls" style="flex-direction:column; align-items:stretch;">
+                    <div class="control-row">
+                        <span class="control-label">Force (N)</span>
+                        <input type="range" class="control-slider" id="forceSlider" min="0" max="50" step="1" value="10">
+                        <span class="control-value" id="forceValue">10 N</span>
+                    </div>
+                    <div class="control-row">
+                        <span class="control-label">Mass (kg)</span>
+                        <input type="range" class="control-slider" id="massSlider" min="1" max="20" step="1" value="5">
+                        <span class="control-value" id="massValue">5 kg</span>
+                    </div>
+                    <div style="display:flex; gap:0.75rem; margin-top:0.5rem;">
+                        <button class="exp-btn primary" onclick="toggleForce()" id="forcePlayBtn">▶ Apply Force</button>
+                        <button class="exp-btn" onclick="resetForce()">🔄 Reset</button>
+                    </div>
+                    <div class="formula-box" id="forceFormula">F = 5 × a → a = 2.00 m/s²</div>
+                </div>
+            </div>
+
+            <div class="info-panel">
+                <h3>📝 Newton's Second Law</h3>
+                <div class="formula-box">F = m × a &nbsp;&nbsp;→&nbsp;&nbsp; a = F / m</div>
+                <div class="steps-list">
+                    <div class="step-item"><div class="step-number">1</div><div class="step-text">More force = more acceleration (if mass stays the same)</div></div>
+                    <div class="step-item"><div class="step-number">2</div><div class="step-text">More mass = less acceleration (if force stays the same)</div></div>
+                    <div class="step-item"><div class="step-number">3</div><div class="step-text">Try: Set mass to 1 kg & force to 10 N. Acceleration = 10 m/s²!</div></div>
+                </div>
+            </div>
+
+            <div class="quiz-container" id="quiz-force">
+                <div class="quiz-score-bar"><span>📝 Quick Quiz</span><span>Score: <strong id="quizScore-force">0/0</strong></span></div>
+                <div id="quizContent-force"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ATOMS -->
+<section class="page-section" id="page-atoms">
+    <div class="module-layout">
+        <div class="module-container">
+            <div class="module-breadcrumb">
+                <a href="#dashboard" onclick="navigate('dashboard')">Dashboard</a> › 
+                <a href="#dashboard" onclick="showDashboard('science'); navigate('dashboard');">Science</a> › 
+                <span>Atoms</span>
+            </div>
+            <div class="module-header">
+                <h1>⚛️ Atoms — 3D Atomic Model</h1>
+                <p>Explore the structure of an atom with orbiting electrons in 3D</p>
+            </div>
+
+            <div class="real-life-box">
+                <h4>🌍 Real-life Example</h4>
+                <p>Everything around you — water, air, your phone, your body — is made of atoms! An atom is so small that millions of them fit on the tip of a needle.</p>
+            </div>
+
+            <div class="experiment-card">
+                <div class="experiment-card-header">
+                    <h3>⚛️ 3D Atom Viewer</h3>
+                    <span class="chapter-card-tag tag-3d">Three.js</span>
+                </div>
+                <div class="experiment-canvas-wrapper">
+                    <div class="three-container" id="atomThreeContainer"></div>
+                    <div class="three-label">🖱️ Drag to rotate • Scroll to zoom</div>
+                </div>
+                <div class="experiment-controls">
+                    <button class="exp-btn primary" onclick="changeAtom('carbon')" id="atomBtn-carbon">Carbon (6)</button>
+                    <button class="exp-btn" onclick="changeAtom('oxygen')" id="atomBtn-oxygen">Oxygen (8)</button>
+                    <button class="exp-btn" onclick="changeAtom('sodium')" id="atomBtn-sodium">Sodium (11)</button>
+                    <button class="exp-btn" onclick="changeAtom('neon')" id="atomBtn-neon">Neon (10)</button>
+                </div>
+            </div>
+
+            <div class="info-panel" id="atomInfoPanel">
+                <h3>⚛️ Carbon Atom</h3>
+                <p id="atomDescription">Carbon has 6 protons, 6 neutrons, and 6 electrons. Electrons orbit in 2 shells: 2 in the first shell and 4 in the second. Carbon is the basis of all organic life!</p>
+                <div class="formula-box" id="atomConfig">Electronic Configuration: 2, 4</div>
+            </div>
+
+            <div class="quiz-container" id="quiz-atoms">
+                <div class="quiz-score-bar"><span>📝 Quick Quiz</span><span>Score: <strong id="quizScore-atoms">0/0</strong></span></div>
+                <div id="quizContent-atoms"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CHEMICAL REACTIONS -->
+<section class="page-section" id="page-reactions">
+    <div class="module-layout">
+        <div class="module-container">
+            <div class="module-breadcrumb">
+                <a href="#dashboard" onclick="navigate('dashboard')">Dashboard</a> › 
+                <a href="#dashboard" onclick="showDashboard('science'); navigate('dashboard');">Science</a> › 
+                <span>Chemical Reactions</span>
+            </div>
+            <div class="module-header">
+                <h1>🧪 Chemical Reactions — Animated Experiments</h1>
+                <p>Watch molecules collide, break, and form new substances</p>
+            </div>
+
+            <div class="real-life-box">
+                <h4>🌍 Real-life Example</h4>
+                <p>Rusting of iron, cooking food, burning a candle, baking a cake — all are chemical reactions! New substances are formed with different properties.</p>
+            </div>
+
+            <div class="experiment-card">
+                <div class="experiment-card-header">
+                    <h3>⚗️ Reaction Animator</h3>
+                    <span class="chapter-card-tag tag-interactive">Simulation</span>
+                </div>
+                <div class="experiment-canvas-wrapper">
+                    <canvas id="reactionCanvas"></canvas>
+                </div>
+                <div class="experiment-controls">
+                    <button class="exp-btn primary" onclick="playReactionAnim()" id="reactionPlayBtn">▶ Play Reaction</button>
+                    <button class="exp-btn" onclick="resetReactionAnim()">🔄 Reset</button>
+                    <select id="reactionSelect" class="exp-btn" onchange="selectReaction(this.value)" style="cursor:pointer;">
+                        <option value="combustion">🔥 Combustion of Methane</option>
+                        <option value="water">💧 Formation of Water</option>
+                        <option value="rust">🟤 Rusting of Iron</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="info-panel" id="reactionInfo">
+                <h3>🔥 Combustion of Methane</h3>
+                <div class="formula-box" id="reactionFormula">CH₄ + 2O₂ → CO₂ + 2H₂O + Energy</div>
+                <p class="mt-2" id="reactionDesc">Methane (natural gas) reacts with oxygen to produce carbon dioxide, water, and energy (heat + light). This is an exothermic reaction used in gas stoves and heaters.</p>
+            </div>
+
+            <div class="quiz-container" id="quiz-reactions">
+                <div class="quiz-score-bar"><span>📝 Quick Quiz</span><span>Score: <strong id="quizScore-reactions">0/0</strong></span></div>
+                <div id="quizContent-reactions"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CELL STRUCTURE -->
+<section class="page-section" id="page-cell">
+    <div class="module-layout">
+        <div class="module-container">
+            <div class="module-breadcrumb">
+                <a href="#dashboard" onclick="navigate('dashboard')">Dashboard</a> › 
+                <a href="#dashboard" onclick="showDashboard('science'); navigate('dashboard');">Science</a> › 
+                <span>Cell Structure</span>
+            </div>
+            <div class="module-header">
+                <h1>🔬 Cell Structure — 3D Cell Model</h1>
+                <p>Explore the fundamental unit of life in interactive 3D</p>
+            </div>
+
+            <div class="real-life-box">
+                <h4>🌍 Real-life Example</h4>
+                <p>Your body has about 37 trillion cells! Each cell is like a tiny factory — the nucleus is the "brain", mitochondria are "power plants", and the cell membrane is the "security gate".</p>
+            </div>
+
+            <div class="experiment-card">
+                <div class="experiment-card-header">
+                    <h3>🔬 3D Animal Cell</h3>
+                    <span class="chapter-card-tag tag-3d">Three.js</span>
+                </div>
+                <div class="experiment-canvas-wrapper">
+                    <div class="three-container" id="cellThreeContainer"></div>
+                    <div class="three-label">🖱️ Drag to rotate • Scroll to zoom</div>
+                </div>
+                <div class="experiment-controls">
+                    <button class="exp-btn primary" onclick="highlightOrganelle('nucleus')">Nucleus</button>
+                    <button class="exp-btn" onclick="highlightOrganelle('mitochondria')">Mitochondria</button>
+                    <button class="exp-btn" onclick="highlightOrganelle('er')">ER</button>
+                    <button class="exp-btn" onclick="highlightOrganelle('membrane')">Cell Membrane</button>
+                </div>
+            </div>
+
+            <div class="info-panel" id="organelleInfo">
+                <h3 id="organelleName">🧬 Nucleus</h3>
+                <p id="organelleDesc">The nucleus is the control center of the cell. It contains DNA (genetic material) that controls cell activities and reproduction. It's surrounded by a nuclear membrane with pores.</p>
+            </div>
+
+            <div class="quiz-container" id="quiz-cell">
+                <div class="quiz-score-bar"><span>📝 Quick Quiz</span><span>Score: <strong id="quizScore-cell">0/0</strong></span></div>
+                <div id="quizContent-cell"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- TISSUES -->
+<section class="page-section" id="page-tissues">
+    <div class="module-layout">
+        <div class="module-container">
+            <div class="module-breadcrumb">
+                <a href="#dashboard" onclick="navigate('dashboard')">Dashboard</a> › 
+                <a href="#dashboard" onclick="showDashboard('science'); navigate('dashboard');">Science</a> › 
+                <span>Tissues</span>
+            </div>
+            <div class="module-header">
+                <h1>🧫 Tissues — Interactive Diagrams</h1>
+                <p>Explore the four types of animal tissues and their functions</p>
+            </div>
+
+            <div class="real-life-box">
+                <h4>🌍 Real-life Example</h4>
+                <p>Your skin is made of epithelial tissue, your muscles are muscular tissue, your brain and nerves are nervous tissue, and your blood is a type of connective tissue!</p>
+            </div>
+
+            <div class="tissue-grid" id="tissueGrid">
+                <div class="tissue-item active" onclick="showTissue('epithelial')">
+                    <div class="tissue-item-icon">🧱</div>
+                    <h4>Epithelial</h4>
+                    <p>Covers body surfaces</p>
+                </div>
+                <div class="tissue-item" onclick="showTissue('connective')">
+                    <div class="tissue-item-icon">🩸</div>
+                    <h4>Connective</h4>
+                    <p>Binds & supports</p>
+                </div>
+                <div class="tissue-item" onclick="showTissue('muscular')">
+                    <div class="tissue-item-icon">💪</div>
+                    <h4>Muscular</h4>
+                    <p>Movement & force</p>
+                </div>
+                <div class="tissue-item" onclick="showTissue('nervous')">
+                    <div class="tissue-item-icon">🧠</div>
+                    <h4>Nervous</h4>
+                    <p>Transmits signals</p>
+                </div>
+            </div>
+
+            <div class="experiment-card" style="margin-top:1.5rem;">
+                <div class="experiment-card-header">
+                    <h3 id="tissueDiagramTitle">🧱 Epithelial Tissue</h3>
+                </div>
+                <div class="experiment-canvas-wrapper" style="min-height:300px;">
+                    <canvas id="tissueCanvas"></canvas>
+                </div>
+            </div>
+
+            <div class="info-panel" id="tissueDetail">
+                <h3 id="tissueDetailTitle">🧱 Epithelial Tissue</h3>
+                <p id="tissueDetailDesc">Epithelial tissue forms a protective covering over body surfaces and lines organs. Cells are tightly packed with minimal intercellular space. Found in skin, lining of mouth, blood vessels, and lung alveoli.</p>
+                <div class="mt-2">
+                    <strong style="font-size:0.85rem; color:var(--text-secondary);">Functions:</strong>
+                    <ul style="margin-top:0.3rem;">
+                        <li id="tissueFunc1">Protection from injury &amp; dehydration</li>
+                        <li id="tissueFunc2">Absorption (intestines)</li>
+                        <li id="tissueFunc3">Secretion (glands)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="quiz-container" id="quiz-tissues">
+                <div class="quiz-score-bar"><span>📝 Quick Quiz</span><span>Score: <strong id="quizScore-tissues">0/0</strong></span></div>
+                <div id="quizContent-tissues"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     SCRIPTS
+     ═══════════════════════════════════════════════════ -->
+<script src="/static/js/learn-three.js"></script>
+<script src="/static/js/learn-canvas.js"></script>
+<script src="/static/js/learn-app.js"></script>
+
+</body>
+</html>

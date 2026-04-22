@@ -79,6 +79,10 @@ def index():
 def demo():
     return render_template('demo.html')
 
+@app.route('/learn')
+def learn():
+    return render_template('learn.html')
+
 # ─── API Routes ──────────────────────────────────────────────────────────────
 
 @app.route('/api/subjects', methods=['GET'])
