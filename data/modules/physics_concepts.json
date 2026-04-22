@@ -1,0 +1,872 @@
+{
+  "module_id": "physics_concepts",
+  "module_title": "Physics: Motion, Force, Waves & Fields",
+  "version": "1.0.0",
+  "prerequisites": [],
+  "topics": [
+    {
+      "topic_id": "kinematics",
+      "title": "Motion & Kinematics",
+      "order": 1,
+      "explanation": {
+        "simple": "Kinematics is the study of how things move without worrying about what causes the motion. We describe motion using four quantities: displacement (how far and in what direction), velocity (how fast and in what direction), acceleration (how velocity changes), and time. The three equations of motion connect these quantities.",
+        "advanced": "Kinematics describes motion using displacement (s), velocity (v = ds/dt), and acceleration (a = dv/dt = d²s/dt²) as functions of time. For uniform acceleration, three kinematic equations relate these quantities. In vector form, each component (x, y, z) can be treated independently — this is crucial for projectile motion, where horizontal motion is uniform and vertical motion is uniformly accelerated. The kinematic equations are derivable from integration of a = constant."
+      },
+      "formulas": [
+        {
+          "name": "First Equation of Motion",
+          "latex": "v = u + at",
+          "variables": {
+            "v": {"description": "Final velocity", "unit": "m/s"},
+            "u": {"description": "Initial velocity", "unit": "m/s"},
+            "a": {"description": "Acceleration", "unit": "m/s²"},
+            "t": {"description": "Time", "unit": "s"}
+          }
+        },
+        {
+          "name": "Second Equation of Motion",
+          "latex": "s = ut + \\frac{1}{2}at^2",
+          "variables": {
+            "s": {"description": "Displacement", "unit": "m"}
+          }
+        },
+        {
+          "name": "Third Equation of Motion",
+          "latex": "v^2 = u^2 + 2as",
+          "variables": {}
+        },
+        {
+          "name": "Average Velocity",
+          "latex": "v_{avg} = \\frac{s}{t} = \\frac{u + v}{2}",
+          "variables": {}
+        },
+        {
+          "name": "Projectile — Maximum Height",
+          "latex": "H = \\frac{u^2 \\sin^2\\theta}{2g}",
+          "variables": {
+            "θ": {"description": "Launch angle", "unit": "°"},
+            "g": {"description": "Gravitational acceleration", "unit": "m/s²"}
+          }
+        },
+        {
+          "name": "Projectile — Range",
+          "latex": "R = \\frac{u^2 \\sin 2\\theta}{g}",
+          "variables": {}
+        },
+        {
+          "name": "Projectile — Time of Flight",
+          "latex": "T = \\frac{2u \\sin\\theta}{g}",
+          "variables": {}
+        }
+      ],
+      "visualization_3d": {
+        "scene_type": "motion_simulation",
+        "objects": [
+          {
+            "id": "ground",
+            "type": "plane",
+            "width": 30,
+            "height": 10,
+            "color": "#1a1a2e",
+            "rotation": {"x": -90, "y": 0, "z": 0},
+            "grid_overlay": true
+          },
+          {
+            "id": "projectile_ball",
+            "type": "sphere",
+            "radius": 0.3,
+            "color": "#e17055",
+            "position_dynamic": "projectile_physics(u, θ, t)",
+            "material": "phong",
+            "trail": {
+              "enabled": true,
+              "color": "#e17055",
+              "opacity": 0.4,
+              "max_points": 300
+            }
+          },
+          {
+            "id": "velocity_vector",
+            "type": "arrow_helper",
+            "origin": "projectile_ball.position",
+            "direction_dynamic": "velocity_direction(t)",
+            "length_dynamic": "velocity_magnitude(t) * 0.15",
+            "color": "#74b9ff",
+            "head_length": 0.2
+          },
+          {
+            "id": "vx_component",
+            "type": "arrow_helper",
+            "origin": "projectile_ball.position",
+            "direction": {"x": 1, "y": 0, "z": 0},
+            "length_dynamic": "vx * 0.15",
+            "color": "#55efc4"
+          },
+          {
+            "id": "vy_component",
+            "type": "arrow_helper",
+            "origin": "projectile_ball.position",
+            "direction": {"x": 0, "y": 1, "z": 0},
+            "length_dynamic": "vy * 0.15",
+            "color": "#fd79a8"
+          },
+          {
+            "id": "ideal_parabola",
+            "type": "curve",
+            "equation": "parametric_projectile(u, θ)",
+            "color": "#636e72",
+            "opacity": 0.3,
+            "style": "dashed"
+          },
+          {
+            "id": "height_marker",
+            "type": "dashed_line",
+            "start": "projectile_ball.position",
+            "end": {"x": "ball.x", "y": 0, "z": "ball.z"},
+            "color": "#fdcb6e",
+            "label_dynamic": "h = y m"
+          },
+          {
+            "id": "range_marker",
+            "type": "dashed_line",
+            "start": {"x": 0, "y": 0, "z": 0},
+            "end": {"x": "ball.x", "y": 0, "z": 0},
+            "color": "#a29bfe",
+            "label_dynamic": "R = x m"
+          }
+        ],
+        "animations": [
+          {
+            "id": "projectile_flight",
+            "type": "physics_projectile",
+            "initial_velocity": "slider_velocity",
+            "angle": "slider_angle",
+            "gravity": 9.8,
+            "trigger": "btn_launch"
+          }
+        ],
+        "camera": {
+          "position": {"x": 0, "y": 5, "z": 15},
+          "look_at": {"x": 5, "y": 3, "z": 0},
+          "fov": 50
+        },
+        "lighting": [
+          {"type": "ambient", "color": "#ffffff", "intensity": 0.5},
+          {"type": "directional", "color": "#ffffff", "intensity": 0.6, "position": {"x": 5, "y": 10, "z": 5}}
+        ]
+      },
+      "interaction": {
+        "sliders": [
+          {"id": "slider_velocity", "label": "Initial Velocity (m/s)", "min": 5, "max": 50, "step": 1, "default": 20, "unit": "m/s"},
+          {"id": "slider_angle", "label": "Launch Angle (°)", "min": 5, "max": 85, "step": 1, "default": 45, "unit": "°"},
+          {"id": "slider_gravity", "label": "Gravity (m/s²)", "min": 1, "max": 20, "step": 0.1, "default": 9.8, "unit": "m/s²"}
+        ],
+        "computed_displays": [
+          {"id": "max_height", "label": "Max Height", "formula": "u²sin²θ / (2g)", "unit": "m", "highlight_color": "#fd79a8"},
+          {"id": "range", "label": "Range", "formula": "u²sin2θ / g", "unit": "m", "highlight_color": "#a29bfe"},
+          {"id": "time_of_flight", "label": "Time of Flight", "formula": "2u sinθ / g", "unit": "s", "highlight_color": "#fdcb6e"},
+          {"id": "current_velocity", "label": "Current Speed", "unit": "m/s", "highlight_color": "#74b9ff"}
+        ],
+        "buttons": [
+          {"id": "btn_launch", "label": "🚀 Launch", "action": "start_projectile"},
+          {"id": "btn_pause", "label": "⏸ Pause", "action": "pause_simulation"},
+          {"id": "btn_slow_mo", "label": "🐢 Slow Motion", "action": "set_speed_0.25"},
+          {"id": "btn_reset", "label": "↺ Reset", "action": "reset_projectile"}
+        ],
+        "graph": {
+          "type": "multi_panel",
+          "panels": [
+            {"title": "Height vs Time", "x": "t", "y": "h", "color": "#fd79a8"},
+            {"title": "Velocity vs Time", "x": "t", "y": "|v|", "color": "#74b9ff"},
+            {"title": "Trajectory (y vs x)", "x": "x", "y": "y", "color": "#e17055"}
+          ]
+        }
+      },
+      "real_world_examples": [
+        {
+          "title": "Basketball Shot",
+          "description": "A basketball thrown at 8 m/s at 52° has a range of about 6.4 m and reaches a max height of 2.5 m. Players intuitively optimize launch angle for the basket distance.",
+          "calculation": "R = 64 × sin(104°)/9.8 ≈ 6.4 m; H = 64 × sin²(52°)/(2×9.8) ≈ 2.5 m"
+        },
+        {
+          "title": "Sprinter's Race",
+          "description": "Usain Bolt accelerated from 0 to ~12.2 m/s in the first 4 seconds of his 100m record. Average acceleration ≈ 3.05 m/s². Distance in that phase: s = ½ × 3.05 × 16 ≈ 24.4 m.",
+          "calculation": "a = Δv/Δt = 12.2/4 = 3.05 m/s²; s = ½at² = 0.5 × 3.05 × 16 ≈ 24.4 m"
+        }
+      ],
+      "quiz": {
+        "mcq": [
+          {
+            "question": "A car accelerates from rest at 2 m/s². Its velocity after 5 seconds is:",
+            "options": ["5 m/s", "10 m/s", "20 m/s", "25 m/s"],
+            "correct": 1,
+            "explanation": "v = u + at = 0 + 2 × 5 = 10 m/s.",
+            "difficulty": "easy"
+          },
+          {
+            "question": "For maximum range of a projectile (no air resistance), the launch angle should be:",
+            "options": ["30°", "45°", "60°", "90°"],
+            "correct": 1,
+            "explanation": "R = u²sin2θ/g is maximum when sin2θ = 1, i.e., 2θ = 90°, so θ = 45°.",
+            "difficulty": "medium"
+          },
+          {
+            "question": "In projectile motion, horizontal velocity remains constant because:",
+            "options": ["Gravity is zero", "There is no horizontal force", "Mass is constant", "Time is constant"],
+            "correct": 1,
+            "explanation": "Gravity acts only vertically. With no horizontal force (ignoring air resistance), horizontal velocity stays constant (Newton's 1st law).",
+            "difficulty": "medium"
+          },
+          {
+            "question": "Distance covered in the nth second of uniform acceleration from rest is:",
+            "options": ["½a(2n-1)", "½an²", "an", "½a(n²-1)"],
+            "correct": 0,
+            "explanation": "Sₙ = u + a(n - ½) = 0 + a(n - 0.5) = a(2n-1)/2. This comes from s(n) - s(n-1).",
+            "difficulty": "hard"
+          }
+        ],
+        "short_answer": [
+          {
+            "question": "A stone is thrown upward with velocity 20 m/s. Find (a) max height, (b) time to reach the top, (c) total time in air. (g = 10 m/s²)",
+            "answer": "(a) H = u²/(2g) = 400/20 = 20 m. (b) t_up = u/g = 20/10 = 2 s. (c) T_total = 2u/g = 40/10 = 4 s.",
+            "hint": "At max height, v = 0. Use v = u - gt for time and v² = u² - 2gs for height."
+          }
+        ]
+      }
+    },
+    {
+      "topic_id": "newtons_laws",
+      "title": "Force & Newton's Laws",
+      "order": 2,
+      "explanation": {
+        "simple": "Force is a push or pull that can change an object's motion. Newton gave us three laws: (1) Objects stay at rest or in motion unless a force acts on them (inertia). (2) F = ma — force equals mass times acceleration. (3) For every action, there is an equal and opposite reaction. These three laws explain almost all everyday motion!",
+        "advanced": "Newton's laws form the foundation of classical mechanics. The first law defines inertial frames and the concept of net force. The second law, F_net = dp/dt (generalized form), relates force to rate of change of momentum; for constant mass, F = ma. The third law establishes force pairs — the forces are equal, opposite, and act on different bodies. Free body diagrams isolate a system and inventory all forces. Applications include friction (f = μN), tension, normal force, and gravitational force (w = mg). These laws are valid in inertial reference frames and break down at relativistic speeds or quantum scales."
+      },
+      "formulas": [
+        {
+          "name": "Newton's Second Law",
+          "latex": "\\vec{F}_{net} = m\\vec{a}",
+          "variables": {
+            "F_net": {"description": "Net (resultant) force", "unit": "N (Newtons)"},
+            "m": {"description": "Mass", "unit": "kg"},
+            "a": {"description": "Acceleration", "unit": "m/s²"}
+          }
+        },
+        {
+          "name": "Weight",
+          "latex": "W = mg",
+          "variables": {
+            "W": {"description": "Weight (gravitational force)", "unit": "N"},
+            "g": {"description": "Gravitational acceleration ≈ 9.8 m/s²", "unit": "m/s²"}
+          }
+        },
+        {
+          "name": "Friction",
+          "latex": "f = \\mu N",
+          "variables": {
+            "f": {"description": "Friction force", "unit": "N"},
+            "μ": {"description": "Coefficient of friction (static or kinetic)", "unit": ""},
+            "N": {"description": "Normal (contact) force", "unit": "N"}
+          }
+        },
+        {
+          "name": "Momentum",
+          "latex": "\\vec{p} = m\\vec{v}",
+          "variables": {
+            "p": {"description": "Linear momentum", "unit": "kg·m/s"}
+          }
+        },
+        {
+          "name": "Impulse",
+          "latex": "J = F \\cdot \\Delta t = \\Delta p",
+          "variables": {
+            "J": {"description": "Impulse", "unit": "N·s"}
+          }
+        },
+        {
+          "name": "Newton's Law of Gravitation",
+          "latex": "F = \\frac{Gm_1 m_2}{r^2}",
+          "variables": {
+            "G": {"description": "Gravitational constant = 6.674 × 10⁻¹¹ N·m²/kg²", "unit": "N·m²/kg²"},
+            "r": {"description": "Distance between centers of mass", "unit": "m"}
+          }
+        }
+      ],
+      "visualization_3d": {
+        "scene_type": "force_simulation",
+        "objects": [
+          {
+            "id": "block",
+            "type": "box",
+            "width": 1.5,
+            "height": 1,
+            "depth": 1,
+            "color": "#6c5ce7",
+            "position_dynamic": "physics_force_position",
+            "material": "phong"
+          },
+          {
+            "id": "surface",
+            "type": "plane",
+            "width": 20,
+            "height": 6,
+            "color": "#2d3436",
+            "rotation": {"x": -90, "y": 0, "z": 0}
+          },
+          {
+            "id": "force_arrow_applied",
+            "type": "arrow_helper",
+            "origin": "block.center",
+            "direction_dynamic": "applied_force_direction",
+            "length_dynamic": "F_applied * 0.1",
+            "color": "#e17055",
+            "label": "F_applied"
+          },
+          {
+            "id": "force_arrow_friction",
+            "type": "arrow_helper",
+            "origin": "block.center",
+            "direction_dynamic": "opposite_to_motion",
+            "length_dynamic": "f_friction * 0.1",
+            "color": "#fdcb6e",
+            "label": "f (friction)"
+          },
+          {
+            "id": "force_arrow_weight",
+            "type": "arrow_helper",
+            "origin": "block.center",
+            "direction": {"x": 0, "y": -1, "z": 0},
+            "length_dynamic": "weight * 0.05",
+            "color": "#ff7675",
+            "label": "W = mg"
+          },
+          {
+            "id": "force_arrow_normal",
+            "type": "arrow_helper",
+            "origin": "block.top_center",
+            "direction": {"x": 0, "y": 1, "z": 0},
+            "length_dynamic": "normal_force * 0.05",
+            "color": "#55efc4",
+            "label": "N"
+          },
+          {
+            "id": "net_force_arrow",
+            "type": "arrow_helper",
+            "origin": "block.center",
+            "direction_dynamic": "net_force_direction",
+            "length_dynamic": "F_net * 0.1",
+            "color": "#a29bfe",
+            "label": "F_net",
+            "style": "thick"
+          },
+          {
+            "id": "acceleration_arrow",
+            "type": "arrow_helper",
+            "origin": {"x": "block.x", "y": "block.y + 1.5", "z": 0},
+            "direction_dynamic": "acceleration_direction",
+            "length_dynamic": "acceleration * 0.2",
+            "color": "#00cec9",
+            "label": "a"
+          }
+        ],
+        "animations": [
+          {
+            "id": "block_motion",
+            "type": "physics_newtons_law",
+            "applied_force": "slider_force",
+            "mass": "slider_mass",
+            "friction_mu": "slider_friction",
+            "gravity": 9.8
+          }
+        ],
+        "camera": {
+          "position": {"x": 0, "y": 3, "z": 8},
+          "look_at": {"x": 0, "y": 0.5, "z": 0},
+          "fov": 50
+        }
+      },
+      "interaction": {
+        "sliders": [
+          {"id": "slider_force", "label": "Applied Force (N)", "min": 0, "max": 50, "step": 0.5, "default": 10, "unit": "N"},
+          {"id": "slider_mass", "label": "Mass (kg)", "min": 0.5, "max": 20, "step": 0.5, "default": 5, "unit": "kg"},
+          {"id": "slider_friction", "label": "Friction Coefficient (μ)", "min": 0, "max": 1, "step": 0.05, "default": 0.3, "unit": ""},
+          {"id": "slider_force_angle", "label": "Force Angle (°)", "min": -45, "max": 45, "step": 1, "default": 0, "unit": "°"}
+        ],
+        "computed_displays": [
+          {"id": "weight_display", "label": "Weight (mg)", "formula": "mass × 9.8", "unit": "N", "highlight_color": "#ff7675"},
+          {"id": "normal_display", "label": "Normal Force", "formula": "mg - F×sinθ", "unit": "N", "highlight_color": "#55efc4"},
+          {"id": "friction_display", "label": "Friction", "formula": "μN", "unit": "N", "highlight_color": "#fdcb6e"},
+          {"id": "net_force_display", "label": "Net Force", "formula": "F×cosθ - f", "unit": "N", "highlight_color": "#a29bfe"},
+          {"id": "acceleration_display", "label": "Acceleration", "formula": "F_net / m", "unit": "m/s²", "highlight_color": "#00cec9"}
+        ],
+        "buttons": [
+          {"id": "btn_apply", "label": "💪 Apply Force", "action": "start_force"},
+          {"id": "btn_release", "label": "Release", "action": "stop_force"},
+          {"id": "btn_reset", "label": "↺ Reset", "action": "reset_block"}
+        ],
+        "free_body_diagram": {
+          "description": "Toggle a separate free body diagram overlay that shows only the block and all force vectors, isolated from the scene",
+          "toggle_id": "toggle_fbd"
+        }
+      },
+      "real_world_examples": [
+        {
+          "title": "Pushing a Shopping Cart",
+          "description": "When you push a 20 kg cart with 30 N of force on a surface with μ = 0.1: friction = 0.1 × 20 × 9.8 = 19.6 N. Net force = 30 - 19.6 = 10.4 N. Acceleration = 10.4/20 = 0.52 m/s².",
+          "calculation": "a = (F - μmg)/m = (30 - 19.6)/20 = 0.52 m/s²"
+        },
+        {
+          "title": "Rocket Launch",
+          "description": "A rocket demonstrates Newton's 3rd law: exhaust gases are expelled downward (action) and the rocket moves upward (reaction). Thrust must exceed weight for liftoff.",
+          "calculation": "For a 500,000 kg rocket: minimum thrust > mg = 500000 × 9.8 = 4,900,000 N"
+        }
+      ],
+      "quiz": {
+        "mcq": [
+          {
+            "question": "If F = 20 N and m = 4 kg, the acceleration is:",
+            "options": ["5 m/s²", "80 m/s²", "0.2 m/s²", "24 m/s²"],
+            "correct": 0,
+            "explanation": "a = F/m = 20/4 = 5 m/s².",
+            "difficulty": "easy"
+          },
+          {
+            "question": "An object is in equilibrium when:",
+            "options": ["It is at rest", "It moves at constant velocity", "Net force is zero", "All of the above"],
+            "correct": 3,
+            "explanation": "Equilibrium means F_net = 0. This includes being at rest OR moving at constant velocity (Newton's 1st law).",
+            "difficulty": "medium"
+          },
+          {
+            "question": "Action and reaction forces:",
+            "options": ["Act on the same body", "Act on different bodies", "Cancel each other", "Are unequal"],
+            "correct": 1,
+            "explanation": "Newton's 3rd law: action and reaction act on DIFFERENT bodies, so they don't cancel. If you push a wall, the wall pushes you back — forces on different objects.",
+            "difficulty": "medium"
+          }
+        ],
+        "short_answer": [
+          {
+            "question": "A 10 kg block on a surface (μ = 0.2) is pulled with 40 N at 30° above horizontal. Find the acceleration.",
+            "answer": "N = mg - F sinθ = 98 - 40 sin30° = 98 - 20 = 78 N. f = μN = 0.2 × 78 = 15.6 N. F_horiz = F cos30° = 40 × 0.866 = 34.64 N. F_net = 34.64 - 15.6 = 19.04 N. a = 19.04/10 = 1.904 m/s².",
+            "hint": "Resolve the applied force into horizontal and vertical components. The vertical component reduces the normal force!"
+          }
+        ]
+      }
+    },
+    {
+      "topic_id": "waves",
+      "title": "Waves: Sound, Light & Oscillations",
+      "order": 3,
+      "explanation": {
+        "simple": "A wave is a disturbance that transfers energy from one place to another without transferring matter. There are two types: transverse waves (like light and water waves, where oscillation is perpendicular to wave direction) and longitudinal waves (like sound, where oscillation is parallel to wave direction). Key properties include wavelength, frequency, amplitude, and speed.",
+        "advanced": "Waves are described by the wave equation: ∂²y/∂t² = v²(∂²y/∂x²). Solutions include y(x,t) = A sin(kx - ωt + φ), where k = 2π/λ (wave number), ω = 2πf (angular frequency). Superposition yields interference (constructive: Δφ = 2nπ; destructive: Δφ = (2n+1)π). Standing waves form at resonance conditions. The Doppler effect accounts for frequency shifts due to relative source-observer motion. Electromagnetic waves are self-propagating E and B field oscillations (Maxwell's equations), requiring no medium, while mechanical waves (sound) require a medium."
+      },
+      "formulas": [
+        {
+          "name": "Wave Speed",
+          "latex": "v = f\\lambda",
+          "variables": {
+            "v": {"description": "Wave speed", "unit": "m/s"},
+            "f": {"description": "Frequency", "unit": "Hz"},
+            "λ": {"description": "Wavelength", "unit": "m"}
+          }
+        },
+        {
+          "name": "Period-Frequency Relation",
+          "latex": "T = \\frac{1}{f}",
+          "variables": {
+            "T": {"description": "Period — time for one complete cycle", "unit": "s"}
+          }
+        },
+        {
+          "name": "Wave Equation",
+          "latex": "y(x,t) = A\\sin(kx - \\omega t + \\phi)",
+          "variables": {
+            "A": {"description": "Amplitude — max displacement", "unit": "m"},
+            "k": {"description": "Wave number (k = 2π/λ)", "unit": "rad/m"},
+            "ω": {"description": "Angular frequency (ω = 2πf)", "unit": "rad/s"},
+            "φ": {"description": "Phase constant", "unit": "rad"}
+          }
+        },
+        {
+          "name": "Doppler Effect",
+          "latex": "f' = f \\cdot \\frac{v \\pm v_o}{v \\mp v_s}",
+          "variables": {
+            "f'": {"description": "Observed frequency", "unit": "Hz"},
+            "v": {"description": "Speed of wave in medium", "unit": "m/s"},
+            "v_o": {"description": "Speed of observer", "unit": "m/s"},
+            "v_s": {"description": "Speed of source", "unit": "m/s"}
+          }
+        },
+        {
+          "name": "Intensity",
+          "latex": "I \\propto A^2",
+          "variables": {
+            "I": {"description": "Intensity (energy per unit area per unit time)", "unit": "W/m²"}
+          }
+        },
+        {
+          "name": "Standing Wave on String",
+          "latex": "f_n = \\frac{n}{2L}\\sqrt{\\frac{T}{\\mu}}, \\quad n = 1,2,3,...",
+          "variables": {
+            "n": {"description": "Harmonic number", "unit": ""},
+            "L": {"description": "Length of string", "unit": "m"},
+            "T": {"description": "Tension", "unit": "N"},
+            "μ": {"description": "Linear mass density", "unit": "kg/m"}
+          }
+        }
+      ],
+      "visualization_3d": {
+        "scene_type": "wave_simulation",
+        "objects": [
+          {
+            "id": "wave_surface",
+            "type": "parametric_surface",
+            "equation": "z = A × sin(kx - ωt)",
+            "x_range": [-10, 10],
+            "y_range": [-3, 3],
+            "resolution": 100,
+            "color_gradient": {
+              "min": "#0984e3",
+              "max": "#74b9ff",
+              "based_on": "height"
+            },
+            "material": "phong",
+            "transparent": true,
+            "opacity": 0.8
+          },
+          {
+            "id": "wavelength_marker",
+            "type": "double_arrow",
+            "start": {"x": 0, "y": 0, "z": 2},
+            "end_dynamic": {"x": "wavelength", "y": 0, "z": 2},
+            "color": "#fdcb6e",
+            "label": "λ"
+          },
+          {
+            "id": "amplitude_marker",
+            "type": "double_arrow",
+            "start": {"x": -8, "y": 0, "z": 0},
+            "end_dynamic": {"x": -8, "y": "amplitude", "z": 0},
+            "color": "#e17055",
+            "label": "A"
+          },
+          {
+            "id": "propagation_arrow",
+            "type": "arrow_helper",
+            "origin": {"x": -8, "y": 0, "z": -2},
+            "direction": {"x": 1, "y": 0, "z": 0},
+            "length": 3,
+            "color": "#55efc4",
+            "label": "Direction of propagation"
+          },
+          {
+            "id": "particle_oscillation",
+            "type": "sphere",
+            "radius": 0.15,
+            "color": "#e17055",
+            "position_dynamic": "track_wave_particle",
+            "trail": {"enabled": true, "color": "#e17055", "max_points": 50}
+          }
+        ],
+        "animations": [
+          {
+            "id": "wave_propagation",
+            "type": "continuous",
+            "description": "Wave surface oscillates according to y = A sin(kx - ωt)"
+          },
+          {
+            "id": "particle_tracking",
+            "type": "follow_wave",
+            "description": "Red sphere follows wave up/down to show particle oscillation direction"
+          }
+        ],
+        "camera": {
+          "position": {"x": -5, "y": 5, "z": 8},
+          "look_at": {"x": 0, "y": 0, "z": 0},
+          "fov": 50,
+          "orbit_enabled": true
+        }
+      },
+      "interaction": {
+        "sliders": [
+          {"id": "slider_amplitude", "label": "Amplitude (m)", "min": 0.1, "max": 3, "step": 0.1, "default": 1, "unit": "m"},
+          {"id": "slider_wavelength", "label": "Wavelength (m)", "min": 1, "max": 10, "step": 0.5, "default": 4, "unit": "m"},
+          {"id": "slider_frequency", "label": "Frequency (Hz)", "min": 0.1, "max": 5, "step": 0.1, "default": 1, "unit": "Hz"}
+        ],
+        "computed_displays": [
+          {"id": "wave_speed_display", "label": "Wave Speed", "formula": "f × λ", "unit": "m/s", "highlight_color": "#55efc4"},
+          {"id": "period_display", "label": "Period", "formula": "1/f", "unit": "s", "highlight_color": "#fdcb6e"},
+          {"id": "wave_number_display", "label": "Wave Number k", "formula": "2π/λ", "unit": "rad/m", "highlight_color": "#74b9ff"},
+          {"id": "angular_freq_display", "label": "Angular Freq ω", "formula": "2πf", "unit": "rad/s", "highlight_color": "#a29bfe"}
+        ],
+        "toggles": [
+          {"id": "toggle_transverse", "label": "Transverse Wave", "default": true},
+          {"id": "toggle_longitudinal", "label": "Longitudinal Wave", "default": false},
+          {"id": "toggle_superposition", "label": "Superposition Mode", "default": false}
+        ],
+        "superposition_controls": {
+          "description": "When superposition is enabled, show two waves and their combined result",
+          "wave2_frequency_slider": {"label": "Wave 2 Frequency", "min": 0.1, "max": 5, "default": 1.2},
+          "wave2_amplitude_slider": {"label": "Wave 2 Amplitude", "min": 0.1, "max": 3, "default": 1}
+        }
+      },
+      "real_world_examples": [
+        {
+          "title": "Sound in Air",
+          "description": "Sound travels at ≈ 340 m/s in air at 20°C. A 440 Hz concert A note has wavelength λ = 340/440 ≈ 0.77 m. Higher frequencies → shorter wavelengths.",
+          "calculation": "λ = v/f = 340/440 = 0.7727 m"
+        },
+        {
+          "title": "Ambulance Siren (Doppler Effect)",
+          "description": "An ambulance approaching at 30 m/s with siren frequency 700 Hz: observed f' = 700 × (340 + 0)/(340 - 30) ≈ 768 Hz (higher pitch when approaching).",
+          "calculation": "f' = 700 × 340/310 ≈ 768 Hz"
+        },
+        {
+          "title": "Earthquake Waves",
+          "description": "P-waves (longitudinal, ~8 km/s) arrive first, followed by S-waves (transverse, ~4.5 km/s). The time gap helps seismologists locate the epicenter using triangulation."
+        }
+      ],
+      "quiz": {
+        "mcq": [
+          {
+            "question": "A wave with frequency 500 Hz and wavelength 0.68 m has a speed of:",
+            "options": ["340 m/s", "735 m/s", "500 m/s", "0.68 m/s"],
+            "correct": 0,
+            "explanation": "v = fλ = 500 × 0.68 = 340 m/s. This is the speed of sound in air!",
+            "difficulty": "easy"
+          },
+          {
+            "question": "In a transverse wave, particles oscillate:",
+            "options": ["Parallel to wave direction", "Perpendicular to wave direction", "In circles", "Randomly"],
+            "correct": 1,
+            "explanation": "In transverse waves, particle oscillation is perpendicular to the direction of wave propagation.",
+            "difficulty": "easy"
+          },
+          {
+            "question": "When two waves of equal amplitude interfere destructively, the resulting amplitude is:",
+            "options": ["Double", "Zero", "Same", "Half"],
+            "correct": 1,
+            "explanation": "Destructive interference: when crest meets trough (180° out of phase), they cancel completely if amplitudes are equal.",
+            "difficulty": "medium"
+          },
+          {
+            "question": "Sound waves cannot travel through:",
+            "options": ["Air", "Water", "Steel", "Vacuum"],
+            "correct": 3,
+            "explanation": "Sound is a mechanical wave that requires a medium. It cannot propagate through vacuum, unlike electromagnetic waves.",
+            "difficulty": "easy"
+          }
+        ],
+        "short_answer": [
+          {
+            "question": "A guitar string 0.65 m long produces a fundamental frequency of 330 Hz. What is the speed of the wave on the string?",
+            "answer": "Fundamental: f₁ = v/(2L). So v = 2Lf₁ = 2 × 0.65 × 330 = 429 m/s.",
+            "hint": "For the fundamental mode on a string fixed at both ends: λ₁ = 2L."
+          }
+        ]
+      }
+    },
+    {
+      "topic_id": "fields",
+      "title": "Fields: Gravitational & Electric",
+      "order": 4,
+      "explanation": {
+        "simple": "A field is an invisible region of influence around an object. Earth has a gravitational field that pulls things toward it. A charged object has an electric field that affects other charges. Fields allow forces to act at a distance without physical contact. Field lines show the direction and strength of the field.",
+        "advanced": "A field is a physical quantity that has a value at every point in space. Scalar fields (temperature, potential) assign a number; vector fields (gravitational, electric, magnetic) assign a vector. The gravitational field g = F/m = -GM/r² r̂ points toward the mass. The electric field E = F/q = kQ/r² r̂ points away from positive charges. Field lines are tangent to the field vector at every point. Field strength is proportional to line density. The potential is the negative line integral of the field: V = -∫E·dr. Both fields obey the inverse-square law."
+      },
+      "formulas": [
+        {
+          "name": "Gravitational Field Strength",
+          "latex": "\\vec{g} = \\frac{\\vec{F}}{m} = -\\frac{GM}{r^2}\\hat{r}",
+          "variables": {
+            "g": {"description": "Gravitational field strength", "unit": "N/kg or m/s²"},
+            "G": {"description": "Gravitational constant", "unit": "N·m²/kg²"},
+            "M": {"description": "Mass creating the field", "unit": "kg"},
+            "r": {"description": "Distance from center of mass", "unit": "m"}
+          }
+        },
+        {
+          "name": "Gravitational Potential",
+          "latex": "V_g = -\\frac{GM}{r}",
+          "variables": {
+            "V_g": {"description": "Gravitational potential", "unit": "J/kg"}
+          }
+        },
+        {
+          "name": "Electric Field (point charge)",
+          "latex": "\\vec{E} = \\frac{kQ}{r^2}\\hat{r} = \\frac{1}{4\\pi\\epsilon_0}\\frac{Q}{r^2}\\hat{r}",
+          "variables": {
+            "E": {"description": "Electric field strength", "unit": "N/C or V/m"},
+            "k": {"description": "Coulomb's constant (8.99 × 10⁹ N·m²/C²)", "unit": ""},
+            "Q": {"description": "Source charge", "unit": "C (Coulombs)"},
+            "ε₀": {"description": "Permittivity of free space (8.854 × 10⁻¹² F/m)", "unit": "F/m"}
+          }
+        },
+        {
+          "name": "Coulomb's Law",
+          "latex": "F = \\frac{kq_1 q_2}{r^2}",
+          "variables": {
+            "q₁, q₂": {"description": "Point charges", "unit": "C"}
+          }
+        },
+        {
+          "name": "Electric Potential",
+          "latex": "V = \\frac{kQ}{r}",
+          "variables": {
+            "V": {"description": "Electric potential", "unit": "V (Volts)"}
+          }
+        },
+        {
+          "name": "Relationship between E and V",
+          "latex": "E = -\\frac{dV}{dr}",
+          "variables": {}
+        }
+      ],
+      "visualization_3d": {
+        "scene_type": "field_visualization",
+        "objects": [
+          {
+            "id": "source_mass_or_charge",
+            "type": "sphere",
+            "radius_dynamic": "proportional_to_magnitude",
+            "color_dynamic": "positive_negative_color",
+            "position": {"x": 0, "y": 0, "z": 0},
+            "label_dynamic": "M or Q",
+            "material": "phong",
+            "emissive_dynamic": true
+          },
+          {
+            "id": "field_lines",
+            "type": "field_line_array",
+            "source": "source_mass_or_charge",
+            "count": 16,
+            "direction": "radial_outward_or_inward",
+            "color": "#74b9ff",
+            "arrow_heads": true,
+            "length_dynamic": "field_range"
+          },
+          {
+            "id": "test_particle",
+            "type": "sphere",
+            "radius": 0.15,
+            "color": "#e17055",
+            "position_dynamic": "draggable_in_field",
+            "label": "test charge/mass",
+            "draggable": true
+          },
+          {
+            "id": "force_on_test",
+            "type": "arrow_helper",
+            "origin": "test_particle.position",
+            "direction_dynamic": "field_at_test_position",
+            "length_dynamic": "field_strength * 0.5",
+            "color": "#e17055",
+            "label": "F"
+          },
+          {
+            "id": "equipotential_surfaces",
+            "type": "concentric_circles",
+            "center": "source_mass_or_charge",
+            "radii": [2, 3, 4, 5, 6],
+            "color": "#55efc4",
+            "opacity": 0.2,
+            "style": "dashed",
+            "visible_toggle": true
+          },
+          {
+            "id": "field_strength_contour",
+            "type": "color_mapped_plane",
+            "value_function": "1/r²",
+            "color_map": {"low": "#0a0a2e", "high": "#6c5ce7"},
+            "opacity": 0.3,
+            "visible_toggle": true
+          }
+        ],
+        "animations": [
+          {
+            "id": "field_line_flow",
+            "type": "particle_along_lines",
+            "speed": 1,
+            "description": "Small particles flow along field lines to show direction"
+          }
+        ],
+        "camera": {
+          "position": {"x": 0, "y": 8, "z": 10},
+          "look_at": {"x": 0, "y": 0, "z": 0},
+          "fov": 50,
+          "orbit_enabled": true
+        }
+      },
+      "interaction": {
+        "sliders": [
+          {"id": "slider_source_magnitude", "label": "Source Magnitude", "min": 1, "max": 100, "step": 1, "default": 20},
+          {"id": "slider_test_distance", "label": "Test Distance (r)", "min": 1, "max": 10, "step": 0.1, "default": 3, "unit": "m"}
+        ],
+        "computed_displays": [
+          {"id": "field_strength", "label": "Field Strength at r", "formula": "k × Q / r²", "highlight_color": "#74b9ff"},
+          {"id": "potential_at_r", "label": "Potential at r", "formula": "k × Q / r", "highlight_color": "#55efc4"},
+          {"id": "force_on_test", "label": "Force on test particle", "formula": "E × q_test", "highlight_color": "#e17055"}
+        ],
+        "field_type_selector": {
+          "options": [
+            {"id": "gravitational", "label": "Gravitational Field", "icon": "🌍"},
+            {"id": "electric_positive", "label": "Electric (+Q)", "icon": "⊕"},
+            {"id": "electric_negative", "label": "Electric (-Q)", "icon": "⊖"},
+            {"id": "electric_dipole", "label": "Electric Dipole", "icon": "±"}
+          ]
+        },
+        "toggles": [
+          {"id": "show_field_lines", "label": "Field Lines", "default": true},
+          {"id": "show_equipotentials", "label": "Equipotential Lines", "default": false},
+          {"id": "show_field_contour", "label": "Field Strength Map", "default": false}
+        ]
+      },
+      "real_world_examples": [
+        {
+          "title": "Earth's Gravitational Field",
+          "description": "g = GM/R² = (6.674×10⁻¹¹ × 5.972×10²⁴) / (6.371×10⁶)² ≈ 9.82 m/s² at the surface. It weakens with altitude: at ISS altitude (~400 km), g ≈ 8.7 m/s².",
+          "calculation": "g at ISS = GM/(R+h)² = 3.986×10¹⁴ / (6.771×10⁶)² ≈ 8.7 m/s²"
+        },
+        {
+          "title": "Lightning & Electric Fields",
+          "description": "Charge separation in clouds creates electric fields of ~3 × 10⁶ V/m needed for dielectric breakdown of air (lightning). A typical lightning bolt transfers ~5 coulombs of charge.",
+          "calculation": "E_breakdown in air ≈ 3 × 10⁶ V/m"
+        }
+      ],
+      "quiz": {
+        "mcq": [
+          {
+            "question": "Electric field lines around a positive point charge:",
+            "options": ["Point inward", "Point outward", "Form closed loops", "Are parallel"],
+            "correct": 1,
+            "explanation": "Electric field lines point outward from positive charges (direction a positive test charge would move) and inward toward negative charges.",
+            "difficulty": "easy"
+          },
+          {
+            "question": "If the distance between two charges doubles, the electrostatic force:",
+            "options": ["Doubles", "Halves", "Becomes ¼", "Becomes 4×"],
+            "correct": 2,
+            "explanation": "F = kq₁q₂/r². If r → 2r: F' = kq₁q₂/(2r)² = F/4. Inverse-square law!",
+            "difficulty": "medium"
+          },
+          {
+            "question": "Gravitational field lines:",
+            "options": ["Point away from mass", "Point toward mass", "Form circles", "Don't exist"],
+            "correct": 1,
+            "explanation": "Gravitational field always attracts, so field lines point toward the mass (direction of force on a test mass).",
+            "difficulty": "easy"
+          }
+        ],
+        "short_answer": [
+          {
+            "question": "Two point charges +3 μC and -5 μC are 0.2 m apart. Find the force between them.",
+            "answer": "F = kq₁q₂/r² = (8.99×10⁹ × 3×10⁻⁶ × 5×10⁻⁶) / (0.2)² = (8.99×10⁹ × 15×10⁻¹²) / 0.04 = 0.13485/0.04 ≈ 3.37 N (attractive).",
+            "hint": "Use Coulomb's law. Remember: opposite charges attract. Convert μC to C (1 μC = 10⁻⁶ C)."
+          }
+        ]
+      }
+    }
+  ]
+}

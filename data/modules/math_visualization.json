@@ -1,0 +1,912 @@
+{
+  "module_id": "math_visualization",
+  "module_title": "Mathematical Visualization: Graphs, Vectors & Coordinate Systems",
+  "version": "1.0.0",
+  "prerequisites": [],
+  "topics": [
+    {
+      "topic_id": "coordinate_systems",
+      "title": "Coordinate Systems",
+      "order": 1,
+      "explanation": {
+        "simple": "A coordinate system is a way to describe the position of any point in space using numbers. The Cartesian system uses perpendicular x, y (and z in 3D) axes with an origin at (0,0). Other systems like polar coordinates use distance and angle instead. Choosing the right coordinate system can make problems much easier to solve!",
+        "advanced": "Coordinate systems provide a systematic framework for locating points in space. The Cartesian (rectangular) system uses orthogonal axes with basis vectors î, ĵ, k̂. Polar coordinates (r, θ) are useful for radially symmetric problems — conversion: x = r cosθ, y = r sinθ. In 3D, cylindrical (r, θ, z) and spherical (r, θ, φ) coordinates extend these concepts. The Jacobian determinant handles area/volume element transformations between systems. Each system has its own expression for gradient, divergence, curl, and Laplacian operators."
+      },
+      "formulas": [
+        {
+          "name": "Cartesian to Polar",
+          "latex": "r = \\sqrt{x^2 + y^2}, \\quad \\theta = \\arctan\\left(\\frac{y}{x}\\right)",
+          "variables": {
+            "r": {"description": "Radial distance from origin", "unit": ""},
+            "θ": {"description": "Angle from positive x-axis", "unit": "rad"}
+          }
+        },
+        {
+          "name": "Polar to Cartesian",
+          "latex": "x = r\\cos\\theta, \\quad y = r\\sin\\theta",
+          "variables": {}
+        },
+        {
+          "name": "3D Cartesian Distance",
+          "latex": "d = \\sqrt{(x_2-x_1)^2 + (y_2-y_1)^2 + (z_2-z_1)^2}",
+          "variables": {}
+        },
+        {
+          "name": "Spherical to Cartesian",
+          "latex": "x = r\\sin\\phi\\cos\\theta, \\quad y = r\\sin\\phi\\sin\\theta, \\quad z = r\\cos\\phi",
+          "variables": {
+            "φ": {"description": "Polar angle (from z-axis)", "unit": "rad"},
+            "θ": {"description": "Azimuthal angle (from x-axis in xy-plane)", "unit": "rad"}
+          }
+        },
+        {
+          "name": "Jacobian (Polar)",
+          "latex": "dA = r\\, dr\\, d\\theta",
+          "variables": {}
+        }
+      ],
+      "visualization_3d": {
+        "scene_type": "coordinate_system_explorer",
+        "objects": [
+          {
+            "id": "cartesian_axes",
+            "type": "axis_system",
+            "x_axis": {"color": "#ff7675", "label": "X", "range": [-6, 6]},
+            "y_axis": {"color": "#55efc4", "label": "Y", "range": [-6, 6]},
+            "z_axis": {"color": "#74b9ff", "label": "Z", "range": [-6, 6]},
+            "grid": true,
+            "tick_marks": true,
+            "tick_labels": true
+          },
+          {
+            "id": "point_P",
+            "type": "sphere",
+            "radius": 0.15,
+            "color": "#fdcb6e",
+            "position_dynamic": "user_point",
+            "label_dynamic": "P(x, y, z)",
+            "draggable": true
+          },
+          {
+            "id": "projection_x",
+            "type": "dashed_line",
+            "start": "point_P",
+            "end": {"x": "P.x", "y": 0, "z": 0},
+            "color": "#ff7675",
+            "opacity": 0.5
+          },
+          {
+            "id": "projection_y",
+            "type": "dashed_line",
+            "start": "point_P",
+            "end": {"x": 0, "y": "P.y", "z": 0},
+            "color": "#55efc4",
+            "opacity": 0.5
+          },
+          {
+            "id": "projection_z",
+            "type": "dashed_line",
+            "start": "point_P",
+            "end": {"x": 0, "y": 0, "z": "P.z"},
+            "color": "#74b9ff",
+            "opacity": 0.5
+          },
+          {
+            "id": "polar_radius_line",
+            "type": "line",
+            "start": {"x": 0, "y": 0, "z": 0},
+            "end": "point_P.position_xy",
+            "color": "#a29bfe",
+            "label": "r",
+            "visible_when": "polar_mode"
+          },
+          {
+            "id": "polar_angle_arc",
+            "type": "arc",
+            "center": {"x": 0, "y": 0, "z": 0},
+            "radius": 1,
+            "start_angle": 0,
+            "end_angle_dynamic": "atan2(P.y, P.x)",
+            "color": "#fd79a8",
+            "label": "θ",
+            "visible_when": "polar_mode"
+          },
+          {
+            "id": "polar_grid",
+            "type": "polar_grid_helper",
+            "radii": [1, 2, 3, 4, 5],
+            "sectors": 12,
+            "color": "#444466",
+            "opacity": 0.3,
+            "visible_when": "polar_mode"
+          }
+        ],
+        "camera": {
+          "position": {"x": 6, "y": 5, "z": 8},
+          "look_at": {"x": 0, "y": 0, "z": 0},
+          "fov": 50,
+          "orbit_enabled": true
+        },
+        "lighting": [
+          {"type": "ambient", "color": "#ffffff", "intensity": 0.6},
+          {"type": "directional", "color": "#ffffff", "intensity": 0.5, "position": {"x": 5, "y": 10, "z": 5}}
+        ]
+      },
+      "interaction": {
+        "sliders": [
+          {"id": "slider_px", "label": "Point X", "min": -5, "max": 5, "step": 0.25, "default": 3},
+          {"id": "slider_py", "label": "Point Y", "min": -5, "max": 5, "step": 0.25, "default": 4},
+          {"id": "slider_pz", "label": "Point Z", "min": -5, "max": 5, "step": 0.25, "default": 0}
+        ],
+        "computed_displays": [
+          {"id": "cartesian_coords", "label": "Cartesian", "formula": "(x, y, z)", "highlight_color": "#fdcb6e"},
+          {"id": "polar_coords", "label": "Polar", "formula": "(r, θ)", "highlight_color": "#a29bfe"},
+          {"id": "distance_from_origin", "label": "Distance from O", "formula": "√(x²+y²+z²)", "highlight_color": "#55efc4"}
+        ],
+        "mode_selector": {
+          "options": [
+            {"id": "cartesian_2d", "label": "2D Cartesian"},
+            {"id": "cartesian_3d", "label": "3D Cartesian"},
+            {"id": "polar", "label": "Polar"},
+            {"id": "cylindrical", "label": "Cylindrical"},
+            {"id": "spherical", "label": "Spherical"}
+          ]
+        }
+      },
+      "real_world_examples": [
+        {
+          "title": "Google Maps",
+          "description": "Maps use latitude/longitude — a spherical coordinate system projected onto a flat surface (Mercator projection). GPS coordinates (28.6139°N, 77.2090°E) locate New Delhi."
+        },
+        {
+          "title": "Radar Systems",
+          "description": "Radar uses polar coordinates (distance and angle) to track objects. The rotating antenna sweeps θ while measuring r — naturally suited to polar representation."
+        }
+      ],
+      "quiz": {
+        "mcq": [
+          {
+            "question": "The polar coordinates of the Cartesian point (3, 4) are:",
+            "options": ["(5, 53.13°)", "(7, 45°)", "(5, 36.87°)", "(12, 53.13°)"],
+            "correct": 0,
+            "explanation": "r = √(9+16) = 5. θ = arctan(4/3) ≈ 53.13°.",
+            "difficulty": "medium"
+          },
+          {
+            "question": "In 3D Cartesian coordinates, the distance from (0,0,0) to (1,1,1) is:",
+            "options": ["1", "√2", "√3", "3"],
+            "correct": 2,
+            "explanation": "d = √(1² + 1² + 1²) = √3 ≈ 1.732.",
+            "difficulty": "easy"
+          },
+          {
+            "question": "The Cartesian coordinates of polar point (4, 60°) are:",
+            "options": ["(2, 2√3)", "(2√3, 2)", "(4, 4)", "(2, 3.46)"],
+            "correct": 0,
+            "explanation": "x = 4cos60° = 4 × 0.5 = 2. y = 4sin60° = 4 × (√3/2) = 2√3 ≈ 3.46. So (2, 2√3).",
+            "difficulty": "medium"
+          }
+        ],
+        "short_answer": [
+          {
+            "question": "Convert the spherical coordinate (r=6, θ=45°, φ=60°) to Cartesian (x, y, z).",
+            "answer": "x = 6 sin60° cos45° = 6 × (√3/2) × (√2/2) = 6 × √6/4 = 3√6/2 ≈ 3.67. y = 6 sin60° sin45° ≈ 3.67. z = 6 cos60° = 3.",
+            "hint": "Use x = r sinφ cosθ, y = r sinφ sinθ, z = r cosφ."
+          }
+        ]
+      }
+    },
+    {
+      "topic_id": "vectors",
+      "title": "Vectors & Vector Operations",
+      "order": 2,
+      "explanation": {
+        "simple": "A vector is a quantity that has both magnitude (size) and direction. Velocity, force, and displacement are vectors. You can add vectors tip-to-tail, subtract them, multiply by scalars, and find dot products and cross products. Vectors are essential tools in physics and engineering!",
+        "advanced": "Vectors are elements of a vector space satisfying closure, associativity, and distributivity axioms. In ℝⁿ, a vector v = (v₁, v₂, ..., vₙ) has magnitude |v| = √(Σvᵢ²). The dot product a·b = |a||b|cosθ = Σaᵢbᵢ yields a scalar (work = F·d). The cross product a×b = |a||b|sinθ n̂ yields a vector perpendicular to both (torque = r×F). Unit vectors: â = a/|a|. Basis vectors {î, ĵ, k̂} span ℝ³. Linear independence, span, and basis form the foundation of linear algebra."
+      },
+      "formulas": [
+        {
+          "name": "Vector magnitude (2D)",
+          "latex": "|\\vec{v}| = \\sqrt{v_x^2 + v_y^2}",
+          "variables": {
+            "vₓ": {"description": "x-component", "unit": ""},
+            "vᵧ": {"description": "y-component", "unit": ""}
+          }
+        },
+        {
+          "name": "Vector magnitude (3D)",
+          "latex": "|\\vec{v}| = \\sqrt{v_x^2 + v_y^2 + v_z^2}",
+          "variables": {}
+        },
+        {
+          "name": "Vector addition",
+          "latex": "\\vec{a} + \\vec{b} = (a_x+b_x)\\hat{i} + (a_y+b_y)\\hat{j} + (a_z+b_z)\\hat{k}",
+          "variables": {}
+        },
+        {
+          "name": "Dot product",
+          "latex": "\\vec{a} \\cdot \\vec{b} = |\\vec{a}||\\vec{b}|\\cos\\theta = a_x b_x + a_y b_y + a_z b_z",
+          "variables": {
+            "θ": {"description": "Angle between the two vectors", "unit": "rad"}
+          }
+        },
+        {
+          "name": "Cross product",
+          "latex": "\\vec{a} \\times \\vec{b} = \\begin{vmatrix} \\hat{i} & \\hat{j} & \\hat{k} \\\\ a_x & a_y & a_z \\\\ b_x & b_y & b_z \\end{vmatrix}",
+          "variables": {}
+        },
+        {
+          "name": "Cross product magnitude",
+          "latex": "|\\vec{a} \\times \\vec{b}| = |\\vec{a}||\\vec{b}|\\sin\\theta",
+          "variables": {}
+        },
+        {
+          "name": "Unit vector",
+          "latex": "\\hat{a} = \\frac{\\vec{a}}{|\\vec{a}|}",
+          "variables": {}
+        },
+        {
+          "name": "Angle between vectors",
+          "latex": "\\cos\\theta = \\frac{\\vec{a} \\cdot \\vec{b}}{|\\vec{a}||\\vec{b}|}",
+          "variables": {}
+        },
+        {
+          "name": "Scalar projection of a onto b",
+          "latex": "\\text{proj}_b a = \\frac{\\vec{a} \\cdot \\vec{b}}{|\\vec{b}|}",
+          "variables": {}
+        }
+      ],
+      "visualization_3d": {
+        "scene_type": "vector_playground",
+        "objects": [
+          {
+            "id": "vector_a",
+            "type": "arrow_helper",
+            "origin": {"x": 0, "y": 0, "z": 0},
+            "direction_dynamic": "normalized(slider_a)",
+            "length_dynamic": "magnitude(slider_a)",
+            "color": "#e17055",
+            "head_length": 0.3,
+            "head_width": 0.15,
+            "label": "a⃗"
+          },
+          {
+            "id": "vector_b",
+            "type": "arrow_helper",
+            "origin": {"x": 0, "y": 0, "z": 0},
+            "direction_dynamic": "normalized(slider_b)",
+            "length_dynamic": "magnitude(slider_b)",
+            "color": "#6c5ce7",
+            "head_length": 0.3,
+            "head_width": 0.15,
+            "label": "b⃗"
+          },
+          {
+            "id": "vector_sum",
+            "type": "arrow_helper",
+            "origin": {"x": 0, "y": 0, "z": 0},
+            "direction_dynamic": "normalized(a + b)",
+            "length_dynamic": "magnitude(a + b)",
+            "color": "#55efc4",
+            "head_length": 0.3,
+            "label": "a⃗ + b⃗",
+            "visible_toggle": true
+          },
+          {
+            "id": "parallelogram",
+            "type": "polygon",
+            "vertices": ["origin", "a_tip", "a_tip + b", "b_tip"],
+            "color": "#55efc4",
+            "opacity": 0.15,
+            "visible_toggle": true
+          },
+          {
+            "id": "cross_product_vector",
+            "type": "arrow_helper",
+            "origin": {"x": 0, "y": 0, "z": 0},
+            "direction_dynamic": "normalized(a × b)",
+            "length_dynamic": "magnitude(a × b) * 0.3",
+            "color": "#fdcb6e",
+            "head_length": 0.3,
+            "label": "a⃗ × b⃗",
+            "visible_toggle": true
+          },
+          {
+            "id": "angle_arc",
+            "type": "arc",
+            "center": {"x": 0, "y": 0, "z": 0},
+            "radius": 1,
+            "from_vector": "vector_a",
+            "to_vector": "vector_b",
+            "color": "#a29bfe",
+            "label_dynamic": "θ"
+          },
+          {
+            "id": "tip_to_tail_b",
+            "type": "arrow_helper",
+            "origin_dynamic": "a_tip",
+            "direction_dynamic": "normalized(b)",
+            "length_dynamic": "magnitude(b)",
+            "color": "#6c5ce7",
+            "style": "dashed",
+            "opacity": 0.5,
+            "visible_toggle": true,
+            "label": "b⃗ (translated)"
+          },
+          {
+            "id": "coordinate_axes",
+            "type": "axis_system",
+            "x_axis": {"color": "#ff7675", "label": "X"},
+            "y_axis": {"color": "#55efc4", "label": "Y"},
+            "z_axis": {"color": "#74b9ff", "label": "Z"},
+            "grid": true
+          }
+        ],
+        "animations": [
+          {
+            "id": "rotation_demo",
+            "type": "optional",
+            "description": "Animate vector a rotating in the xy-plane to show changing dot product and cross product"
+          }
+        ],
+        "camera": {
+          "position": {"x": 5, "y": 4, "z": 7},
+          "look_at": {"x": 0, "y": 0, "z": 0},
+          "fov": 50,
+          "orbit_enabled": true
+        },
+        "lighting": [
+          {"type": "ambient", "color": "#ffffff", "intensity": 0.6},
+          {"type": "directional", "color": "#ffffff", "intensity": 0.5, "position": {"x": 5, "y": 10, "z": 5}}
+        ]
+      },
+      "interaction": {
+        "sliders": [
+          {"id": "slider_ax", "label": "a: x", "min": -5, "max": 5, "step": 0.5, "default": 3},
+          {"id": "slider_ay", "label": "a: y", "min": -5, "max": 5, "step": 0.5, "default": 1},
+          {"id": "slider_az", "label": "a: z", "min": -5, "max": 5, "step": 0.5, "default": 0},
+          {"id": "slider_bx", "label": "b: x", "min": -5, "max": 5, "step": 0.5, "default": 1},
+          {"id": "slider_by", "label": "b: y", "min": -5, "max": 5, "step": 0.5, "default": 3},
+          {"id": "slider_bz", "label": "b: z", "min": -5, "max": 5, "step": 0.5, "default": 0}
+        ],
+        "computed_displays": [
+          {"id": "mag_a", "label": "|a⃗|", "formula": "√(ax²+ay²+az²)", "highlight_color": "#e17055"},
+          {"id": "mag_b", "label": "|b⃗|", "formula": "√(bx²+by²+bz²)", "highlight_color": "#6c5ce7"},
+          {"id": "dot_product", "label": "a⃗ · b⃗", "formula": "ax·bx + ay·by + az·bz", "highlight_color": "#a29bfe"},
+          {"id": "cross_product", "label": "a⃗ × b⃗", "formula": "determinant", "highlight_color": "#fdcb6e"},
+          {"id": "angle_between", "label": "Angle θ", "formula": "arccos(a·b / |a||b|)", "unit": "°", "highlight_color": "#fd79a8"},
+          {"id": "sum_vector", "label": "a⃗ + b⃗", "highlight_color": "#55efc4"}
+        ],
+        "toggles": [
+          {"id": "show_sum", "label": "Show Sum (a+b)", "default": true},
+          {"id": "show_parallelogram", "label": "Parallelogram Law", "default": false},
+          {"id": "show_cross", "label": "Show Cross Product", "default": false},
+          {"id": "show_tip_to_tail", "label": "Tip-to-Tail Method", "default": true},
+          {"id": "show_components", "label": "Show Components", "default": false}
+        ]
+      },
+      "real_world_examples": [
+        {
+          "title": "Airplane Navigation",
+          "description": "Wind velocity and aircraft velocity are vectors. The resultant ground velocity = aircraft velocity + wind velocity. A plane heading north at 200 km/h with a 50 km/h eastward crosswind has ground speed ≈ 206 km/h at 14° east of north.",
+          "calculation": "|v| = √(200² + 50²) ≈ 206.2 km/h; θ = arctan(50/200) ≈ 14°"
+        },
+        {
+          "title": "Work Done by a Force",
+          "description": "Work = F⃗ · d⃗ = |F||d|cosθ. Pulling a suitcase with 50 N at 30° over 10 m: W = 50 × 10 × cos30° = 433 J. Only the component along displacement does work.",
+          "calculation": "W = 50 × 10 × 0.866 = 433 J"
+        },
+        {
+          "title": "Torque (Cross Product)",
+          "description": "Torque τ⃗ = r⃗ × F⃗. A 0.3 m wrench with 100 N perpendicular force: |τ| = 0.3 × 100 × sin90° = 30 N·m. Direction given by right-hand rule.",
+          "calculation": "|τ| = r × F × sinθ = 0.3 × 100 × 1 = 30 N·m"
+        }
+      ],
+      "quiz": {
+        "mcq": [
+          {
+            "question": "The dot product of perpendicular vectors is:",
+            "options": ["1", "0", "-1", "Undefined"],
+            "correct": 1,
+            "explanation": "a·b = |a||b|cosθ. When θ = 90° (perpendicular), cos90° = 0, so a·b = 0.",
+            "difficulty": "easy"
+          },
+          {
+            "question": "The magnitude of vector (3, 4, 0) is:",
+            "options": ["3", "4", "5", "7"],
+            "correct": 2,
+            "explanation": "|v| = √(9 + 16 + 0) = √25 = 5.",
+            "difficulty": "easy"
+          },
+          {
+            "question": "If a⃗ × b⃗ = 0⃗, the vectors are:",
+            "options": ["Perpendicular", "Parallel", "Equal", "Unit vectors"],
+            "correct": 1,
+            "explanation": "|a×b| = |a||b|sinθ. This equals zero when sinθ = 0, i.e., θ = 0° or 180° (parallel or anti-parallel).",
+            "difficulty": "medium"
+          },
+          {
+            "question": "The cross product of î × ĵ equals:",
+            "options": ["0", "1", "k̂", "-k̂"],
+            "correct": 2,
+            "explanation": "By the right-hand rule: î × ĵ = k̂. This follows the cyclic order î → ĵ → k̂.",
+            "difficulty": "medium"
+          }
+        ],
+        "short_answer": [
+          {
+            "question": "Find the angle between vectors a⃗ = (1, 2, 3) and b⃗ = (4, 5, 6).",
+            "answer": "a·b = 4 + 10 + 18 = 32. |a| = √14 ≈ 3.742. |b| = √77 ≈ 8.775. cosθ = 32/(3.742 × 8.775) = 32/32.84 ≈ 0.9744. θ = arccos(0.9744) ≈ 12.93°.",
+            "hint": "Use cosθ = (a·b) / (|a||b|). Calculate dot product and magnitudes first."
+          }
+        ]
+      }
+    },
+    {
+      "topic_id": "function_graphs",
+      "title": "Function Graphs & Transformations",
+      "order": 3,
+      "explanation": {
+        "simple": "A graph is a visual picture of a mathematical function — it shows how one quantity changes with another. The graph of y = x² is a parabola, y = sin(x) is a wave, and y = 1/x is a hyperbola. You can transform graphs by shifting, stretching, reflecting, or rotating them. Understanding graphs helps you see patterns and solve equations visually!",
+        "advanced": "Functions f: ℝ → ℝ are visualized as curves in the Cartesian plane {(x, f(x)) | x ∈ domain(f)}. Transformations include: vertical shift f(x) + k, horizontal shift f(x - h), vertical stretch af(x), horizontal stretch f(bx), and reflections -f(x) or f(-x). Critical analysis involves: domain/range, intercepts, symmetry (even/odd), asymptotes, continuity, differentiability, monotonicity (f' > 0 increasing), concavity (f'' > 0 concave up), extrema (f' = 0, f'' test), and inflection points (f'' = 0). Parametric forms (x(t), y(t)) and implicit forms F(x,y) = 0 extend the representation."
+      },
+      "formulas": [
+        {
+          "name": "Linear Function",
+          "latex": "f(x) = mx + c",
+          "variables": {
+            "m": {"description": "Slope (rate of change)", "unit": ""},
+            "c": {"description": "y-intercept", "unit": ""}
+          }
+        },
+        {
+          "name": "Quadratic Function",
+          "latex": "f(x) = ax^2 + bx + c",
+          "variables": {
+            "vertex": {"description": "(-b/2a, f(-b/2a))", "unit": ""},
+            "discriminant": {"description": "Δ = b² - 4ac", "unit": ""}
+          }
+        },
+        {
+          "name": "Vertex Form",
+          "latex": "f(x) = a(x - h)^2 + k",
+          "variables": {
+            "(h, k)": {"description": "Vertex coordinates", "unit": ""},
+            "a": {"description": "Controls width and direction of parabola", "unit": ""}
+          }
+        },
+        {
+          "name": "Sine Function",
+          "latex": "f(x) = A\\sin(Bx + C) + D",
+          "variables": {
+            "A": {"description": "Amplitude", "unit": ""},
+            "B": {"description": "Affects period: T = 2π/|B|", "unit": ""},
+            "C": {"description": "Phase shift: -C/B", "unit": ""},
+            "D": {"description": "Vertical shift", "unit": ""}
+          }
+        },
+        {
+          "name": "Exponential Function",
+          "latex": "f(x) = a \\cdot b^x",
+          "variables": {
+            "a": {"description": "Initial value", "unit": ""},
+            "b": {"description": "Growth (b>1) or decay (0<b<1) factor", "unit": ""}
+          }
+        },
+        {
+          "name": "Logarithmic Function",
+          "latex": "f(x) = \\log_b(x)",
+          "variables": {
+            "b": {"description": "Base of logarithm", "unit": ""}
+          }
+        }
+      ],
+      "visualization_3d": {
+        "scene_type": "function_plotter",
+        "objects": [
+          {
+            "id": "axes_2d",
+            "type": "axis_system_2d",
+            "x_range": [-10, 10],
+            "y_range": [-10, 10],
+            "grid": true,
+            "tick_marks": true,
+            "colors": {"x": "#636e72", "y": "#636e72", "grid": "#2d2d4e"}
+          },
+          {
+            "id": "function_curve",
+            "type": "parametric_curve",
+            "equation_dynamic": "selected_function",
+            "x_range": [-10, 10],
+            "resolution": 500,
+            "color": "#6c5ce7",
+            "linewidth": 2.5,
+            "glow": true
+          },
+          {
+            "id": "transformed_curve",
+            "type": "parametric_curve",
+            "equation_dynamic": "transformed_function",
+            "x_range": [-10, 10],
+            "resolution": 500,
+            "color": "#e17055",
+            "linewidth": 2,
+            "style": "dashed",
+            "visible_toggle": true
+          },
+          {
+            "id": "tangent_line",
+            "type": "line",
+            "position_dynamic": "at cursor x",
+            "slope_dynamic": "derivative at x",
+            "color": "#55efc4",
+            "length": 4,
+            "visible_toggle": true
+          },
+          {
+            "id": "area_under_curve",
+            "type": "filled_region",
+            "curve": "function_curve",
+            "x_start_dynamic": "slider_integral_start",
+            "x_end_dynamic": "slider_integral_end",
+            "color": "#6c5ce7",
+            "opacity": 0.2,
+            "visible_toggle": true
+          },
+          {
+            "id": "critical_points",
+            "type": "sphere_array",
+            "positions_dynamic": "where derivative = 0",
+            "radius": 0.12,
+            "color": "#fdcb6e",
+            "label": "Critical Points",
+            "visible_toggle": true
+          },
+          {
+            "id": "intercept_markers",
+            "type": "sphere_array",
+            "positions_dynamic": "x and y intercepts",
+            "radius": 0.1,
+            "color": "#fd79a8"
+          }
+        ],
+        "camera": {
+          "position": {"x": 0, "y": 0, "z": 15},
+          "look_at": {"x": 0, "y": 0, "z": 0},
+          "orthographic": true
+        }
+      },
+      "interaction": {
+        "function_selector": {
+          "label": "Choose Function",
+          "options": [
+            {"id": "linear", "label": "Linear: y = mx + c", "default_params": {"m": 1, "c": 0}},
+            {"id": "quadratic", "label": "Quadratic: y = ax² + bx + c", "default_params": {"a": 1, "b": 0, "c": 0}},
+            {"id": "cubic", "label": "Cubic: y = ax³ + bx", "default_params": {"a": 0.1, "b": -1}},
+            {"id": "sine", "label": "Sine: y = A sin(Bx + C) + D", "default_params": {"A": 1, "B": 1, "C": 0, "D": 0}},
+            {"id": "cosine", "label": "Cosine: y = A cos(Bx)", "default_params": {"A": 1, "B": 1}},
+            {"id": "exponential", "label": "Exponential: y = a·bˣ", "default_params": {"a": 1, "b": 2}},
+            {"id": "logarithmic", "label": "Logarithmic: y = log_b(x)", "default_params": {"b": 10}},
+            {"id": "reciprocal", "label": "Reciprocal: y = 1/x", "default_params": {}},
+            {"id": "absolute", "label": "Absolute: y = |x - h| + k", "default_params": {"h": 0, "k": 0}},
+            {"id": "sqrt", "label": "Square Root: y = √x", "default_params": {}}
+          ]
+        },
+        "parameter_sliders_dynamic": "based on selected function",
+        "transformation_sliders": [
+          {"id": "slider_h_shift", "label": "Horizontal Shift (h)", "min": -5, "max": 5, "step": 0.5, "default": 0},
+          {"id": "slider_v_shift", "label": "Vertical Shift (k)", "min": -5, "max": 5, "step": 0.5, "default": 0},
+          {"id": "slider_h_stretch", "label": "Horizontal Stretch", "min": 0.2, "max": 5, "step": 0.1, "default": 1},
+          {"id": "slider_v_stretch", "label": "Vertical Stretch", "min": 0.2, "max": 5, "step": 0.1, "default": 1}
+        ],
+        "computed_displays": [
+          {"id": "domain_display", "label": "Domain", "highlight_color": "#74b9ff"},
+          {"id": "range_display", "label": "Range", "highlight_color": "#55efc4"},
+          {"id": "x_intercepts", "label": "x-intercepts (roots)", "highlight_color": "#fd79a8"},
+          {"id": "y_intercept", "label": "y-intercept", "highlight_color": "#fdcb6e"},
+          {"id": "vertex_display", "label": "Vertex/Extremum", "highlight_color": "#e17055"},
+          {"id": "derivative_at_cursor", "label": "Slope at cursor", "highlight_color": "#a29bfe"}
+        ],
+        "toggles": [
+          {"id": "show_tangent", "label": "Tangent Line", "default": false},
+          {"id": "show_transformation", "label": "Show Transformed", "default": false},
+          {"id": "show_area", "label": "Area Under Curve", "default": false},
+          {"id": "show_critical", "label": "Critical Points", "default": false},
+          {"id": "show_derivative_graph", "label": "f'(x) Graph", "default": false}
+        ]
+      },
+      "real_world_examples": [
+        {
+          "title": "Population Growth",
+          "description": "Bacterial population grows exponentially: P(t) = P₀ × 2^(t/d), where d is the doubling time. Starting with 100 bacteria doubling every 20 minutes, after 2 hours: P = 100 × 2⁶ = 6400.",
+          "calculation": "P(120) = 100 × 2^(120/20) = 100 × 64 = 6400"
+        },
+        {
+          "title": "Sound Waves & Sine Functions",
+          "description": "Pure musical tones are sine waves: y = A sin(2πft). Concert A (440 Hz) has period T = 1/440 ≈ 2.27 ms. Louder sounds have larger amplitude A."
+        },
+        {
+          "title": "Projectile Path as a Parabola",
+          "description": "A ball thrown at angle θ traces y = x tanθ - (gx²)/(2u²cos²θ) — a quadratic (parabolic) function of x."
+        }
+      ],
+      "quiz": {
+        "mcq": [
+          {
+            "question": "The graph of y = (x-3)² + 2 has its vertex at:",
+            "options": ["(3, 2)", "(-3, 2)", "(3, -2)", "(2, 3)"],
+            "correct": 0,
+            "explanation": "In vertex form y = a(x-h)² + k, vertex is (h, k). Here h=3, k=2, so vertex (3, 2).",
+            "difficulty": "easy"
+          },
+          {
+            "question": "The graph of y = -f(x) is a reflection of y = f(x) in the:",
+            "options": ["x-axis", "y-axis", "Origin", "Line y = x"],
+            "correct": 0,
+            "explanation": "Negating the output reflects the graph across the x-axis. f(-x) reflects across y-axis.",
+            "difficulty": "medium"
+          },
+          {
+            "question": "The period of y = sin(2x) is:",
+            "options": ["π", "2π", "4π", "π/2"],
+            "correct": 0,
+            "explanation": "Period T = 2π/|B| = 2π/2 = π. The '2' doubles the frequency, halving the period.",
+            "difficulty": "medium"
+          },
+          {
+            "question": "An exponential decay function has a base b where:",
+            "options": ["b > 1", "0 < b < 1", "b = 1", "b < 0"],
+            "correct": 1,
+            "explanation": "For decay, 0 < b < 1. Each multiplication reduces the value. For growth, b > 1.",
+            "difficulty": "medium"
+          }
+        ],
+        "short_answer": [
+          {
+            "question": "Describe all transformations applied to get y = -2sin(3x - π) + 1 from y = sin(x).",
+            "answer": "1) Horizontal compression by factor 1/3 (period becomes 2π/3). 2) Horizontal shift right by π/3 (phase shift = -C/B = π/3). 3) Vertical stretch by factor 2. 4) Reflection in x-axis (negative sign). 5) Vertical shift up by 1.",
+            "hint": "Write in standard form A sin(B(x - h)) + k and identify each parameter."
+          }
+        ]
+      }
+    },
+    {
+      "topic_id": "3d_surfaces",
+      "title": "3D Surfaces & Parametric Curves",
+      "order": 4,
+      "explanation": {
+        "simple": "Just like 2D graphs show functions of one variable, 3D surfaces show functions of two variables: z = f(x, y). A bowl shape (paraboloid), a saddle shape, a sphere, and a torus (donut) are all 3D surfaces. Parametric curves let you trace paths through 3D space by defining x, y, and z as functions of a single parameter t.",
+        "advanced": "Surfaces in ℝ³ are 2-manifolds defined implicitly F(x,y,z) = 0, explicitly z = f(x,y), or parametrically r(u,v) = (x(u,v), y(u,v), z(u,v)). Key surfaces: plane (ax+by+cz=d), sphere (x²+y²+z² = r²), ellipsoid, paraboloid (z = x²+y²), hyperboloid, cylinder, cone, torus. Differential geometry studies curvature (Gaussian K = κ₁κ₂, mean H = (κ₁+κ₂)/2). Parametric space curves r(t) = (x(t), y(t), z(t)) have tangent T̂ = r'/|r'|, normal N̂, binormal B̂ = T̂ × N̂ (Frenet-Serret frame), curvature κ = |r' × r''|/|r'|³."
+      },
+      "formulas": [
+        {
+          "name": "Sphere",
+          "latex": "x^2 + y^2 + z^2 = R^2",
+          "variables": {"R": {"description": "Radius", "unit": ""}}
+        },
+        {
+          "name": "Paraboloid",
+          "latex": "z = x^2 + y^2",
+          "variables": {}
+        },
+        {
+          "name": "Ellipsoid",
+          "latex": "\\frac{x^2}{a^2} + \\frac{y^2}{b^2} + \\frac{z^2}{c^2} = 1",
+          "variables": {
+            "a, b, c": {"description": "Semi-axis lengths", "unit": ""}
+          }
+        },
+        {
+          "name": "Hyperboloid of One Sheet",
+          "latex": "\\frac{x^2}{a^2} + \\frac{y^2}{b^2} - \\frac{z^2}{c^2} = 1",
+          "variables": {}
+        },
+        {
+          "name": "Torus (parametric)",
+          "latex": "\\begin{cases} x = (R + r\\cos v)\\cos u \\\\ y = (R + r\\cos v)\\sin u \\\\ z = r\\sin v \\end{cases}",
+          "variables": {
+            "R": {"description": "Distance from center of tube to center of torus", "unit": ""},
+            "r": {"description": "Radius of tube", "unit": ""},
+            "u, v": {"description": "Parameters ∈ [0, 2π]", "unit": "rad"}
+          }
+        },
+        {
+          "name": "Helix (parametric curve)",
+          "latex": "\\vec{r}(t) = (a\\cos t, \\, a\\sin t, \\, bt)",
+          "variables": {
+            "a": {"description": "Radius of helix", "unit": ""},
+            "b": {"description": "Pitch factor (vertical rise per radian)", "unit": ""}
+          }
+        },
+        {
+          "name": "Curvature of a space curve",
+          "latex": "\\kappa = \\frac{|\\vec{r}' \\times \\vec{r}''|}{|\\vec{r}'|^3}",
+          "variables": {
+            "κ": {"description": "Curvature at a point", "unit": "1/length"}
+          }
+        }
+      ],
+      "visualization_3d": {
+        "scene_type": "surface_explorer",
+        "objects": [
+          {
+            "id": "surface_mesh",
+            "type": "parametric_surface",
+            "equation_dynamic": "selected_surface",
+            "u_range": "depends on surface",
+            "v_range": "depends on surface",
+            "resolution": {"u": 50, "v": 50},
+            "color_gradient": {
+              "based_on": "height",
+              "min_color": "#0984e3",
+              "max_color": "#e17055"
+            },
+            "material": "phong",
+            "transparent": true,
+            "opacity": 0.85,
+            "wireframe_overlay": true,
+            "wireframe_opacity": 0.1
+          },
+          {
+            "id": "parametric_curve",
+            "type": "tube_geometry",
+            "path_dynamic": "selected_curve",
+            "t_range": [0, "4π"],
+            "tube_radius": 0.05,
+            "color": "#fdcb6e",
+            "visible_when": "curve_mode"
+          },
+          {
+            "id": "moving_point_on_curve",
+            "type": "sphere",
+            "radius": 0.12,
+            "color": "#e17055",
+            "position_dynamic": "curve(t_slider)",
+            "visible_when": "curve_mode"
+          },
+          {
+            "id": "tangent_vector",
+            "type": "arrow_helper",
+            "origin": "moving_point",
+            "direction_dynamic": "tangent_at_t",
+            "length": 1.5,
+            "color": "#55efc4",
+            "label": "T̂",
+            "visible_when": "show_frenet"
+          },
+          {
+            "id": "normal_vector",
+            "type": "arrow_helper",
+            "origin": "moving_point",
+            "direction_dynamic": "normal_at_t",
+            "length": 1,
+            "color": "#74b9ff",
+            "label": "N̂",
+            "visible_when": "show_frenet"
+          },
+          {
+            "id": "binormal_vector",
+            "type": "arrow_helper",
+            "origin": "moving_point",
+            "direction_dynamic": "binormal_at_t",
+            "length": 1,
+            "color": "#a29bfe",
+            "label": "B̂",
+            "visible_when": "show_frenet"
+          },
+          {
+            "id": "coordinate_axes",
+            "type": "axis_system",
+            "range": 6,
+            "grid": true
+          }
+        ],
+        "animations": [
+          {
+            "id": "surface_rotation",
+            "type": "auto_rotate",
+            "speed": 0.003,
+            "axis": "y"
+          },
+          {
+            "id": "curve_traversal",
+            "type": "parameter_sweep",
+            "parameter": "t",
+            "range": [0, "4π"],
+            "speed": 0.5
+          }
+        ],
+        "camera": {
+          "position": {"x": 5, "y": 4, "z": 6},
+          "look_at": {"x": 0, "y": 0, "z": 0},
+          "fov": 50,
+          "orbit_enabled": true
+        },
+        "lighting": [
+          {"type": "ambient", "color": "#ffffff", "intensity": 0.5},
+          {"type": "directional", "color": "#ffffff", "intensity": 0.6, "position": {"x": 5, "y": 10, "z": 5}},
+          {"type": "point", "color": "#6c5ce7", "intensity": 0.3, "position": {"x": -3, "y": 3, "z": 3}}
+        ]
+      },
+      "interaction": {
+        "surface_selector": {
+          "label": "Choose Surface",
+          "options": [
+            {"id": "sphere", "label": "Sphere", "equation": "x²+y²+z²=R²"},
+            {"id": "paraboloid", "label": "Paraboloid", "equation": "z=x²+y²"},
+            {"id": "saddle", "label": "Saddle (Hyperbolic Paraboloid)", "equation": "z=x²-y²"},
+            {"id": "ellipsoid", "label": "Ellipsoid", "equation": "x²/a²+y²/b²+z²/c²=1"},
+            {"id": "hyperboloid", "label": "Hyperboloid", "equation": "x²+y²-z²=1"},
+            {"id": "torus", "label": "Torus", "equation": "parametric"},
+            {"id": "cone", "label": "Cone", "equation": "z²=x²+y²"},
+            {"id": "mobius", "label": "Möbius Strip", "equation": "parametric"},
+            {"id": "klein", "label": "Klein Bottle (immersion)", "equation": "parametric"}
+          ]
+        },
+        "curve_selector": {
+          "label": "Choose Curve",
+          "options": [
+            {"id": "helix", "label": "Helix", "parametric": "(cos t, sin t, 0.2t)"},
+            {"id": "trefoil", "label": "Trefoil Knot", "parametric": "(sin t + 2sin 2t, cos t - 2cos 2t, -sin 3t)"},
+            {"id": "lissajous3d", "label": "Lissajous 3D", "parametric": "(sin at, sin bt, sin ct)"},
+            {"id": "toroidal", "label": "Toroidal Spiral", "parametric": "((2+cos nt)cos t, (2+cos nt)sin t, sin nt)"}
+          ]
+        },
+        "sliders_dynamic": "based on selected surface/curve parameters",
+        "toggles": [
+          {"id": "show_wireframe", "label": "Wireframe", "default": true},
+          {"id": "show_normals", "label": "Surface Normals", "default": false},
+          {"id": "show_contours", "label": "Contour Lines", "default": false},
+          {"id": "show_frenet", "label": "Frenet Frame (TNB)", "default": false},
+          {"id": "show_cross_sections", "label": "Cross Sections", "default": false}
+        ]
+      },
+      "real_world_examples": [
+        {
+          "title": "DNA Double Helix",
+          "description": "DNA's structure is a double helix — two intertwined parametric helices. Each helix: r(t) = (R cos(2πt/p), R sin(2πt/p), ht), where p is the period and h is the rise per turn (3.4 nm)."
+        },
+        {
+          "title": "Satellite Dish (Paraboloid)",
+          "description": "Satellite dishes are paraboloid surfaces because all parallel incoming signals reflect to a single focal point: F = (0, 0, 1/(4a)) for z = ax² + ay²."
+        },
+        {
+          "title": "Cooling Towers (Hyperboloid)",
+          "description": "Nuclear power plant cooling towers use hyperboloid shapes. Despite being curved, hyperboloids can be built from straight lines (ruled surface) — structurally strong and efficient."
+        }
+      ],
+      "quiz": {
+        "mcq": [
+          {
+            "question": "The equation x² + y² + z² = 9 represents:",
+            "options": ["A cylinder", "A sphere of radius 3", "A sphere of radius 9", "A plane"],
+            "correct": 1,
+            "explanation": "x² + y² + z² = R² is a sphere. Here R² = 9, so R = 3.",
+            "difficulty": "easy"
+          },
+          {
+            "question": "The parametric curve r(t) = (cos t, sin t, t) is a:",
+            "options": ["Circle", "Helix", "Parabola", "Straight line"],
+            "correct": 1,
+            "explanation": "The x and y components trace a circle while z increases linearly — this produces a helix (spiral staircase shape).",
+            "difficulty": "easy"
+          },
+          {
+            "question": "A saddle point has:",
+            "options": ["Positive curvature everywhere", "Negative Gaussian curvature", "Zero curvature", "Undefined curvature"],
+            "correct": 1,
+            "explanation": "At a saddle point, principal curvatures have opposite signs (κ₁ > 0, κ₂ < 0), so Gaussian curvature K = κ₁κ₂ < 0.",
+            "difficulty": "hard"
+          }
+        ],
+        "short_answer": [
+          {
+            "question": "Write the parametric equations for a circle of radius 3 centered at (1, 2, 0) in the xy-plane.",
+            "answer": "x(t) = 1 + 3cos(t), y(t) = 2 + 3sin(t), z(t) = 0, where t ∈ [0, 2π].",
+            "hint": "Start with the standard parameterization (R cos t, R sin t) and shift by the center coordinates."
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "version": "1.0.0",
+  "generated": "2026-04-22",
+  "module_count": 4,
+  "topic_count": 16,
+  "modules": [
+    {
+      "module_id": "energy",
+      "title": "Energy: Forms, Conservation & Transformations",
+      "file": "energy.json",
+      "topics": ["kinetic_energy", "potential_energy", "conservation_of_energy", "energy_transformations"],
+      "icon": "⚡",
+      "color": "#fdcb6e",
+      "description": "Explore kinetic, potential, conservation, and transformation of energy with interactive simulations and real-world examples.",
+      "prerequisites": ["motion", "force"],
+      "difficulty_range": ["easy", "hard"],
+      "tags": ["physics", "energy", "conservation", "simulation"]
+    },
+    {
+      "module_id": "euclidean_geometry",
+      "title": "Euclidean Geometry: Foundations & Theorems",
+      "file": "euclidean_geometry.json",
+      "topics": ["points_lines_planes", "angles_and_parallels", "triangles", "circles"],
+      "icon": "📐",
+      "color": "#74b9ff",
+      "description": "Master Euclidean principles from points and lines through triangle theorems and circle properties with interactive constructions.",
+      "prerequisites": [],
+      "difficulty_range": ["easy", "hard"],
+      "tags": ["geometry", "theorems", "proofs", "construction", "euclidean"]
+    },
+    {
+      "module_id": "physics_concepts",
+      "title": "Physics: Motion, Force, Waves & Fields",
+      "file": "physics_concepts.json",
+      "topics": ["kinematics", "newtons_laws", "waves", "fields"],
+      "icon": "⚛️",
+      "color": "#6c5ce7",
+      "description": "Visualize motion, forces, wave interference, and gravitational/electric fields with dynamic 3D simulations.",
+      "prerequisites": [],
+      "difficulty_range": ["easy", "hard"],
+      "tags": ["physics", "motion", "force", "waves", "fields", "newton"]
+    },
+    {
+      "module_id": "math_visualization",
+      "title": "Mathematical Visualization: Graphs, Vectors & Coordinate Systems",
+      "file": "math_visualization.json",
+      "topics": ["coordinate_systems", "vectors", "function_graphs", "3d_surfaces"],
+      "icon": "📊",
+      "color": "#55efc4",
+      "description": "Explore coordinate systems, vector operations, function graphing, and 3D surfaces with interactive visualization tools.",
+      "prerequisites": [],
+      "difficulty_range": ["easy", "hard"],
+      "tags": ["math", "vectors", "graphs", "3D", "visualization", "coordinates"]
+    }
+  ],
+  "api_endpoints": {
+    "list_modules": "GET /api/modules",
+    "get_module": "GET /api/modules/<module_id>",
+    "get_topic": "GET /api/modules/<module_id>/topics/<topic_id>",
+    "get_topic_quiz": "GET /api/modules/<module_id>/topics/<topic_id>/quiz",
+    "get_topic_visualization": "GET /api/modules/<module_id>/topics/<topic_id>/visualization",
+    "search_topics": "GET /api/modules/search?q=<query>",
+    "get_formulas": "GET /api/modules/<module_id>/topics/<topic_id>/formulas"
+  }
+}

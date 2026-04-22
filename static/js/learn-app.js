@@ -191,6 +191,11 @@ function handleHash() {
 }
 
 function goBack() {
+    if (currentPage === 'landing') {
+        window.location.href = '/';
+        return;
+    }
+
     if (navigationHistory.length > 1) {
         navigationHistory.pop(); // remove current
         const prev = navigationHistory[navigationHistory.length - 1];

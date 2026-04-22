@@ -12,12 +12,51 @@ app = Flask(__name__)
 
 # ─── Load MCQ data ───────────────────────────────────────────────────────────
 DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
+MODULES_DIR = os.path.join(DATA_DIR, 'modules')
 
 def load_mcq_data():
     with open(os.path.join(DATA_DIR, 'mcq_data.json'), 'r', encoding='utf-8') as f:
         return json.load(f)
 
 MCQ_DATA = load_mcq_data()
+
+# ─── Load Science Learning Modules ───────────────────────────────────────────
+
+def load_module_index():
+    index_path = os.path.join(MODULES_DIR, 'index.json')
+    if not os.path.exists(index_path):
+        return {"modules": []}
+    with open(index_path, 'r', encoding='utf-8') as f:
+        return json.load(f)
+
+def load_module(module_id):
+    """Load a full module JSON file by module_id."""
+    index = MODULE_INDEX
+    for mod in index.get('modules', []):
+        if mod['module_id'] == module_id:
+            filepath = os.path.join(MODULES_DIR, mod['file'])
+            if os.path.exists(filepath):
+                with open(filepath, 'r', encoding='utf-8') as f:
+                    return json.load(f)
+    return None
+
+def find_topic(module_data, topic_id):
+    """Find a specific topic within a loaded module."""
+    if not module_data:
+        return None
+    for topic in module_data.get('topics', []):
+        if topic['topic_id'] == topic_id:
+            return topic
+    return None
+
+MODULE_INDEX = load_module_index()
+
+# Pre-load all modules into memory for fast search
+MODULE_CACHE = {}
+for _mod_entry in MODULE_INDEX.get('modules', []):
+    _loaded = load_module(_mod_entry['module_id'])
+    if _loaded:
+        MODULE_CACHE[_mod_entry['module_id']] = _loaded
 
 # ─── Chatbot knowledge base ─────────────────────────────────────────────────
 CHAT_RESPONSES = {
@@ -174,6 +213,294 @@ def contact():
         "success": True,
         "message": f"Thank you {name}! We'll contact you at {email} within 24 hours.",
         "reference": f"EDU-{random.randint(10000, 99999)}"
+    })
+
+# ─── Science Learning Module API Routes ──────────────────────────────────────
+
+@app.route('/api/modules', methods=['GET'])
+def get_modules():
+    """List all available learning modules with metadata."""
+    modules_list = []
+    for mod in MODULE_INDEX.get('modules', []):
+        modules_list.append({
+            "module_id": mod['module_id'],
+            "title": mod['title'],
+            "icon": mod['icon'],
+            "color": mod['color'],
+            "description": mod['description'],
+            "topics": mod['topics'],
+            "topic_count": len(mod['topics']),
+            "tags": mod.get('tags', []),
+            "prerequisites": mod.get('prerequisites', []),
+        })
+    return jsonify({
+        "count": len(modules_list),
+        "modules": modules_list
+    })
+
+
+@app.route('/api/modules/<module_id>', methods=['GET'])
+def get_module_detail(module_id):
+    """Get full module data including all topics."""
+    module_data = MODULE_CACHE.get(module_id)
+    if not module_data:
+        return jsonify({"error": f"Module '{module_id}' not found",
+                        "available": list(MODULE_CACHE.keys())}), 404
+
+    # Build a summary (without full quiz/visualization data for overview)
+    include_full = request.args.get('full', 'false').lower() == 'true'
+
+    if include_full:
+        return jsonify(module_data)
+
+    # Summary view
+    topics_summary = []
+    for topic in module_data.get('topics', []):
+        topics_summary.append({
+            "topic_id": topic['topic_id'],
+            "title": topic['title'],
+            "order": topic['order'],
+            "explanation_simple": topic['explanation']['simple'],
+            "formula_count": len(topic.get('formulas', [])),
+            "quiz_mcq_count": len(topic.get('quiz', {}).get('mcq', [])),
+            "quiz_short_count": len(topic.get('quiz', {}).get('short_answer', [])),
+            "has_visualization": 'visualization_3d' in topic,
+            "has_proofs": 'theorem_proofs' in topic,
+            "real_world_examples": len(topic.get('real_world_examples', [])),
+        })
+
+    return jsonify({
+        "module_id": module_data['module_id'],
+        "module_title": module_data['module_title'],
+        "version": module_data.get('version', '1.0.0'),
+        "topic_count": len(topics_summary),
+        "topics": topics_summary
+    })
+
+
+@app.route('/api/modules/<module_id>/topics/<topic_id>', methods=['GET'])
+def get_topic(module_id, topic_id):
+    """Get a specific topic with all content."""
+    module_data = MODULE_CACHE.get(module_id)
+    if not module_data:
+        return jsonify({"error": f"Module '{module_id}' not found"}), 404
+
+    topic = find_topic(module_data, topic_id)
+    if not topic:
+        available = [t['topic_id'] for t in module_data.get('topics', [])]
+        return jsonify({"error": f"Topic '{topic_id}' not found in module '{module_id}'",
+                        "available_topics": available}), 404
+
+    return jsonify({
+        "module_id": module_id,
+        "module_title": module_data['module_title'],
+        "topic": topic
+    })
+
+
+@app.route('/api/modules/<module_id>/topics/<topic_id>/quiz', methods=['GET'])
+def get_topic_quiz(module_id, topic_id):
+    """Get quiz questions for a specific topic. Supports type and count filters."""
+    module_data = MODULE_CACHE.get(module_id)
+    if not module_data:
+        return jsonify({"error": f"Module '{module_id}' not found"}), 404
+
+    topic = find_topic(module_data, topic_id)
+    if not topic:
+        return jsonify({"error": f"Topic '{topic_id}' not found"}), 404
+
+    quiz = topic.get('quiz', {})
+    quiz_type = request.args.get('type', 'all')  # 'mcq', 'short_answer', 'all'
+    difficulty = request.args.get('difficulty', 'all')
+    count = int(request.args.get('count', 50))
+    shuffle = request.args.get('shuffle', 'false').lower() == 'true'
+
+    result = {"module_id": module_id, "topic_id": topic_id, "topic_title": topic['title']}
+
+    if quiz_type in ('mcq', 'all'):
+        mcqs = quiz.get('mcq', [])
+        if difficulty != 'all':
+            mcqs = [q for q in mcqs if q.get('difficulty') == difficulty]
+        if shuffle:
+            mcqs = list(mcqs)
+            random.shuffle(mcqs)
+        result['mcq'] = mcqs[:count]
+        result['mcq_count'] = len(result['mcq'])
+
+    if quiz_type in ('short_answer', 'all'):
+        shorts = quiz.get('short_answer', [])
+        if shuffle:
+            shorts = list(shorts)
+            random.shuffle(shorts)
+        result['short_answer'] = shorts[:count]
+        result['short_answer_count'] = len(result['short_answer'])
+
+    return jsonify(result)
+
+
+@app.route('/api/modules/<module_id>/topics/<topic_id>/visualization', methods=['GET'])
+def get_topic_visualization(module_id, topic_id):
+    """Get 3D visualization instructions and interaction config for a topic."""
+    module_data = MODULE_CACHE.get(module_id)
+    if not module_data:
+        return jsonify({"error": f"Module '{module_id}' not found"}), 404
+
+    topic = find_topic(module_data, topic_id)
+    if not topic:
+        return jsonify({"error": f"Topic '{topic_id}' not found"}), 404
+
+    viz = topic.get('visualization_3d', {})
+    interaction = topic.get('interaction', {})
+
+    return jsonify({
+        "module_id": module_id,
+        "topic_id": topic_id,
+        "topic_title": topic['title'],
+        "visualization_3d": viz,
+        "interaction": interaction
+    })
+
+
+@app.route('/api/modules/<module_id>/topics/<topic_id>/formulas', methods=['GET'])
+def get_topic_formulas(module_id, topic_id):
+    """Get LaTeX formulas and variable descriptions for a topic."""
+    module_data = MODULE_CACHE.get(module_id)
+    if not module_data:
+        return jsonify({"error": f"Module '{module_id}' not found"}), 404
+
+    topic = find_topic(module_data, topic_id)
+    if not topic:
+        return jsonify({"error": f"Topic '{topic_id}' not found"}), 404
+
+    return jsonify({
+        "module_id": module_id,
+        "topic_id": topic_id,
+        "topic_title": topic['title'],
+        "formulas": topic.get('formulas', []),
+        "formula_count": len(topic.get('formulas', []))
+    })
+
+
+@app.route('/api/modules/<module_id>/topics/<topic_id>/examples', methods=['GET'])
+def get_topic_examples(module_id, topic_id):
+    """Get real-world examples for a topic."""
+    module_data = MODULE_CACHE.get(module_id)
+    if not module_data:
+        return jsonify({"error": f"Module '{module_id}' not found"}), 404
+
+    topic = find_topic(module_data, topic_id)
+    if not topic:
+        return jsonify({"error": f"Topic '{topic_id}' not found"}), 404
+
+    return jsonify({
+        "module_id": module_id,
+        "topic_id": topic_id,
+        "topic_title": topic['title'],
+        "real_world_examples": topic.get('real_world_examples', []),
+        "count": len(topic.get('real_world_examples', []))
+    })
+
+
+@app.route('/api/modules/search', methods=['GET'])
+def search_modules():
+    """Full-text search across all modules, topics, formulas, and quizzes."""
+    query = request.args.get('q', '').lower().strip()
+    if not query or len(query) < 2:
+        return jsonify({"error": "Search query must be at least 2 characters",
+                        "usage": "/api/modules/search?q=kinetic+energy"}), 400
+
+    results = []
+
+    for mod_id, mod_data in MODULE_CACHE.items():
+        for topic in mod_data.get('topics', []):
+            score = 0
+            matches = []
+
+            # Search in title
+            if query in topic['title'].lower():
+                score += 10
+                matches.append('title')
+
+            # Search in explanations
+            if query in topic['explanation'].get('simple', '').lower():
+                score += 5
+                matches.append('explanation_simple')
+            if query in topic['explanation'].get('advanced', '').lower():
+                score += 3
+                matches.append('explanation_advanced')
+
+            # Search in formulas
+            for formula in topic.get('formulas', []):
+                if query in formula.get('name', '').lower():
+                    score += 7
+                    matches.append(f"formula:{formula['name']}")
+
+            # Search in quiz questions
+            for q in topic.get('quiz', {}).get('mcq', []):
+                if query in q.get('question', '').lower():
+                    score += 2
+                    matches.append('quiz_mcq')
+
+            # Search in real-world examples
+            for ex in topic.get('real_world_examples', []):
+                if query in ex.get('title', '').lower() or query in ex.get('description', '').lower():
+                    score += 4
+                    matches.append(f"example:{ex['title']}")
+
+            if score > 0:
+                results.append({
+                    "module_id": mod_id,
+                    "module_title": mod_data['module_title'],
+                    "topic_id": topic['topic_id'],
+                    "topic_title": topic['title'],
+                    "relevance_score": score,
+                    "matched_in": list(set(matches)),
+                    "explanation_preview": topic['explanation']['simple'][:200] + '...',
+                    "endpoint": f"/api/modules/{mod_id}/topics/{topic['topic_id']}"
+                })
+
+    # Sort by relevance
+    results.sort(key=lambda x: x['relevance_score'], reverse=True)
+
+    return jsonify({
+        "query": query,
+        "result_count": len(results),
+        "results": results[:20]  # Cap at 20 results
+    })
+
+
+@app.route('/api/modules/stats', methods=['GET'])
+def module_stats():
+    """Get aggregate statistics across all modules."""
+    total_topics = 0
+    total_formulas = 0
+    total_mcqs = 0
+    total_short_answers = 0
+    total_examples = 0
+    total_proofs = 0
+    total_visualizations = 0
+
+    for mod_id, mod_data in MODULE_CACHE.items():
+        for topic in mod_data.get('topics', []):
+            total_topics += 1
+            total_formulas += len(topic.get('formulas', []))
+            total_mcqs += len(topic.get('quiz', {}).get('mcq', []))
+            total_short_answers += len(topic.get('quiz', {}).get('short_answer', []))
+            total_examples += len(topic.get('real_world_examples', []))
+            total_proofs += len(topic.get('theorem_proofs', []))
+            if 'visualization_3d' in topic:
+                total_visualizations += 1
+
+    return jsonify({
+        "module_count": len(MODULE_CACHE),
+        "topic_count": total_topics,
+        "formula_count": total_formulas,
+        "mcq_count": total_mcqs,
+        "short_answer_count": total_short_answers,
+        "real_world_example_count": total_examples,
+        "theorem_proof_count": total_proofs,
+        "visualization_count": total_visualizations,
+        "total_quiz_questions": total_mcqs + total_short_answers
     })
 
 # ─── Run ─────────────────────────────────────────────────────────────────────

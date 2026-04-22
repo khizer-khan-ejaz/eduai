@@ -1,0 +1,879 @@
+{
+  "module_id": "energy",
+  "module_title": "Energy: Forms, Conservation & Transformations",
+  "version": "1.0.0",
+  "prerequisites": ["motion", "force"],
+  "topics": [
+    {
+      "topic_id": "kinetic_energy",
+      "title": "Kinetic Energy",
+      "order": 1,
+      "explanation": {
+        "simple": "Kinetic energy is the energy an object has because it is moving. The faster something moves or the heavier it is, the more kinetic energy it has. A rolling ball, a flying bird, and a moving car all have kinetic energy.",
+        "advanced": "Kinetic energy (KE) is a scalar quantity defined as the work needed to accelerate a body of mass m from rest to velocity v. It is frame-dependent and always non-negative. For relativistic speeds, the classical formula is replaced by the Lorentz factor expression. In the work-energy theorem, the net work done on a particle equals its change in kinetic energy: W_net = ΔKE."
+      },
+      "formulas": [
+        {
+          "name": "Kinetic Energy",
+          "latex": "KE = \\frac{1}{2}mv^2",
+          "variables": {
+            "KE": {"description": "Kinetic energy", "unit": "J (Joules)"},
+            "m": {"description": "Mass of the object", "unit": "kg"},
+            "v": {"description": "Velocity of the object", "unit": "m/s"}
+          }
+        },
+        {
+          "name": "Work-Energy Theorem",
+          "latex": "W_{net} = \\Delta KE = \\frac{1}{2}mv_f^2 - \\frac{1}{2}mv_i^2",
+          "variables": {
+            "W_net": {"description": "Net work done", "unit": "J"},
+            "v_f": {"description": "Final velocity", "unit": "m/s"},
+            "v_i": {"description": "Initial velocity", "unit": "m/s"}
+          }
+        },
+        {
+          "name": "KE in terms of momentum",
+          "latex": "KE = \\frac{p^2}{2m}",
+          "variables": {
+            "p": {"description": "Linear momentum (p = mv)", "unit": "kg·m/s"}
+          }
+        }
+      ],
+      "visualization_3d": {
+        "scene_type": "dynamic_simulation",
+        "objects": [
+          {
+            "id": "moving_sphere",
+            "type": "sphere",
+            "radius": 0.5,
+            "color": "#6c5ce7",
+            "position": {"x": -5, "y": 0.5, "z": 0},
+            "material": "phong",
+            "shininess": 80,
+            "emissive": "#3d2e8f",
+            "emissive_intensity": 0.2
+          },
+          {
+            "id": "ground_plane",
+            "type": "plane",
+            "width": 14,
+            "height": 6,
+            "color": "#1a1a2e",
+            "rotation": {"x": -90, "y": 0, "z": 0},
+            "position": {"x": 0, "y": 0, "z": 0},
+            "material": "standard",
+            "grid_overlay": true,
+            "grid_color": "#333355"
+          },
+          {
+            "id": "velocity_arrow",
+            "type": "arrow_helper",
+            "direction": {"x": 1, "y": 0, "z": 0},
+            "origin": "moving_sphere.position",
+            "length_factor": "velocity * 0.3",
+            "color": "#74b9ff",
+            "head_length": 0.3,
+            "head_width": 0.15
+          },
+          {
+            "id": "ke_bar",
+            "type": "box",
+            "width": 0.4,
+            "height_dynamic": "KE * 0.1",
+            "depth": 0.4,
+            "color": "#55efc4",
+            "position": {"x": 6, "y": "height/2", "z": -2},
+            "material": "phong",
+            "label": "KE"
+          },
+          {
+            "id": "energy_glow",
+            "type": "point_light",
+            "color": "#6c5ce7",
+            "intensity_dynamic": "velocity * 0.1",
+            "position": "moving_sphere.position",
+            "distance": 5
+          }
+        ],
+        "animations": [
+          {
+            "id": "ball_motion",
+            "target": "moving_sphere",
+            "property": "position.x",
+            "type": "linear_motion",
+            "velocity_source": "slider_velocity",
+            "bounds": {"min": -5, "max": 5},
+            "loop": "bounce"
+          },
+          {
+            "id": "arrow_update",
+            "target": "velocity_arrow",
+            "property": "length",
+            "type": "proportional",
+            "source": "slider_velocity",
+            "scale": 0.3
+          },
+          {
+            "id": "glow_pulse",
+            "target": "energy_glow",
+            "property": "intensity",
+            "type": "sinusoidal_pulse",
+            "frequency": 2,
+            "amplitude": 0.3,
+            "offset": "velocity * 0.1"
+          }
+        ],
+        "camera": {
+          "position": {"x": 0, "y": 4, "z": 8},
+          "look_at": {"x": 0, "y": 0.5, "z": 0},
+          "fov": 50
+        },
+        "lighting": [
+          {"type": "ambient", "color": "#ffffff", "intensity": 0.4},
+          {"type": "directional", "color": "#ffffff", "intensity": 0.7, "position": {"x": 5, "y": 8, "z": 5}, "cast_shadow": true}
+        ]
+      },
+      "interaction": {
+        "sliders": [
+          {
+            "id": "slider_mass",
+            "label": "Mass (kg)",
+            "min": 0.5,
+            "max": 10,
+            "step": 0.1,
+            "default": 2,
+            "unit": "kg",
+            "affects": ["KE_calculation", "moving_sphere.scale"]
+          },
+          {
+            "id": "slider_velocity",
+            "label": "Velocity (m/s)",
+            "min": 0,
+            "max": 20,
+            "step": 0.5,
+            "default": 5,
+            "unit": "m/s",
+            "affects": ["KE_calculation", "ball_motion", "velocity_arrow"]
+          }
+        ],
+        "computed_displays": [
+          {
+            "id": "ke_display",
+            "label": "Kinetic Energy",
+            "formula": "0.5 * mass * velocity^2",
+            "unit": "J",
+            "format": "0.00",
+            "highlight_color": "#55efc4"
+          },
+          {
+            "id": "momentum_display",
+            "label": "Momentum",
+            "formula": "mass * velocity",
+            "unit": "kg·m/s",
+            "format": "0.00",
+            "highlight_color": "#74b9ff"
+          }
+        ],
+        "buttons": [
+          {"id": "btn_play", "label": "▶ Play", "action": "start_animation"},
+          {"id": "btn_pause", "label": "⏸ Pause", "action": "pause_animation"},
+          {"id": "btn_reset", "label": "↺ Reset", "action": "reset_to_defaults"}
+        ]
+      },
+      "real_world_examples": [
+        {
+          "title": "Car in Motion",
+          "description": "A 1000 kg car traveling at 20 m/s has KE = ½ × 1000 × 20² = 200,000 J. This is why speed matters more than mass in crashes — energy scales with v².",
+          "calculation": "KE = 0.5 × 1000 × 400 = 200,000 J"
+        },
+        {
+          "title": "Cricket Ball",
+          "description": "A 160 g cricket ball bowled at 140 km/h (≈ 38.9 m/s) carries about 121 J of kinetic energy.",
+          "calculation": "KE = 0.5 × 0.16 × 38.9² ≈ 121 J"
+        },
+        {
+          "title": "Running Athlete",
+          "description": "A 70 kg sprinter running at 10 m/s has KE = 3500 J, equivalent to lifting a 35 kg weight 10 meters high.",
+          "calculation": "KE = 0.5 × 70 × 100 = 3500 J"
+        }
+      ],
+      "quiz": {
+        "mcq": [
+          {
+            "question": "If the velocity of an object doubles, its kinetic energy:",
+            "options": ["Doubles", "Triples", "Quadruples", "Stays the same"],
+            "correct": 2,
+            "explanation": "KE = ½mv². If v → 2v, then KE = ½m(2v)² = ½m(4v²) = 4 × (½mv²). So KE quadruples.",
+            "difficulty": "medium"
+          },
+          {
+            "question": "A 2 kg ball moving at 3 m/s has kinetic energy of:",
+            "options": ["6 J", "9 J", "12 J", "18 J"],
+            "correct": 1,
+            "explanation": "KE = ½ × 2 × 3² = ½ × 2 × 9 = 9 J.",
+            "difficulty": "easy"
+          },
+          {
+            "question": "Which has more kinetic energy: a 10 kg object at 2 m/s or a 2 kg object at 10 m/s?",
+            "options": ["10 kg object", "2 kg object", "They are equal", "Cannot determine"],
+            "correct": 1,
+            "explanation": "10 kg at 2 m/s: KE = ½ × 10 × 4 = 20 J. 2 kg at 10 m/s: KE = ½ × 2 × 100 = 100 J. The lighter, faster object has more KE.",
+            "difficulty": "medium"
+          },
+          {
+            "question": "Kinetic energy is a _____ quantity.",
+            "options": ["Vector", "Scalar", "Tensor", "Imaginary"],
+            "correct": 1,
+            "explanation": "Kinetic energy has only magnitude, no direction. It is always a non-negative scalar quantity.",
+            "difficulty": "easy"
+          }
+        ],
+        "short_answer": [
+          {
+            "question": "A truck of mass 5000 kg accelerates from rest to 15 m/s. Calculate its kinetic energy.",
+            "answer": "KE = ½ × 5000 × 15² = ½ × 5000 × 225 = 562,500 J = 562.5 kJ",
+            "hint": "Use KE = ½mv² with m = 5000 kg and v = 15 m/s."
+          },
+          {
+            "question": "Explain why a bullet (small mass, high velocity) can be more dangerous than a slow-moving heavy object.",
+            "answer": "Kinetic energy depends on the square of velocity (KE = ½mv²). Since velocity is squared, a small increase in speed contributes much more to energy than a proportional increase in mass. A 10 g bullet at 300 m/s has KE = 450 J, while a 10 kg rock at 1 m/s has KE = 5 J.",
+            "hint": "Think about how KE scales with velocity vs. mass."
+          }
+        ]
+      }
+    },
+    {
+      "topic_id": "potential_energy",
+      "title": "Potential Energy",
+      "order": 2,
+      "explanation": {
+        "simple": "Potential energy is stored energy — energy an object has because of its position or shape. A book on a shelf, a stretched rubber band, or water at the top of a waterfall all have potential energy waiting to be released.",
+        "advanced": "Potential energy is the energy stored in a system due to the relative positions of its components or its configuration. Gravitational PE depends on height in a gravitational field (U = mgh near Earth's surface, U = -GMm/r in general). Elastic PE follows Hooke's law (U = ½kx²). Electric PE arises from charge configurations in electric fields. The negative gradient of potential energy gives the conservative force: F = -∇U."
+      },
+      "formulas": [
+        {
+          "name": "Gravitational Potential Energy (near surface)",
+          "latex": "PE = mgh",
+          "variables": {
+            "PE": {"description": "Gravitational potential energy", "unit": "J"},
+            "m": {"description": "Mass", "unit": "kg"},
+            "g": {"description": "Acceleration due to gravity (≈ 9.8 m/s²)", "unit": "m/s²"},
+            "h": {"description": "Height above reference point", "unit": "m"}
+          }
+        },
+        {
+          "name": "Gravitational PE (general)",
+          "latex": "U = -\\frac{GMm}{r}",
+          "variables": {
+            "G": {"description": "Gravitational constant (6.674 × 10⁻¹¹)", "unit": "N·m²/kg²"},
+            "M": {"description": "Mass of the larger body", "unit": "kg"},
+            "r": {"description": "Distance between centers of mass", "unit": "m"}
+          }
+        },
+        {
+          "name": "Elastic Potential Energy",
+          "latex": "PE_{elastic} = \\frac{1}{2}kx^2",
+          "variables": {
+            "k": {"description": "Spring constant", "unit": "N/m"},
+            "x": {"description": "Displacement from equilibrium", "unit": "m"}
+          }
+        }
+      ],
+      "visualization_3d": {
+        "scene_type": "height_simulation",
+        "objects": [
+          {
+            "id": "ramp",
+            "type": "inclined_plane",
+            "length": 8,
+            "angle_dynamic": "slider_ramp_angle",
+            "color": "#2d3436",
+            "material": "phong",
+            "position": {"x": 0, "y": 0, "z": 0}
+          },
+          {
+            "id": "ball_on_ramp",
+            "type": "sphere",
+            "radius": 0.4,
+            "color": "#fd79a8",
+            "position_dynamic": "calculated_from_ramp_position",
+            "material": "phong",
+            "shininess": 60
+          },
+          {
+            "id": "height_indicator",
+            "type": "dashed_line",
+            "start": "ball_on_ramp.position",
+            "end": {"x": "ball_on_ramp.x", "y": 0, "z": "ball_on_ramp.z"},
+            "color": "#fdcb6e",
+            "dash_size": 0.2,
+            "gap_size": 0.1,
+            "label": "h"
+          },
+          {
+            "id": "pe_bar",
+            "type": "box",
+            "width": 0.4,
+            "height_dynamic": "PE * 0.05",
+            "depth": 0.4,
+            "color": "#fd79a8",
+            "position": {"x": 5, "y": "height/2", "z": -2},
+            "label": "PE"
+          },
+          {
+            "id": "ke_bar_pe",
+            "type": "box",
+            "width": 0.4,
+            "height_dynamic": "KE * 0.05",
+            "depth": 0.4,
+            "color": "#55efc4",
+            "position": {"x": 6, "y": "height/2", "z": -2},
+            "label": "KE"
+          }
+        ],
+        "animations": [
+          {
+            "id": "ball_slide_down",
+            "target": "ball_on_ramp",
+            "type": "physics_ramp_slide",
+            "acceleration": "g * sin(ramp_angle)",
+            "trigger": "btn_release"
+          },
+          {
+            "id": "energy_bar_update",
+            "type": "continuous",
+            "description": "PE bar shrinks as KE bar grows during ball descent"
+          }
+        ],
+        "camera": {
+          "position": {"x": -3, "y": 5, "z": 8},
+          "look_at": {"x": 0, "y": 2, "z": 0},
+          "fov": 50
+        },
+        "lighting": [
+          {"type": "ambient", "color": "#ffffff", "intensity": 0.5},
+          {"type": "directional", "color": "#ffffff", "intensity": 0.6, "position": {"x": -3, "y": 10, "z": 5}}
+        ]
+      },
+      "interaction": {
+        "sliders": [
+          {
+            "id": "slider_height",
+            "label": "Height (m)",
+            "min": 0,
+            "max": 20,
+            "step": 0.5,
+            "default": 10,
+            "unit": "m",
+            "affects": ["PE_calculation", "ball_on_ramp.position"]
+          },
+          {
+            "id": "slider_pe_mass",
+            "label": "Mass (kg)",
+            "min": 0.5,
+            "max": 10,
+            "step": 0.1,
+            "default": 2,
+            "unit": "kg"
+          },
+          {
+            "id": "slider_ramp_angle",
+            "label": "Ramp Angle (°)",
+            "min": 10,
+            "max": 80,
+            "step": 1,
+            "default": 30,
+            "unit": "°"
+          }
+        ],
+        "computed_displays": [
+          {
+            "id": "pe_display",
+            "label": "Potential Energy",
+            "formula": "mass * 9.8 * height",
+            "unit": "J",
+            "format": "0.00",
+            "highlight_color": "#fd79a8"
+          }
+        ],
+        "buttons": [
+          {"id": "btn_release", "label": "🔽 Release Ball", "action": "start_ramp_slide"},
+          {"id": "btn_pe_reset", "label": "↺ Reset", "action": "reset_ball_to_top"}
+        ]
+      },
+      "real_world_examples": [
+        {
+          "title": "Hydroelectric Dam",
+          "description": "Water stored at a height in a dam has gravitational PE. When released, this PE converts to KE, which spins turbines to generate electricity.",
+          "calculation": "1000 kg of water at 50 m height: PE = 1000 × 9.8 × 50 = 490,000 J"
+        },
+        {
+          "title": "Roller Coaster",
+          "description": "At the top of a 40 m drop, a 500 kg coaster car has PE = 196,000 J. This converts entirely to kinetic energy at the bottom (ignoring friction), giving a speed of ≈ 28 m/s (100 km/h).",
+          "calculation": "PE = 500 × 9.8 × 40 = 196,000 J → v = √(2 × 196000/500) ≈ 28 m/s"
+        },
+        {
+          "title": "Archery Bow",
+          "description": "A drawn bow stores elastic potential energy. When released, PE converts to the kinetic energy of the arrow. A 30 kg/m bow drawn 0.5 m stores 3.75 J.",
+          "calculation": "PE = ½ × 30 × 0.5² = 3.75 J"
+        }
+      ],
+      "quiz": {
+        "mcq": [
+          {
+            "question": "A 3 kg object at height 10 m has gravitational PE of (g = 10 m/s²):",
+            "options": ["30 J", "100 J", "300 J", "3000 J"],
+            "correct": 2,
+            "explanation": "PE = mgh = 3 × 10 × 10 = 300 J.",
+            "difficulty": "easy"
+          },
+          {
+            "question": "If a spring with k = 200 N/m is compressed by 0.1 m, the elastic PE is:",
+            "options": ["1 J", "10 J", "20 J", "100 J"],
+            "correct": 0,
+            "explanation": "PE = ½kx² = ½ × 200 × 0.01 = 1 J.",
+            "difficulty": "medium"
+          },
+          {
+            "question": "Gravitational PE depends on:",
+            "options": ["Mass and velocity", "Mass, gravity, and height", "Force and distance", "Acceleration and time"],
+            "correct": 1,
+            "explanation": "PE = mgh. It depends on mass (m), gravitational acceleration (g), and height (h) above a reference point.",
+            "difficulty": "easy"
+          }
+        ],
+        "short_answer": [
+          {
+            "question": "A 0.5 kg ball is thrown upward with velocity 20 m/s. What is the maximum height it reaches? (g = 10 m/s²)",
+            "answer": "At max height, all KE converts to PE: ½mv² = mgh → h = v²/(2g) = 400/20 = 20 m",
+            "hint": "At maximum height, velocity = 0 and all kinetic energy has converted to potential energy."
+          }
+        ]
+      }
+    },
+    {
+      "topic_id": "conservation_of_energy",
+      "title": "Conservation of Energy",
+      "order": 3,
+      "explanation": {
+        "simple": "Energy cannot be created or destroyed — it can only change form. When a ball falls, its potential energy transforms into kinetic energy. The total energy in a closed system always stays the same. This is one of the most important laws in all of physics!",
+        "advanced": "The Law of Conservation of Energy states that the total energy of an isolated system remains constant over time. Energy can transform between forms (kinetic, potential, thermal, chemical, nuclear, electromagnetic), but the total is invariant. Mathematically: E_total = KE + PE + E_thermal + E_other = constant. This principle arises from Noether's theorem as a consequence of time translation symmetry of the laws of physics. In thermodynamics, this corresponds to the First Law: ΔU = Q - W."
+      },
+      "formulas": [
+        {
+          "name": "Conservation of Mechanical Energy",
+          "latex": "KE_i + PE_i = KE_f + PE_f",
+          "variables": {
+            "KE_i": {"description": "Initial kinetic energy", "unit": "J"},
+            "PE_i": {"description": "Initial potential energy", "unit": "J"},
+            "KE_f": {"description": "Final kinetic energy", "unit": "J"},
+            "PE_f": {"description": "Final potential energy", "unit": "J"}
+          }
+        },
+        {
+          "name": "Total Energy (with dissipation)",
+          "latex": "E_{total} = KE + PE + E_{thermal} + E_{other}",
+          "variables": {
+            "E_thermal": {"description": "Thermal energy (heat from friction, etc.)", "unit": "J"}
+          }
+        },
+        {
+          "name": "First Law of Thermodynamics",
+          "latex": "\\Delta U = Q - W",
+          "variables": {
+            "ΔU": {"description": "Change in internal energy", "unit": "J"},
+            "Q": {"description": "Heat added to the system", "unit": "J"},
+            "W": {"description": "Work done by the system", "unit": "J"}
+          }
+        }
+      ],
+      "visualization_3d": {
+        "scene_type": "energy_conservation_demo",
+        "objects": [
+          {
+            "id": "pendulum_support",
+            "type": "box",
+            "width": 0.1,
+            "height": 6,
+            "depth": 0.1,
+            "color": "#636e72",
+            "position": {"x": 0, "y": 3, "z": 0}
+          },
+          {
+            "id": "pendulum_string",
+            "type": "line",
+            "start": {"x": 0, "y": 6, "z": 0},
+            "end": "pendulum_bob.position",
+            "color": "#b2bec3"
+          },
+          {
+            "id": "pendulum_bob",
+            "type": "sphere",
+            "radius": 0.4,
+            "color": "#e17055",
+            "position_dynamic": "pendulum_physics",
+            "material": "phong"
+          },
+          {
+            "id": "energy_pie_chart",
+            "type": "custom_ui_overlay",
+            "position": {"x": "top-right"},
+            "data": {
+              "KE_percentage": "dynamic",
+              "PE_percentage": "dynamic",
+              "colors": ["#55efc4", "#fd79a8"]
+            }
+          },
+          {
+            "id": "trail_line",
+            "type": "trajectory_trail",
+            "source": "pendulum_bob",
+            "max_points": 200,
+            "color": "#a29bfe",
+            "opacity": 0.3,
+            "fade": true
+          }
+        ],
+        "animations": [
+          {
+            "id": "pendulum_swing",
+            "target": "pendulum_bob",
+            "type": "pendulum_physics",
+            "length": 5,
+            "initial_angle_source": "slider_angle",
+            "damping": 0,
+            "gravity": 9.8
+          }
+        ],
+        "camera": {
+          "position": {"x": 0, "y": 3, "z": 10},
+          "look_at": {"x": 0, "y": 3, "z": 0},
+          "fov": 45
+        }
+      },
+      "interaction": {
+        "sliders": [
+          {
+            "id": "slider_angle",
+            "label": "Release Angle (°)",
+            "min": 5,
+            "max": 85,
+            "step": 1,
+            "default": 45,
+            "unit": "°"
+          },
+          {
+            "id": "slider_string_length",
+            "label": "String Length (m)",
+            "min": 1,
+            "max": 5,
+            "step": 0.1,
+            "default": 3,
+            "unit": "m"
+          },
+          {
+            "id": "slider_damping",
+            "label": "Air Resistance",
+            "min": 0,
+            "max": 0.5,
+            "step": 0.01,
+            "default": 0,
+            "unit": ""
+          }
+        ],
+        "computed_displays": [
+          {
+            "id": "ke_live",
+            "label": "Kinetic Energy",
+            "formula": "0.5 * mass * velocity²",
+            "unit": "J",
+            "highlight_color": "#55efc4"
+          },
+          {
+            "id": "pe_live",
+            "label": "Potential Energy",
+            "formula": "mass * g * height",
+            "unit": "J",
+            "highlight_color": "#fd79a8"
+          },
+          {
+            "id": "total_live",
+            "label": "Total Energy",
+            "formula": "KE + PE",
+            "unit": "J",
+            "highlight_color": "#a29bfe"
+          }
+        ],
+        "graph": {
+          "type": "real_time_line_chart",
+          "x_axis": "Time (s)",
+          "y_axis": "Energy (J)",
+          "series": [
+            {"id": "ke_series", "label": "KE", "color": "#55efc4"},
+            {"id": "pe_series", "label": "PE", "color": "#fd79a8"},
+            {"id": "total_series", "label": "Total", "color": "#a29bfe", "style": "dashed"}
+          ]
+        }
+      },
+      "real_world_examples": [
+        {
+          "title": "Bouncing Ball",
+          "description": "When a ball bounces, PE → KE → PE cyclically. Each bounce loses some energy to heat and sound (deformation), so the ball bounces lower each time.",
+          "calculation": "If h₁ = 2 m and coefficient of restitution e = 0.8, then h₂ = e² × h₁ = 0.64 × 2 = 1.28 m"
+        },
+        {
+          "title": "Bungee Jumping",
+          "description": "Gravitational PE converts to elastic PE of the stretched cord and KE of the jumper. At the lowest point, all energy is elastic PE. The total mechanical energy is conserved if we ignore air resistance.",
+          "calculation": "At max extension: mgh = ½k(x)², where x = extension beyond natural length"
+        }
+      ],
+      "quiz": {
+        "mcq": [
+          {
+            "question": "A ball is dropped from 20 m. At 10 m above ground, what fraction of its energy is kinetic? (ignore air resistance)",
+            "options": ["None", "One-quarter", "One-half", "All of it"],
+            "correct": 2,
+            "explanation": "At 10 m (halfway), half the PE has converted to KE. PE at 10 m = mgh = mg(10). KE at 10 m = mg(20-10) = mg(10). Ratio = ½.",
+            "difficulty": "medium"
+          },
+          {
+            "question": "The total mechanical energy of a freely falling object (no air resistance):",
+            "options": ["Increases", "Decreases", "Remains constant", "Becomes zero"],
+            "correct": 2,
+            "explanation": "In the absence of non-conservative forces, total mechanical energy (KE + PE) is conserved.",
+            "difficulty": "easy"
+          },
+          {
+            "question": "A pendulum at the highest point of its swing has:",
+            "options": ["Maximum KE, minimum PE", "Maximum PE, minimum KE", "Equal KE and PE", "Zero total energy"],
+            "correct": 1,
+            "explanation": "At the highest point, the pendulum momentarily stops (KE = 0) and has maximum height (PE = max).",
+            "difficulty": "easy"
+          }
+        ],
+        "short_answer": [
+          {
+            "question": "A 0.2 kg ball is dropped from 5 m. Calculate its velocity just before hitting the ground using energy conservation. (g = 10 m/s²)",
+            "answer": "mgh = ½mv² → v = √(2gh) = √(2 × 10 × 5) = √100 = 10 m/s",
+            "hint": "Set PE at the top equal to KE at the bottom. Mass cancels out!"
+          }
+        ]
+      }
+    },
+    {
+      "topic_id": "energy_transformations",
+      "title": "Energy Transformations",
+      "order": 4,
+      "explanation": {
+        "simple": "Energy constantly changes from one form to another. When you eat food, chemical energy becomes kinetic energy (movement) and thermal energy (body heat). A light bulb converts electrical energy to light and heat energy. Understanding these transformations helps us design efficient machines and understand nature.",
+        "advanced": "Energy transformation refers to the conversion of energy from one form to another within or between systems. Key forms include: kinetic, gravitational potential, elastic potential, thermal (internal), chemical, nuclear, electromagnetic, sound, and electrical. The efficiency of any transformation is η = (useful output / total input) × 100%. The second law of thermodynamics dictates that in any real transformation, some energy inevitably becomes thermal energy (entropy increases), making perpetual motion machines impossible."
+      },
+      "formulas": [
+        {
+          "name": "Efficiency",
+          "latex": "\\eta = \\frac{E_{useful}}{E_{total}} \\times 100\\%",
+          "variables": {
+            "η": {"description": "Efficiency (dimensionless, %)", "unit": "%"},
+            "E_useful": {"description": "Useful energy output", "unit": "J"},
+            "E_total": {"description": "Total energy input", "unit": "J"}
+          }
+        },
+        {
+          "name": "Power",
+          "latex": "P = \\frac{E}{t} = \\frac{W}{t}",
+          "variables": {
+            "P": {"description": "Power — rate of energy transfer", "unit": "W (Watts)"},
+            "t": {"description": "Time", "unit": "s"}
+          }
+        }
+      ],
+      "visualization_3d": {
+        "scene_type": "energy_flow_diagram",
+        "objects": [
+          {
+            "id": "energy_source",
+            "type": "sphere",
+            "radius": 1,
+            "color": "#fdcb6e",
+            "position": {"x": -5, "y": 2, "z": 0},
+            "label": "Chemical Energy (Fuel)",
+            "emissive": "#e17055",
+            "emissive_intensity": 0.4
+          },
+          {
+            "id": "engine_box",
+            "type": "box",
+            "width": 2,
+            "height": 2,
+            "depth": 2,
+            "color": "#636e72",
+            "position": {"x": 0, "y": 2, "z": 0},
+            "label": "Engine"
+          },
+          {
+            "id": "output_ke",
+            "type": "sphere",
+            "radius": 0.7,
+            "color": "#55efc4",
+            "position": {"x": 4, "y": 3, "z": 0},
+            "label": "Kinetic Energy"
+          },
+          {
+            "id": "output_heat",
+            "type": "sphere",
+            "radius": 0.5,
+            "color": "#ff7675",
+            "position": {"x": 4, "y": 1, "z": 0},
+            "label": "Heat (waste)"
+          },
+          {
+            "id": "output_sound",
+            "type": "sphere",
+            "radius": 0.3,
+            "color": "#a29bfe",
+            "position": {"x": 4, "y": -0.5, "z": 0},
+            "label": "Sound (waste)"
+          },
+          {
+            "id": "flow_arrow_input",
+            "type": "animated_particle_stream",
+            "start": "energy_source",
+            "end": "engine_box",
+            "particle_color": "#fdcb6e",
+            "particle_count": 20,
+            "speed": 2
+          },
+          {
+            "id": "flow_arrow_ke",
+            "type": "animated_particle_stream",
+            "start": "engine_box",
+            "end": "output_ke",
+            "particle_color": "#55efc4",
+            "particle_count_dynamic": "efficiency * 0.2",
+            "speed": 2
+          },
+          {
+            "id": "flow_arrow_heat",
+            "type": "animated_particle_stream",
+            "start": "engine_box",
+            "end": "output_heat",
+            "particle_color": "#ff7675",
+            "particle_count_dynamic": "(1 - efficiency) * 0.15",
+            "speed": 1.5
+          }
+        ],
+        "animations": [
+          {
+            "id": "particle_flow",
+            "type": "continuous",
+            "description": "Particles flow from source through engine to outputs, with proportions based on efficiency slider"
+          },
+          {
+            "id": "engine_rotation",
+            "target": "engine_box",
+            "property": "rotation.y",
+            "type": "continuous_rotation",
+            "speed": 1
+          }
+        ]
+      },
+      "interaction": {
+        "sliders": [
+          {
+            "id": "slider_efficiency",
+            "label": "Engine Efficiency (%)",
+            "min": 5,
+            "max": 95,
+            "step": 1,
+            "default": 40,
+            "unit": "%"
+          },
+          {
+            "id": "slider_input_energy",
+            "label": "Input Energy (J)",
+            "min": 100,
+            "max": 10000,
+            "step": 100,
+            "default": 1000,
+            "unit": "J"
+          }
+        ],
+        "computed_displays": [
+          {
+            "id": "useful_output",
+            "label": "Useful Output",
+            "formula": "input_energy * efficiency / 100",
+            "unit": "J",
+            "highlight_color": "#55efc4"
+          },
+          {
+            "id": "waste_output",
+            "label": "Wasted Energy",
+            "formula": "input_energy * (1 - efficiency/100)",
+            "unit": "J",
+            "highlight_color": "#ff7675"
+          }
+        ],
+        "transformation_selector": {
+          "label": "Choose Transformation",
+          "options": [
+            {"id": "chemical_to_kinetic", "name": "Car Engine", "input": "Chemical", "output": "Kinetic + Heat", "efficiency": 25},
+            {"id": "electrical_to_light", "name": "LED Bulb", "input": "Electrical", "output": "Light + Heat", "efficiency": 80},
+            {"id": "chemical_to_electrical", "name": "Battery", "input": "Chemical", "output": "Electrical + Heat", "efficiency": 90},
+            {"id": "solar_to_electrical", "name": "Solar Panel", "input": "Solar (EM)", "output": "Electrical + Heat", "efficiency": 22},
+            {"id": "nuclear_to_thermal", "name": "Nuclear Reactor", "input": "Nuclear", "output": "Thermal → Electrical", "efficiency": 33}
+          ]
+        }
+      },
+      "real_world_examples": [
+        {
+          "title": "Human Body",
+          "description": "Food (chemical energy) → ATP → muscle contraction (KE) + body heat (thermal). The human body is about 25% efficient at converting chemical energy to mechanical work.",
+          "calculation": "From 2000 kcal food: useful work ≈ 500 kcal, heat ≈ 1500 kcal"
+        },
+        {
+          "title": "Photosynthesis",
+          "description": "Plants convert solar energy → chemical energy (glucose). The efficiency is about 3-6%. 6CO₂ + 6H₂O + light → C₆H₁₂O₆ + 6O₂",
+          "calculation": "1 mole glucose stores ≈ 2870 kJ of chemical energy"
+        },
+        {
+          "title": "Hydroelectric Power",
+          "description": "Gravitational PE of water → KE of flowing water → rotational KE of turbine → electrical energy. Modern hydroelectric plants achieve ~90% efficiency.",
+          "calculation": "10,000 kg water at 50 m: PE = 4,900,000 J → ~4,410,000 J electrical output"
+        }
+      ],
+      "quiz": {
+        "mcq": [
+          {
+            "question": "In a coal power plant, the primary energy transformation is:",
+            "options": ["Nuclear → Electrical", "Chemical → Thermal → Electrical", "Kinetic → Electrical", "Solar → Electrical"],
+            "correct": 1,
+            "explanation": "Coal (chemical energy) is burned to produce heat (thermal), which creates steam to turn turbines (kinetic), which drives generators (electrical).",
+            "difficulty": "medium"
+          },
+          {
+            "question": "An engine with 30% efficiency receives 5000 J of input energy. The useful output is:",
+            "options": ["150 J", "1500 J", "3500 J", "5000 J"],
+            "correct": 1,
+            "explanation": "Useful output = efficiency × input = 0.30 × 5000 = 1500 J.",
+            "difficulty": "easy"
+          },
+          {
+            "question": "Why is 100% efficiency impossible in real machines?",
+            "options": ["Machines break down", "Energy is destroyed", "Some energy always converts to heat (2nd law of thermodynamics)", "We cannot measure energy accurately"],
+            "correct": 2,
+            "explanation": "The second law of thermodynamics states that entropy always increases in real processes, meaning some energy is inevitably lost as waste heat.",
+            "difficulty": "hard"
+          }
+        ],
+        "short_answer": [
+          {
+            "question": "List the energy transformations in a mobile phone being charged and then used to play music through a speaker.",
+            "answer": "Charging: Electrical energy (socket) → Chemical energy (battery). Playing music: Chemical energy (battery) → Electrical energy (circuits) → Sound energy (speaker) + Thermal energy (heat from processor) + Light energy (screen).",
+            "hint": "Think about the journey of energy from the power outlet to the sound waves you hear."
+          }
+        ]
+      }
+    }
+  ]
+}

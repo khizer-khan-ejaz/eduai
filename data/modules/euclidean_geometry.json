@@ -1,0 +1,936 @@
+{
+  "module_id": "euclidean_geometry",
+  "module_title": "Euclidean Geometry: Foundations & Theorems",
+  "version": "1.0.0",
+  "prerequisites": [],
+  "topics": [
+    {
+      "topic_id": "points_lines_planes",
+      "title": "Points, Lines & Planes",
+      "order": 1,
+      "explanation": {
+        "simple": "A point is an exact location in space with no size. A line is an infinite collection of points extending in both directions with no width. A plane is a flat surface that extends infinitely in all directions. These are the building blocks of all geometry!",
+        "advanced": "In Euclidean geometry (as axiomatized by Hilbert), a point is an undefined primitive with no dimension (dimension 0). A line is a 1-dimensional locus defined by any two distinct points, extending infinitely. A plane is a 2-dimensional flat surface determined by three non-collinear points. Euclid's five postulates govern these primitives: (1) a straight line can be drawn between any two points, (2) a line segment can be extended indefinitely, (3) a circle can be drawn with any center and radius, (4) all right angles are equal, and (5) the parallel postulate."
+      },
+      "formulas": [
+        {
+          "name": "Distance between two points (2D)",
+          "latex": "d = \\sqrt{(x_2-x_1)^2 + (y_2-y_1)^2}",
+          "variables": {
+            "d": {"description": "Distance", "unit": "units"},
+            "(x₁,y₁)": {"description": "Coordinates of point 1", "unit": ""},
+            "(x₂,y₂)": {"description": "Coordinates of point 2", "unit": ""}
+          }
+        },
+        {
+          "name": "Distance between two points (3D)",
+          "latex": "d = \\sqrt{(x_2-x_1)^2 + (y_2-y_1)^2 + (z_2-z_1)^2}",
+          "variables": {
+            "z₁, z₂": {"description": "Z-coordinates of the points", "unit": ""}
+          }
+        },
+        {
+          "name": "Midpoint Formula",
+          "latex": "M = \\left(\\frac{x_1+x_2}{2}, \\frac{y_1+y_2}{2}\\right)",
+          "variables": {
+            "M": {"description": "Midpoint of segment", "unit": ""}
+          }
+        },
+        {
+          "name": "Section Formula (Internal Division)",
+          "latex": "P = \\left(\\frac{mx_2+nx_1}{m+n}, \\frac{my_2+ny_1}{m+n}\\right)",
+          "variables": {
+            "m:n": {"description": "Ratio in which P divides the segment", "unit": ""}
+          }
+        },
+        {
+          "name": "Slope of a Line",
+          "latex": "m = \\frac{y_2-y_1}{x_2-x_1} = \\tan\\theta",
+          "variables": {
+            "m": {"description": "Slope", "unit": ""},
+            "θ": {"description": "Angle line makes with positive x-axis", "unit": "°"}
+          }
+        },
+        {
+          "name": "Equation of a Line (slope-intercept)",
+          "latex": "y = mx + c",
+          "variables": {
+            "c": {"description": "Y-intercept", "unit": ""}
+          }
+        },
+        {
+          "name": "General equation of a line",
+          "latex": "ax + by + c = 0",
+          "variables": {}
+        }
+      ],
+      "visualization_3d": {
+        "scene_type": "coordinate_system",
+        "objects": [
+          {
+            "id": "origin_point",
+            "type": "sphere",
+            "radius": 0.1,
+            "color": "#fdcb6e",
+            "position": {"x": 0, "y": 0, "z": 0},
+            "label": "O"
+          },
+          {
+            "id": "x_axis",
+            "type": "arrow_helper",
+            "direction": {"x": 1, "y": 0, "z": 0},
+            "origin": {"x": -8, "y": 0, "z": 0},
+            "length": 16,
+            "color": "#ff7675",
+            "label": "X"
+          },
+          {
+            "id": "y_axis",
+            "type": "arrow_helper",
+            "direction": {"x": 0, "y": 1, "z": 0},
+            "origin": {"x": 0, "y": -8, "z": 0},
+            "length": 16,
+            "color": "#55efc4",
+            "label": "Y"
+          },
+          {
+            "id": "z_axis",
+            "type": "arrow_helper",
+            "direction": {"x": 0, "y": 0, "z": 1},
+            "origin": {"x": 0, "y": 0, "z": -8},
+            "length": 16,
+            "color": "#74b9ff",
+            "label": "Z"
+          },
+          {
+            "id": "point_A",
+            "type": "sphere",
+            "radius": 0.15,
+            "color": "#e17055",
+            "position_dynamic": "slider_point_A",
+            "label": "A",
+            "draggable": true
+          },
+          {
+            "id": "point_B",
+            "type": "sphere",
+            "radius": 0.15,
+            "color": "#6c5ce7",
+            "position_dynamic": "slider_point_B",
+            "label": "B",
+            "draggable": true
+          },
+          {
+            "id": "line_AB",
+            "type": "line",
+            "start": "point_A.position",
+            "end": "point_B.position",
+            "color": "#a29bfe",
+            "linewidth": 2
+          },
+          {
+            "id": "midpoint_M",
+            "type": "sphere",
+            "radius": 0.12,
+            "color": "#00cec9",
+            "position_dynamic": "midpoint(A, B)",
+            "label": "M"
+          },
+          {
+            "id": "distance_label",
+            "type": "text_sprite",
+            "text_dynamic": "distance(A, B)",
+            "position": "midpoint(A, B)",
+            "color": "#dfe6e9"
+          },
+          {
+            "id": "grid_plane",
+            "type": "grid_helper",
+            "size": 16,
+            "divisions": 16,
+            "color_center": "#444466",
+            "color_grid": "#222244",
+            "position": {"x": 0, "y": 0, "z": 0}
+          }
+        ],
+        "animations": [],
+        "camera": {
+          "position": {"x": 5, "y": 5, "z": 8},
+          "look_at": {"x": 0, "y": 0, "z": 0},
+          "fov": 50,
+          "orbit_enabled": true
+        },
+        "lighting": [
+          {"type": "ambient", "color": "#ffffff", "intensity": 0.6},
+          {"type": "directional", "color": "#ffffff", "intensity": 0.5, "position": {"x": 5, "y": 10, "z": 5}}
+        ]
+      },
+      "interaction": {
+        "sliders": [
+          {"id": "slider_ax", "label": "Point A: x", "min": -5, "max": 5, "step": 0.5, "default": -2},
+          {"id": "slider_ay", "label": "Point A: y", "min": -5, "max": 5, "step": 0.5, "default": 1},
+          {"id": "slider_bx", "label": "Point B: x", "min": -5, "max": 5, "step": 0.5, "default": 3},
+          {"id": "slider_by", "label": "Point B: y", "min": -5, "max": 5, "step": 0.5, "default": 4}
+        ],
+        "computed_displays": [
+          {
+            "id": "distance_display",
+            "label": "Distance AB",
+            "formula": "sqrt((bx - ax)² + (by - ay)²)",
+            "unit": "units",
+            "highlight_color": "#a29bfe"
+          },
+          {
+            "id": "midpoint_display",
+            "label": "Midpoint M",
+            "formula": "((ax+bx)/2, (ay+by)/2)",
+            "highlight_color": "#00cec9"
+          },
+          {
+            "id": "slope_display",
+            "label": "Slope",
+            "formula": "(by - ay) / (bx - ax)",
+            "highlight_color": "#fdcb6e"
+          }
+        ],
+        "construction_tools": {
+          "compass": {
+            "description": "Draw a circle with a given center and radius",
+            "usage": "Click a center point, drag to set radius"
+          },
+          "straightedge": {
+            "description": "Draw a straight line through two points",
+            "usage": "Click two points to draw a line segment"
+          }
+        }
+      },
+      "real_world_examples": [
+        {
+          "title": "GPS Navigation",
+          "description": "GPS uses the distance formula in 3D (with Earth's curvature corrections) to calculate distances between your location and your destination."
+        },
+        {
+          "title": "Architecture",
+          "description": "Architects use points, lines, and planes to design buildings. Blueprints are 2D representations of 3D structures using geometric primitives."
+        }
+      ],
+      "quiz": {
+        "mcq": [
+          {
+            "question": "The distance between points (1, 2) and (4, 6) is:",
+            "options": ["3", "4", "5", "7"],
+            "correct": 2,
+            "explanation": "d = √((4-1)² + (6-2)²) = √(9 + 16) = √25 = 5. This is a 3-4-5 right triangle!",
+            "difficulty": "easy"
+          },
+          {
+            "question": "The midpoint of (0, 0) and (6, 8) is:",
+            "options": ["(3, 4)", "(6, 8)", "(2, 4)", "(3, 8)"],
+            "correct": 0,
+            "explanation": "M = ((0+6)/2, (0+8)/2) = (3, 4).",
+            "difficulty": "easy"
+          },
+          {
+            "question": "Two lines with slopes m₁ and m₂ are perpendicular if:",
+            "options": ["m₁ = m₂", "m₁ + m₂ = 0", "m₁ × m₂ = -1", "m₁ × m₂ = 1"],
+            "correct": 2,
+            "explanation": "Perpendicular lines have slopes that are negative reciprocals: m₁ × m₂ = -1.",
+            "difficulty": "medium"
+          }
+        ],
+        "short_answer": [
+          {
+            "question": "Find the equation of the line passing through (2, 3) with slope 4.",
+            "answer": "Using point-slope form: y - 3 = 4(x - 2) → y = 4x - 8 + 3 → y = 4x - 5",
+            "hint": "Use y - y₁ = m(x - x₁) with the given point and slope."
+          }
+        ]
+      }
+    },
+    {
+      "topic_id": "angles_and_parallels",
+      "title": "Angles & Parallel Lines",
+      "order": 2,
+      "explanation": {
+        "simple": "An angle is formed when two rays share a common endpoint (vertex). When a line crosses two parallel lines, it creates special angle pairs: alternate angles are equal, corresponding angles are equal, and co-interior angles add up to 180°. These rules help us solve many geometry problems!",
+        "advanced": "An angle is the figure formed by two rays (sides) sharing a common endpoint (vertex). Angles are measured in degrees (0°–360°) or radians (0–2π). Euclid's postulate 4 states all right angles are congruent. When a transversal intersects parallel lines, the following angle relationships follow from Euclid's 5th postulate (parallel postulate): corresponding angles are congruent (F-pattern), alternate interior angles are congruent (Z-pattern), alternate exterior angles are congruent, and co-interior (same-side interior) angles are supplementary."
+      },
+      "formulas": [
+        {
+          "name": "Angles on a straight line",
+          "latex": "\\alpha + \\beta = 180°",
+          "variables": {"α, β": {"description": "Adjacent angles on a straight line (supplementary)", "unit": "°"}}
+        },
+        {
+          "name": "Angles at a point",
+          "latex": "\\sum \\theta_i = 360°",
+          "variables": {"θᵢ": {"description": "Angles around a complete revolution", "unit": "°"}}
+        },
+        {
+          "name": "Vertically opposite angles",
+          "latex": "\\angle AOC = \\angle BOD",
+          "variables": {}
+        },
+        {
+          "name": "Angle conversion",
+          "latex": "\\theta_{rad} = \\frac{\\pi}{180} \\times \\theta_{deg}",
+          "variables": {}
+        }
+      ],
+      "visualization_3d": {
+        "scene_type": "2d_on_plane",
+        "objects": [
+          {
+            "id": "parallel_line_1",
+            "type": "line",
+            "start": {"x": -5, "y": 2, "z": 0},
+            "end": {"x": 5, "y": 2, "z": 0},
+            "color": "#74b9ff",
+            "linewidth": 2,
+            "label": "l₁"
+          },
+          {
+            "id": "parallel_line_2",
+            "type": "line",
+            "start": {"x": -5, "y": -2, "z": 0},
+            "end": {"x": 5, "y": -2, "z": 0},
+            "color": "#74b9ff",
+            "linewidth": 2,
+            "label": "l₂"
+          },
+          {
+            "id": "transversal",
+            "type": "line",
+            "start_dynamic": "calculated_from_angle_slider",
+            "end_dynamic": "calculated_from_angle_slider",
+            "color": "#e17055",
+            "linewidth": 2,
+            "label": "t"
+          },
+          {
+            "id": "angle_arc_1",
+            "type": "arc",
+            "center": "intersection(transversal, l₁)",
+            "radius": 0.8,
+            "start_angle_dynamic": 0,
+            "end_angle_dynamic": "transversal_angle",
+            "color": "#55efc4",
+            "label_dynamic": "θ₁"
+          },
+          {
+            "id": "angle_arc_2",
+            "type": "arc",
+            "center": "intersection(transversal, l₂)",
+            "radius": 0.8,
+            "start_angle_dynamic": 0,
+            "end_angle_dynamic": "transversal_angle",
+            "color": "#fdcb6e",
+            "label_dynamic": "θ₂"
+          },
+          {
+            "id": "parallel_arrows",
+            "type": "arrow_markers",
+            "on": ["parallel_line_1", "parallel_line_2"],
+            "color": "#74b9ff",
+            "count": 2
+          }
+        ],
+        "camera": {
+          "position": {"x": 0, "y": 0, "z": 10},
+          "look_at": {"x": 0, "y": 0, "z": 0},
+          "fov": 45,
+          "orthographic": true
+        }
+      },
+      "interaction": {
+        "sliders": [
+          {
+            "id": "slider_transversal_angle",
+            "label": "Transversal Angle (°)",
+            "min": 10,
+            "max": 170,
+            "step": 1,
+            "default": 60,
+            "unit": "°"
+          },
+          {
+            "id": "slider_line_spacing",
+            "label": "Line Spacing",
+            "min": 1,
+            "max": 5,
+            "step": 0.5,
+            "default": 2,
+            "unit": "units"
+          }
+        ],
+        "computed_displays": [
+          {"id": "corresponding_angle", "label": "Corresponding ∠", "formula": "θ", "highlight_color": "#55efc4"},
+          {"id": "alternate_angle", "label": "Alternate Interior ∠", "formula": "θ", "highlight_color": "#fdcb6e"},
+          {"id": "cointerior_angle", "label": "Co-interior ∠", "formula": "180 - θ", "highlight_color": "#fd79a8"}
+        ],
+        "highlight_mode": {
+          "description": "Click an angle pair type to highlight the matching angles in the diagram",
+          "options": ["Corresponding", "Alternate Interior", "Alternate Exterior", "Co-interior"]
+        }
+      },
+      "real_world_examples": [
+        {
+          "title": "Railroad Tracks",
+          "description": "Railroad tracks are parallel lines. The railway ties act as transversals, creating equal corresponding angles."
+        },
+        {
+          "title": "Scissor Lifts",
+          "description": "Scissor lift mechanisms use the properties of parallel lines and equal alternate angles to raise platforms evenly."
+        }
+      ],
+      "quiz": {
+        "mcq": [
+          {
+            "question": "If two parallel lines are cut by a transversal making a 65° angle with one line, the alternate interior angle is:",
+            "options": ["25°", "65°", "115°", "130°"],
+            "correct": 1,
+            "explanation": "Alternate interior angles are equal when lines are parallel. So the angle is 65°.",
+            "difficulty": "easy"
+          },
+          {
+            "question": "Co-interior angles on the same side of a transversal sum to:",
+            "options": ["90°", "180°", "270°", "360°"],
+            "correct": 1,
+            "explanation": "Co-interior (same-side interior) angles are supplementary: they add up to 180°.",
+            "difficulty": "easy"
+          },
+          {
+            "question": "Vertically opposite angles are always:",
+            "options": ["Supplementary", "Complementary", "Equal", "Right angles"],
+            "correct": 2,
+            "explanation": "When two lines intersect, the vertically opposite angles are always equal.",
+            "difficulty": "easy"
+          }
+        ],
+        "short_answer": [
+          {
+            "question": "A transversal crosses two parallel lines. One angle is 72°. Find all eight angles formed at both intersection points.",
+            "answer": "At each intersection: 72°, 108°, 72°, 108° (vertically opposite pairs). Both intersections have the same four angles due to parallel line properties.",
+            "hint": "Use: supplementary angles sum to 180°, vertically opposite angles are equal, corresponding angles are equal."
+          }
+        ]
+      }
+    },
+    {
+      "topic_id": "triangles",
+      "title": "Triangles & Theorems",
+      "order": 3,
+      "explanation": {
+        "simple": "A triangle is a polygon with three sides, three vertices, and three angles. The angles of any triangle always add up to 180°. Triangles can be classified by sides (equilateral, isosceles, scalene) or by angles (acute, right, obtuse). The Pythagoras theorem is special for right triangles: a² + b² = c².",
+        "advanced": "A triangle is the simplest polygon, defined by three non-collinear points. Key properties include: angle sum = 180° (provable via the parallel postulate), triangle inequality (sum of any two sides > third side), and area formulas (½bh, Heron's formula, cross product). Congruence criteria (SSS, SAS, ASA, AAS, RHS) establish when two triangles are identical in shape and size. Similarity criteria (AA, SAS, SSS) establish proportional correspondence. Notable theorems include: Pythagoras, angle bisector theorem, basic proportionality theorem (Thales), and the centroid divides medians in 2:1 ratio."
+      },
+      "formulas": [
+        {
+          "name": "Angle Sum Property",
+          "latex": "\\angle A + \\angle B + \\angle C = 180°",
+          "variables": {}
+        },
+        {
+          "name": "Pythagoras Theorem",
+          "latex": "a^2 + b^2 = c^2",
+          "variables": {
+            "a, b": {"description": "Legs of the right triangle", "unit": ""},
+            "c": {"description": "Hypotenuse (longest side, opposite 90°)", "unit": ""}
+          }
+        },
+        {
+          "name": "Area — base × height",
+          "latex": "A = \\frac{1}{2} \\times b \\times h",
+          "variables": {
+            "b": {"description": "Base", "unit": ""},
+            "h": {"description": "Perpendicular height", "unit": ""}
+          }
+        },
+        {
+          "name": "Heron's Formula",
+          "latex": "A = \\sqrt{s(s-a)(s-b)(s-c)}, \\quad s = \\frac{a+b+c}{2}",
+          "variables": {
+            "s": {"description": "Semi-perimeter", "unit": ""},
+            "a, b, c": {"description": "Side lengths", "unit": ""}
+          }
+        },
+        {
+          "name": "Exterior Angle Theorem",
+          "latex": "\\text{exterior angle} = \\text{sum of two non-adjacent interior angles}",
+          "variables": {}
+        },
+        {
+          "name": "Basic Proportionality Theorem (Thales)",
+          "latex": "\\frac{AD}{DB} = \\frac{AE}{EC} \\quad \\text{(if } DE \\parallel BC \\text{)}",
+          "variables": {}
+        }
+      ],
+      "theorem_proofs": [
+        {
+          "theorem": "Pythagoras Theorem",
+          "statement": "In a right-angled triangle, the square of the hypotenuse equals the sum of squares of the other two sides.",
+          "proof_steps": [
+            "Consider a right triangle ABC with right angle at C.",
+            "Draw altitude CD from C to hypotenuse AB, where D is the foot.",
+            "Triangle ACD is similar to triangle ABC (AA similarity: ∠A is common, ∠ACD = ∠ABC = 90° - ∠A).",
+            "So AC/AB = AD/AC → AC² = AB × AD ... (i)",
+            "Similarly, triangle BCD is similar to triangle BAC.",
+            "So BC/BA = BD/BC → BC² = AB × BD ... (ii)",
+            "Adding (i) and (ii): AC² + BC² = AB × AD + AB × BD = AB(AD + BD) = AB × AB = AB²",
+            "Therefore: a² + b² = c². ∎"
+          ],
+          "visualization_hint": "Show triangle ABC with altitude CD. Highlight the three similar triangles with different colors."
+        },
+        {
+          "theorem": "Angle Sum Property",
+          "statement": "The sum of interior angles of a triangle is 180°.",
+          "proof_steps": [
+            "Let triangle ABC have angles ∠A, ∠B, ∠C.",
+            "Draw a line PQ through vertex A, parallel to side BC.",
+            "∠PAB = ∠ABC (alternate interior angles with transversal AB, since PQ ∥ BC).",
+            "∠QAC = ∠ACB (alternate interior angles with transversal AC, since PQ ∥ BC).",
+            "Now, ∠PAB + ∠BAC + ∠QAC = 180° (angles on a straight line PQ).",
+            "Substituting: ∠ABC + ∠BAC + ∠ACB = 180°.",
+            "Therefore: ∠A + ∠B + ∠C = 180°. ∎"
+          ],
+          "visualization_hint": "Show triangle with line through vertex A parallel to BC. Color-code alternate angle pairs."
+        },
+        {
+          "theorem": "Basic Proportionality Theorem (Thales' Theorem)",
+          "statement": "If a line is drawn parallel to one side of a triangle, it divides the other two sides proportionally.",
+          "proof_steps": [
+            "In triangle ABC, let DE ∥ BC, where D is on AB and E is on AC.",
+            "We need to prove: AD/DB = AE/EC.",
+            "Join BE and CD.",
+            "Area of △ADE = ½ × AD × h₁ (where h₁ is perpendicular from E to AD).",
+            "Area of △BDE = ½ × DB × h₁ (same height h₁).",
+            "So ar(△ADE)/ar(△BDE) = AD/DB ... (i)",
+            "Similarly, ar(△ADE)/ar(△CDE) = AE/EC ... (ii)",
+            "Since DE ∥ BC, triangles BDE and CDE have the same base DE and lie between the same parallels.",
+            "Therefore ar(△BDE) = ar(△CDE) ... (iii)",
+            "From (i), (ii), and (iii): AD/DB = AE/EC. ∎"
+          ]
+        }
+      ],
+      "visualization_3d": {
+        "scene_type": "interactive_triangle",
+        "objects": [
+          {
+            "id": "vertex_A",
+            "type": "sphere",
+            "radius": 0.12,
+            "color": "#e17055",
+            "position_dynamic": "slider_vertex_A",
+            "label": "A",
+            "draggable": true
+          },
+          {
+            "id": "vertex_B",
+            "type": "sphere",
+            "radius": 0.12,
+            "color": "#6c5ce7",
+            "position_dynamic": "slider_vertex_B",
+            "label": "B",
+            "draggable": true
+          },
+          {
+            "id": "vertex_C",
+            "type": "sphere",
+            "radius": 0.12,
+            "color": "#00cec9",
+            "position_dynamic": "slider_vertex_C",
+            "label": "C",
+            "draggable": true
+          },
+          {
+            "id": "side_AB",
+            "type": "line",
+            "start": "vertex_A",
+            "end": "vertex_B",
+            "color": "#dfe6e9",
+            "linewidth": 2
+          },
+          {
+            "id": "side_BC",
+            "type": "line",
+            "start": "vertex_B",
+            "end": "vertex_C",
+            "color": "#dfe6e9",
+            "linewidth": 2
+          },
+          {
+            "id": "side_CA",
+            "type": "line",
+            "start": "vertex_C",
+            "end": "vertex_A",
+            "color": "#dfe6e9",
+            "linewidth": 2
+          },
+          {
+            "id": "angle_A_arc",
+            "type": "arc",
+            "center": "vertex_A",
+            "color": "#e17055",
+            "label_dynamic": "∠A"
+          },
+          {
+            "id": "angle_B_arc",
+            "type": "arc",
+            "center": "vertex_B",
+            "color": "#6c5ce7",
+            "label_dynamic": "∠B"
+          },
+          {
+            "id": "angle_C_arc",
+            "type": "arc",
+            "center": "vertex_C",
+            "color": "#00cec9",
+            "label_dynamic": "∠C"
+          },
+          {
+            "id": "centroid",
+            "type": "sphere",
+            "radius": 0.08,
+            "color": "#fdcb6e",
+            "position_dynamic": "centroid(A, B, C)",
+            "label": "G",
+            "visible_toggle": true
+          },
+          {
+            "id": "circumcircle",
+            "type": "circle_outline",
+            "center_dynamic": "circumcenter(A, B, C)",
+            "radius_dynamic": "circumradius(A, B, C)",
+            "color": "#a29bfe",
+            "opacity": 0.5,
+            "visible_toggle": true
+          },
+          {
+            "id": "incircle",
+            "type": "circle_outline",
+            "center_dynamic": "incenter(A, B, C)",
+            "radius_dynamic": "inradius(A, B, C)",
+            "color": "#55efc4",
+            "opacity": 0.5,
+            "visible_toggle": true
+          }
+        ],
+        "camera": {
+          "position": {"x": 0, "y": 0, "z": 12},
+          "look_at": {"x": 0, "y": 0, "z": 0},
+          "fov": 45,
+          "orthographic": true
+        }
+      },
+      "interaction": {
+        "sliders": [
+          {"id": "slider_side_a", "label": "Side a (BC)", "min": 1, "max": 10, "step": 0.1, "default": 5},
+          {"id": "slider_side_b", "label": "Side b (CA)", "min": 1, "max": 10, "step": 0.1, "default": 4},
+          {"id": "slider_angle_C", "label": "Angle C (°)", "min": 10, "max": 150, "step": 1, "default": 60}
+        ],
+        "computed_displays": [
+          {"id": "angle_A_display", "label": "∠A", "highlight_color": "#e17055"},
+          {"id": "angle_B_display", "label": "∠B", "highlight_color": "#6c5ce7"},
+          {"id": "angle_C_display", "label": "∠C", "highlight_color": "#00cec9"},
+          {"id": "angle_sum", "label": "∠A + ∠B + ∠C", "formula": "always 180°", "highlight_color": "#fdcb6e"},
+          {"id": "area_display", "label": "Area", "highlight_color": "#55efc4"},
+          {"id": "perimeter_display", "label": "Perimeter", "highlight_color": "#74b9ff"},
+          {"id": "triangle_type", "label": "Type", "highlight_color": "#dfe6e9"}
+        ],
+        "toggles": [
+          {"id": "show_centroid", "label": "Show Centroid (G)", "default": false},
+          {"id": "show_circumcircle", "label": "Circumscribed Circle", "default": false},
+          {"id": "show_incircle", "label": "Inscribed Circle", "default": false},
+          {"id": "show_medians", "label": "Medians", "default": false},
+          {"id": "show_altitudes", "label": "Altitudes", "default": false}
+        ],
+        "construction": {
+          "description": "Compass + straightedge construction of equilateral triangle",
+          "steps": [
+            "Draw segment AB.",
+            "Set compass to length AB. Place at A, draw arc.",
+            "Place compass at B, draw arc.",
+            "Mark intersection C of the two arcs.",
+            "Draw segments AC and BC.",
+            "Triangle ABC is equilateral."
+          ]
+        }
+      },
+      "real_world_examples": [
+        {
+          "title": "Bridge Trusses",
+          "description": "Triangular shapes are the strongest structural form because they distribute weight evenly. Bridge trusses, roof supports, and cranes all use triangles."
+        },
+        {
+          "title": "Surveying & Navigation",
+          "description": "Triangulation uses the properties of triangles to determine distances and positions of distant objects, used in GPS and land surveying."
+        }
+      ],
+      "quiz": {
+        "mcq": [
+          {
+            "question": "If two angles of a triangle are 50° and 70°, the third angle is:",
+            "options": ["50°", "60°", "70°", "120°"],
+            "correct": 1,
+            "explanation": "Third angle = 180° - 50° - 70° = 60°.",
+            "difficulty": "easy"
+          },
+          {
+            "question": "In a right triangle with legs 3 and 4, the hypotenuse is:",
+            "options": ["5", "6", "7", "12"],
+            "correct": 0,
+            "explanation": "c = √(3² + 4²) = √(9 + 16) = √25 = 5.",
+            "difficulty": "easy"
+          },
+          {
+            "question": "How many congruence criteria exist for triangles?",
+            "options": ["3", "4", "5", "6"],
+            "correct": 2,
+            "explanation": "Five: SSS, SAS, ASA, AAS, and RHS (right angle-hypotenuse-side).",
+            "difficulty": "medium"
+          },
+          {
+            "question": "The centroid divides each median in the ratio:",
+            "options": ["1:1", "1:2", "2:1", "3:1"],
+            "correct": 2,
+            "explanation": "The centroid divides each median in the ratio 2:1 from vertex to midpoint of opposite side.",
+            "difficulty": "medium"
+          }
+        ],
+        "short_answer": [
+          {
+            "question": "Prove that an exterior angle of a triangle equals the sum of the two non-adjacent interior angles.",
+            "answer": "Let ∠A + ∠B + ∠C = 180° (angle sum). The exterior angle at C = 180° - ∠C (linear pair). So exterior angle = 180° - ∠C = ∠A + ∠B.",
+            "hint": "Use the angle sum property and the fact that an angle and its exterior angle form a linear pair (180°)."
+          }
+        ]
+      }
+    },
+    {
+      "topic_id": "circles",
+      "title": "Circles & Their Properties",
+      "order": 4,
+      "explanation": {
+        "simple": "A circle is the set of all points in a plane that are at the same distance (radius) from a fixed point (center). Key parts include: radius, diameter, chord, arc, sector, segment, and tangent. Circles have many beautiful properties that have fascinated mathematicians for thousands of years!",
+        "advanced": "A circle is the locus of points equidistant (radius r) from a center (h, k), with equation (x-h)² + (y-k)² = r². Key theorems include: angle at center = 2 × angle at circumference (same arc), angles in a semicircle = 90°, cyclic quadrilateral opposite angles sum to 180°, tangent is perpendicular to radius at point of contact, and the alternate segment theorem. The area = πr² (provable by integration or Archimedes' exhaustion method) and circumference = 2πr."
+      },
+      "formulas": [
+        {
+          "name": "Circumference",
+          "latex": "C = 2\\pi r = \\pi d",
+          "variables": {
+            "r": {"description": "Radius", "unit": ""},
+            "d": {"description": "Diameter (d = 2r)", "unit": ""}
+          }
+        },
+        {
+          "name": "Area",
+          "latex": "A = \\pi r^2",
+          "variables": {}
+        },
+        {
+          "name": "Arc length",
+          "latex": "l = \\frac{\\theta}{360°} \\times 2\\pi r",
+          "variables": {
+            "θ": {"description": "Central angle subtended by the arc", "unit": "°"}
+          }
+        },
+        {
+          "name": "Sector area",
+          "latex": "A_{sector} = \\frac{\\theta}{360°} \\times \\pi r^2",
+          "variables": {}
+        },
+        {
+          "name": "Equation of a circle",
+          "latex": "(x-h)^2 + (y-k)^2 = r^2",
+          "variables": {
+            "(h, k)": {"description": "Center coordinates", "unit": ""},
+            "r": {"description": "Radius", "unit": ""}
+          }
+        },
+        {
+          "name": "Length of tangent from external point",
+          "latex": "L = \\sqrt{d^2 - r^2}",
+          "variables": {
+            "d": {"description": "Distance from external point to center", "unit": ""},
+            "r": {"description": "Radius", "unit": ""}
+          }
+        }
+      ],
+      "theorem_proofs": [
+        {
+          "theorem": "Angle at Center Theorem",
+          "statement": "The angle subtended by an arc at the center is double the angle subtended at any point on the remaining arc.",
+          "proof_steps": [
+            "Let O be the center, and arc PQ subtend ∠POQ at center and ∠PAQ at point A on the circle.",
+            "Join AO and extend to point R beyond O.",
+            "In triangle OAP: OA = OP (radii), so ∠OAP = ∠OPA (isosceles triangle).",
+            "Exterior angle ∠POR = ∠OAP + ∠OPA = 2∠OAP ... (i)",
+            "Similarly, in triangle OAQ: ∠QOR = 2∠OAQ ... (ii)",
+            "Adding (i) and (ii): ∠POQ = ∠POR + ∠QOR = 2(∠OAP + ∠OAQ) = 2∠PAQ.",
+            "Therefore: ∠POQ = 2 × ∠PAQ. ∎"
+          ]
+        },
+        {
+          "theorem": "Angle in a Semicircle",
+          "statement": "An angle inscribed in a semicircle is always 90°.",
+          "proof_steps": [
+            "Let AB be a diameter of circle with center O.",
+            "Let C be any point on the semicircle (not on AB).",
+            "∠AOB = 180° (straight line / diameter).",
+            "By the angle at the center theorem: ∠ACB = ½ × ∠AOB = ½ × 180° = 90°.",
+            "Therefore, angle in a semicircle is always a right angle. ∎"
+          ]
+        }
+      ],
+      "visualization_3d": {
+        "scene_type": "interactive_circle",
+        "objects": [
+          {
+            "id": "main_circle",
+            "type": "circle_outline",
+            "center": {"x": 0, "y": 0, "z": 0},
+            "radius_dynamic": "slider_radius",
+            "color": "#74b9ff",
+            "segments": 64
+          },
+          {
+            "id": "center_O",
+            "type": "sphere",
+            "radius": 0.1,
+            "color": "#fdcb6e",
+            "position": {"x": 0, "y": 0, "z": 0},
+            "label": "O"
+          },
+          {
+            "id": "radius_line",
+            "type": "line",
+            "start": "center_O",
+            "end": "point_on_circle",
+            "color": "#fdcb6e",
+            "linewidth": 2,
+            "label": "r"
+          },
+          {
+            "id": "chord",
+            "type": "line",
+            "start_dynamic": "chord_point_1",
+            "end_dynamic": "chord_point_2",
+            "color": "#55efc4",
+            "linewidth": 2,
+            "label": "Chord",
+            "visible_toggle": true
+          },
+          {
+            "id": "tangent_line",
+            "type": "line",
+            "position_dynamic": "tangent_point",
+            "direction_dynamic": "perpendicular_to_radius",
+            "color": "#e17055",
+            "linewidth": 2,
+            "label": "Tangent",
+            "visible_toggle": true
+          },
+          {
+            "id": "sector_fill",
+            "type": "sector",
+            "center": "center_O",
+            "radius_dynamic": "slider_radius",
+            "start_angle": 0,
+            "end_angle_dynamic": "slider_sector_angle",
+            "color": "#6c5ce7",
+            "opacity": 0.3,
+            "visible_toggle": true
+          },
+          {
+            "id": "inscribed_angle_point",
+            "type": "sphere",
+            "radius": 0.1,
+            "color": "#fd79a8",
+            "position_dynamic": "on_circle_movable",
+            "label": "P",
+            "draggable": true
+          }
+        ],
+        "camera": {
+          "position": {"x": 0, "y": 0, "z": 12},
+          "look_at": {"x": 0, "y": 0, "z": 0},
+          "orthographic": true
+        }
+      },
+      "interaction": {
+        "sliders": [
+          {"id": "slider_radius", "label": "Radius", "min": 1, "max": 5, "step": 0.1, "default": 3},
+          {"id": "slider_sector_angle", "label": "Sector Angle (°)", "min": 0, "max": 360, "step": 1, "default": 90},
+          {"id": "slider_chord_position", "label": "Chord Position", "min": -4, "max": 4, "step": 0.1, "default": 0}
+        ],
+        "computed_displays": [
+          {"id": "circumference_display", "label": "Circumference", "formula": "2πr", "highlight_color": "#74b9ff"},
+          {"id": "area_display", "label": "Area", "formula": "πr²", "highlight_color": "#6c5ce7"},
+          {"id": "arc_length_display", "label": "Arc Length", "formula": "(θ/360)×2πr", "highlight_color": "#55efc4"},
+          {"id": "sector_area_display", "label": "Sector Area", "formula": "(θ/360)×πr²", "highlight_color": "#fd79a8"}
+        ],
+        "construction": {
+          "description": "Compass construction of tangent from external point",
+          "steps": [
+            "Mark external point P and center O.",
+            "Draw segment OP.",
+            "Find midpoint M of OP.",
+            "Draw circle with center M and radius MO = MP.",
+            "Mark intersection points T₁, T₂ with original circle.",
+            "Lines PT₁ and PT₂ are tangents. OT₁ ⊥ PT₁."
+          ]
+        }
+      },
+      "real_world_examples": [
+        {
+          "title": "Wheels & Gears",
+          "description": "Wheels work because every point on the rim is equidistant from the axle (center). Gear ratios depend on the circumference relationship between meshing circles."
+        },
+        {
+          "title": "Satellite Orbits",
+          "description": "Low Earth orbit satellites follow approximately circular paths. The orbital speed depends on the radius: v = √(GM/r)."
+        }
+      ],
+      "quiz": {
+        "mcq": [
+          {
+            "question": "The area of a circle with diameter 10 cm is:",
+            "options": ["25π cm²", "100π cm²", "10π cm²", "50π cm²"],
+            "correct": 0,
+            "explanation": "Diameter = 10 → radius = 5. Area = π × 5² = 25π cm².",
+            "difficulty": "easy"
+          },
+          {
+            "question": "A tangent to a circle is perpendicular to the:",
+            "options": ["Chord", "Diameter", "Radius at the point of contact", "Arc"],
+            "correct": 2,
+            "explanation": "A fundamental property: the tangent at any point is perpendicular to the radius drawn to that point.",
+            "difficulty": "easy"
+          },
+          {
+            "question": "The angle inscribed in a semicircle is:",
+            "options": ["45°", "60°", "90°", "180°"],
+            "correct": 2,
+            "explanation": "By the angle in a semicircle theorem, any angle inscribed in a semicircle is always 90°.",
+            "difficulty": "easy"
+          },
+          {
+            "question": "Opposite angles of a cyclic quadrilateral sum to:",
+            "options": ["90°", "180°", "270°", "360°"],
+            "correct": 1,
+            "explanation": "In a cyclic quadrilateral (inscribed in a circle), opposite angles are supplementary: ∠A + ∠C = 180°, ∠B + ∠D = 180°.",
+            "difficulty": "medium"
+          }
+        ],
+        "short_answer": [
+          {
+            "question": "A chord is 8 cm long and is 3 cm from the center. Find the radius.",
+            "answer": "Half-chord = 4 cm. Using Pythagoras: r² = 4² + 3² = 16 + 9 = 25 → r = 5 cm.",
+            "hint": "The perpendicular from the center bisects the chord. Use the right triangle formed by half-chord, distance, and radius."
+          }
+        ]
+      }
+    }
+  ]
+}

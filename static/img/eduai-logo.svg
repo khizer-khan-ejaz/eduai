@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="EduAI logo">
+  <defs>
+    <linearGradient id="bg" x1="28" y1="20" x2="228" y2="236" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0f172a"/>
+      <stop offset="0.52" stop-color="#2e2f87"/>
+      <stop offset="1" stop-color="#0ea5e9"/>
+    </linearGradient>
+
+    <linearGradient id="rim" x1="20" y1="20" x2="236" y2="236" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#dbeafe" stop-opacity="0.9"/>
+      <stop offset="0.4" stop-color="#93c5fd" stop-opacity="0.5"/>
+      <stop offset="1" stop-color="#a5b4fc" stop-opacity="0.35"/>
+    </linearGradient>
+
+    <radialGradient id="glow" cx="128" cy="72" r="96" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+
+    <linearGradient id="pageLight" x1="58" y1="82" x2="116" y2="170" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f8fafc"/>
+      <stop offset="1" stop-color="#dbe4ff"/>
+    </linearGradient>
+
+    <linearGradient id="pageDark" x1="140" y1="82" x2="198" y2="170" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f8fafc"/>
+      <stop offset="1" stop-color="#c7d2fe"/>
+    </linearGradient>
+
+    <linearGradient id="spine" x1="120" y1="86" x2="136" y2="167" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#94a3b8"/>
+      <stop offset="1" stop-color="#64748b"/>
+    </linearGradient>
+
+    <linearGradient id="orbit" x1="88" y1="82" x2="168" y2="122" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#93c5fd"/>
+      <stop offset="1" stop-color="#67e8f9"/>
+    </linearGradient>
+
+    <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="7" stdDeviation="8" flood-color="#020617" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+
+  <rect x="8" y="8" width="240" height="240" rx="56" fill="url(#bg)"/>
+  <rect x="8.5" y="8.5" width="239" height="239" rx="55.5" fill="none" stroke="url(#rim)" stroke-width="1"/>
+  <ellipse cx="128" cy="72" rx="100" ry="62" fill="url(#glow)"/>
+
+  <g filter="url(#softShadow)">
+    <path d="M58 84 C76 76 98 79 116 90 V166 C98 156 76 153 58 160 Z" fill="url(#pageLight)"/>
+    <path d="M198 84 C180 76 158 79 140 90 V166 C158 156 180 153 198 160 Z" fill="url(#pageDark)"/>
+    <path d="M116 90 C122 88 134 88 140 90 V166 C134 164 122 164 116 166 Z" fill="url(#spine)"/>
+
+    <path d="M64 95 C81 90 96 92 111 101" stroke="#94a3b8" stroke-opacity="0.6" stroke-width="2" fill="none"/>
+    <path d="M64 108 C81 103 96 105 111 114" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="2" fill="none"/>
+    <path d="M64 121 C81 116 96 118 111 127" stroke="#94a3b8" stroke-opacity="0.45" stroke-width="2" fill="none"/>
+
+    <path d="M192 95 C175 90 160 92 145 101" stroke="#818cf8" stroke-opacity="0.6" stroke-width="2" fill="none"/>
+    <path d="M192 108 C175 103 160 105 145 114" stroke="#818cf8" stroke-opacity="0.5" stroke-width="2" fill="none"/>
+    <path d="M192 121 C175 116 160 118 145 127" stroke="#818cf8" stroke-opacity="0.45" stroke-width="2" fill="none"/>
+
+    <ellipse cx="128" cy="101" rx="42" ry="15" transform="rotate(-24 128 101)" fill="none" stroke="url(#orbit)" stroke-width="3" stroke-opacity="0.95"/>
+    <ellipse cx="128" cy="101" rx="42" ry="15" transform="rotate(24 128 101)" fill="none" stroke="url(#orbit)" stroke-width="2.6" stroke-opacity="0.75"/>
+    <ellipse cx="128" cy="101" rx="41" ry="14" fill="none" stroke="#c4b5fd" stroke-opacity="0.55" stroke-width="2"/>
+
+    <circle cx="128" cy="101" r="7" fill="#f8fafc"/>
+    <circle cx="128" cy="101" r="4" fill="#60a5fa"/>
+    <circle cx="154" cy="78" r="4" fill="#a5f3fc"/>
+    <circle cx="100" cy="124" r="3.5" fill="#bfdbfe"/>
+    <circle cx="160" cy="112" r="3.5" fill="#e0e7ff"/>
+  </g>
+
+  <path d="M46 186 C81 176 101 176 128 188 C155 176 175 176 210 186" stroke="#dbeafe" stroke-opacity="0.35" stroke-width="2" fill="none"/>
+</svg>

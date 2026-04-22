@@ -71,13 +71,19 @@ const DEMO_LABELS = {
 // ─── INITIALIZATION ───
 document.addEventListener('DOMContentLoaded', () => {
     // Init hero background
-    ThreeScenes.initHero('hero-canvas');
+    if (document.getElementById('hero-canvas')) {
+        ThreeScenes.initHero('hero-canvas');
+    }
 
     // Init demo canvas
-    ThreeScenes.initHomeDemo('demo-canvas', 'biology');
+    if (document.getElementById('demo-canvas')) {
+        ThreeScenes.initHomeDemo('demo-canvas', 'biology');
+    }
 
     // Load initial quiz
-    loadHomeQuiz('biology');
+    if (document.getElementById('homeQuizContent')) {
+        loadHomeQuiz('biology');
+    }
 
     // Navbar scroll effect
     window.addEventListener('scroll', () => {
@@ -120,7 +126,9 @@ function selectSubject(subject) {
     });
 
     // Update 3D scene
-    ThreeScenes.initHomeDemo('demo-canvas', subject);
+    if (document.getElementById('demo-canvas')) {
+        ThreeScenes.initHomeDemo('demo-canvas', subject);
+    }
 
     // Update overlay label
     const label = document.getElementById('demoOverlayLabel');
@@ -129,16 +137,21 @@ function selectSubject(subject) {
     // Load quiz
     homeQuizIndex = 0;
     homeScore = { correct: 0, total: 0 };
-    loadHomeQuiz(subject);
+    if (document.getElementById('homeQuizContent')) {
+        loadHomeQuiz(subject);
+    }
 
     // Update flashcard
     homeFlashcardIndex = 0;
-    updateHomeFlashcard(subject);
+    if (document.getElementById('homeFlashcard')) {
+        updateHomeFlashcard(subject);
+    }
 }
 
 // ─── QUIZ SYSTEM ───
 async function loadHomeQuiz(subject) {
     const container = document.getElementById('homeQuizContent');
+    if (!container) return;
     container.innerHTML = '<div class="spinner"></div>';
 
     try {
@@ -156,6 +169,8 @@ async function loadHomeQuiz(subject) {
 
 function renderHomeQuestion() {
     const container = document.getElementById('homeQuizContent');
+    if (!container) return;
+
     if (homeQuizIndex >= homeQuizData.length) {
         container.innerHTML = `
             <div style="text-align:center; padding:1rem;">
@@ -184,12 +199,16 @@ function renderHomeQuestion() {
         <div class="mcq-explanation" id="homeExplanation">${q.explanation}</div>
     `;
 
-    document.getElementById('homeDifficulty').textContent = q.difficulty.charAt(0).toUpperCase() + q.difficulty.slice(1);
-    document.getElementById('homeDifficulty').style.color = q.difficulty === 'easy' ? '#00b894' : q.difficulty === 'medium' ? '#fdcb6e' : '#e17055';
+    const difficulty = document.getElementById('homeDifficulty');
+    if (difficulty) {
+        difficulty.textContent = q.difficulty.charAt(0).toUpperCase() + q.difficulty.slice(1);
+        difficulty.style.color = q.difficulty === 'easy' ? '#00b894' : q.difficulty === 'medium' ? '#fdcb6e' : '#e17055';
+    }
 }
 
 function answerHomeQuiz(selected, correct) {
     const options = document.querySelectorAll('#homeQuizContent .mcq-option');
+    if (!options.length) return;
 
     // Prevent double click
     if (options[0].style.pointerEvents === 'none') return;
@@ -204,7 +223,8 @@ function answerHomeQuiz(selected, correct) {
     if (selected === correct) homeScore.correct++;
     updateHomeScore();
 
-    document.getElementById('homeExplanation').classList.add('show');
+    const explanation = document.getElementById('homeExplanation');
+    if (explanation) explanation.classList.add('show');
 
     setTimeout(() => {
         homeQuizIndex++;
@@ -213,7 +233,8 @@ function answerHomeQuiz(selected, correct) {
 }
 
 function updateHomeScore() {
-    document.getElementById('homeScore').textContent = `${homeScore.correct}/${homeScore.total}`;
+    const score = document.getElementById('homeScore');
+    if (score) score.textContent = `${homeScore.correct}/${homeScore.total}`;
 }
 
 // ─── FLASHCARD SYSTEM ───
@@ -221,12 +242,19 @@ function updateHomeFlashcard(subject) {
     const cards = FLASHCARD_DATA[subject] || FLASHCARD_DATA.biology;
     const card = cards[homeFlashcardIndex % cards.length];
 
-    document.getElementById('homeFlashEmoji').textContent = card.emoji;
-    document.getElementById('homeFlashTitle').textContent = card.title;
-    document.getElementById('homeFlashBack').textContent = card.back;
+    const emoji = document.getElementById('homeFlashEmoji');
+    const title = document.getElementById('homeFlashTitle');
+    const back = document.getElementById('homeFlashBack');
+    const flashcard = document.getElementById('homeFlashcard');
+
+    if (!emoji || !title || !back || !flashcard) return;
+
+    emoji.textContent = card.emoji;
+    title.textContent = card.title;
+    back.textContent = card.back;
 
     // Reset flip
-    document.getElementById('homeFlashcard').classList.remove('flipped');
+    flashcard.classList.remove('flipped');
 }
 
 function flipFlashcard(prefix) {
