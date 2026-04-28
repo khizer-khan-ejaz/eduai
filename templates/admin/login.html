@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - MathsLab</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/simulations/style.css') }}">
+    <style>
+        .login-container {
+            max-width: 400px;
+            margin: 5rem auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+        .form-group input { width: 100%; padding: 0.8rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .error { color: #dc2626; margin-bottom: 1rem; text-align: center; }
+    </style>
+</head>
+<body style="background: #f1f5f9;">
+    <div class="login-container">
+        <h2 style="text-align: center; color: #1a73e8; margin-top: 0;">Admin Login</h2>
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+        <form method="POST">
+            <div class="form-group">
+                <label>Username (admin)</label>
+                <input type="text" name="username" required>
+            </div>
+            <div class="form-group">
+                <label>Password (password)</label>
+                <input type="password" name="password" required>
+            </div>
+            <button type="submit" class="action-btn" style="width: 100%; margin-top: 1rem;">Login</button>
+        </form>
+    </div>
+</body>
+</html>

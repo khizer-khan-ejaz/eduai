@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/simulations/style.css') }}">
+    <!-- Using Chart.js via CDN as requested -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .stat-card {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        .stat-card h3 { font-size: 0.9rem; color: #64748b; margin: 0 0 0.5rem 0; text-transform: uppercase; letter-spacing: 0.5px;}
+        .stat-card .value { font-size: 2.5rem; font-weight: bold; color: #1a73e8; margin: 0;}
+    </style>
+</head>
+<body>
+    <header class="app-header">
+        <div class="logo">Maths<span>Lab</span></div>
+        <nav>
+            <a href="/simulations/coordinate-geometry">Simulations</a>
+            <a href="/admin/enquiries-dashboard">Admin</a>
+        </nav>
+    </header>
+
+    <main class="sim-container">
+        <h2>Your Progress</h2>
+        <p>Track your maths learning journey here.</p>
+
+        <div class="dashboard-grid">
+            <div class="stat-card">
+                <h3>Overall Accuracy</h3>
+                <p class="value">78%</p>
+            </div>
+            <div class="stat-card">
+                <h3>Questions Attempted</h3>
+                <p class="value">452</p>
+            </div>
+            <div class="stat-card">
+                <h3>Points Earned</h3>
+                <p class="value" id="localScore">0</p>
+            </div>
+        </div>
+
+        <div class="module-card" style="margin-top: 2rem;">
+            <h2>Topic Performance</h2>
+            <div style="width: 100%; max-width: 600px; margin: 0 auto;">
+                <canvas id="progressChart"></canvas>
+            </div>
+        </div>
+
+        <div class="module-card">
+            <h2>Focus Areas (Needs Improvement)</h2>
+            <ul style="list-style: none; padding: 0;">
+                <li style="padding: 1rem; background: #fff1f2; color: #9f1239; border-radius: 8px; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <strong>Surface Areas and Volumes</strong><br>
+                        <small>Accuracy: 45% • 12 mistakes</small>
+                    </div>
+                    <button class="action-btn" style="background:#be123c;">Practice</button>
+                </li>
+                <li style="padding: 1rem; background: #fff7ed; color: #92400e; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <strong>Polynomials</strong><br>
+                        <small>Accuracy: 58% • 8 mistakes</small>
+                    </div>
+                    <button class="action-btn" style="background:#ea580c;">Review</button>
+                </li>
+            </ul>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Load score from localStorage
+            const score = localStorage.getItem('mathScore') || '120';
+            document.getElementById('localScore').textContent = score;
+
+            const ctx = document.getElementById('progressChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Geometry', 'Algebra', 'Statistics', 'Polynomials', 'Probability', 'Mensuration'],
+                    datasets: [{
+                        label: 'Accuracy (%)',
+                        data: [85, 58, 90, 60, 95, 45],
+                        backgroundColor: 'rgba(26, 115, 232, 0.2)',
+                        borderColor: 'rgba(26, 115, 232, 1)',
+                        pointBackgroundColor: 'rgba(26, 115, 232, 1)',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    scales: {
+                        r: {
+                            min: 0,
+                            max: 100,
+                            ticks: { display: false }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "math-learning-app",
+  "version": "1.0.0",
+  "description": "Interactive learning modules for Class 9 Maths",
+  "private": true,
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.0"
+  }
+}

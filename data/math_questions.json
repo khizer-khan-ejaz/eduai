@@ -1,0 +1,22 @@
+{
+    "topic": "Coordinate Geometry",
+    "questions": [
+        {
+            "id": "q1",
+            "type": "mcq",
+            "text": "What is the reflection of the point (3, -4) across the x-axis?",
+            "options": ["(-3, -4)", "(3, 4)", "(-3, 4)", "(4, 3)"],
+            "answer": "(3, 4)",
+            "hint": "When reflecting across the x-axis, the x-coordinate stays the same and the y-coordinate changes sign.",
+            "solution": "Reflecting (x, y) across the x-axis results in (x, -y). Therefore, (3, -4) becomes (3, 4)."
+        },
+        {
+            "id": "q2",
+            "type": "numerical",
+            "text": "Find the distance from the point (-5, 12) to the origin.",
+            "answer": "13",
+            "hint": "Use the distance formula from the origin: √(x² + y²)",
+            "solution": "Distance = √((-5)² + 12²) = √(25 + 144) = √169 = 13 units."
+        }
+    ]
+}

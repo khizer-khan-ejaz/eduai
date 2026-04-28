@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coordinate Geometry Simulation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/simulations/style.css') }}">
+</head>
+<body>
+    <header class="app-header">
+        <div class="logo">Maths<span>Lab</span></div>
+        <nav>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/admin/enquiries-dashboard">Admin</a>
+        </nav>
+    </header>
+
+    <main class="sim-container">
+        <!-- SIMULATION SECTION -->
+        <section class="module-card simulation-module">
+            <h2>Coordinate Geometry: Plotting Points</h2>
+            <p>An interactive class 9 maths module. Drag sliders to adjust coordinates.</p>
+            
+            <div class="sim-layout">
+                <!-- Canvas Rendering -->
+                <div class="sim-canvas-wrapper">
+                    <canvas id="coordCanvas" width="400" height="400"></canvas>
+                </div>
+                
+                <!-- Controls & Steps -->
+                <div class="sim-controls">
+                    <div class="control-box">
+                        <h3>Interactive Controls</h3>
+                        <div class="slider-group">
+                            <label>X Coordinate: <span id="xVal">3</span></label>
+                            <input type="range" id="xSlider" min="-10" max="10" value="3">
+                        </div>
+                        <div class="slider-group">
+                            <label>Y Coordinate: <span id="yVal">4</span></label>
+                            <input type="range" id="ySlider" min="-10" max="10" value="4">
+                        </div>
+                    </div>
+                    
+                    <div class="explanation-box" id="explanationBox">
+                        <h3>Step-by-Step Breakdown</h3>
+                        <ol>
+                            <li>Start at the origin <strong>(0,0)</strong>.</li>
+                            <li>Move <strong id="stepXText">3 units right</strong> along the X-axis.</li>
+                            <li>Move <strong id="stepYText">4 units up</strong> parallel to the Y-axis.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRACTICE SECTION -->
+        <section class="module-card practice-module">
+            <h2>Practice Concept</h2>
+            <div id="quizContainer">
+                <p>Loading practice questions...</p>
+            </div>
+        </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/simulations/coordinate_geometry.js') }}"></script>
+</body>
+</html>

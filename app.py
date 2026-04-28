@@ -3,12 +3,14 @@ EduAI Demo Platform — Flask Backend
 India's First AI Content Integration Partner for Educational Institutes
 """
 
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for
+from datetime import datetime
 import json
 import os
 import random
 
 app = Flask(__name__)
+app.secret_key = 'eduai_secure_secret_key_123'
 
 # ─── Load MCQ data ───────────────────────────────────────────────────────────
 DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
@@ -122,6 +124,10 @@ def demo():
 def learn():
     return render_template('learn.html')
 
+@app.route('/3d/cell')
+def render_3d_cell():
+    return render_template('3d/cell.html')
+
 # ─── API Routes ──────────────────────────────────────────────────────────────
 
 @app.route('/api/subjects', methods=['GET'])
@@ -208,11 +214,34 @@ def contact():
     if not all([name, email, message]):
         return jsonify({"error": "Name, email and message are required"}), 400
 
-    # In a real app, this would save to database / send email
+    # Save to enquiries.json
+    enquiries_file = os.path.join(DATA_DIR, 'enquiries.json')
+    enquiries = []
+    if os.path.exists(enquiries_file):
+        try:
+            with open(enquiries_file, 'r', encoding='utf-8') as f:
+                enquiries = json.load(f)
+        except: pass
+    
+    new_id = f"EQ-{random.randint(10000, 99999)}"
+    new_entry = {
+        "id": new_id,
+        "date": datetime.now().strftime("%Y-%m-%d"),
+        "name": name,
+        "phone": email,  # using email as phone/contact for now
+        "institute": institute,
+        "message": message,
+        "status": "New"
+    }
+    enquiries.insert(0, new_entry)
+    
+    with open(enquiries_file, 'w', encoding='utf-8') as f:
+        json.dump(enquiries, f, indent=4)
+
     return jsonify({
         "success": True,
         "message": f"Thank you {name}! We'll contact you at {email} within 24 hours.",
-        "reference": f"EDU-{random.randint(10000, 99999)}"
+        "reference": new_id
     })
 
 # ─── Science Learning Module API Routes ──────────────────────────────────────
@@ -502,6 +531,84 @@ def module_stats():
         "visualization_count": total_visualizations,
         "total_quiz_questions": total_mcqs + total_short_answers
     })
+
+# ─── New Features: Class 9 Maths & Dashboards ────────────────────────────────
+
+@app.route('/simulations/coordinate-geometry')
+def sim_coordinate_geometry():
+    return render_template('simulations/coordinate_geometry.html')
+
+@app.route('/dashboard')
+def student_dashboard():
+    return render_template('dashboard/student.html')
+
+@app.route('/admin/login', methods=['GET', 'POST'])
+def admin_login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        if username == 'admin' and password == 'password':
+            session['admin_logged_in'] = True
+            return redirect(url_for('admin_enquiries'))
+        return render_template('admin/login.html', error="Invalid credentials")
+    return render_template('admin/login.html')
+
+@app.route('/admin/logout')
+def admin_logout():
+    session.pop('admin_logged_in', None)
+    return redirect(url_for('admin_login'))
+
+@app.route('/admin/enquiries-dashboard')
+def admin_enquiries():
+    if not session.get('admin_logged_in'):
+        return redirect(url_for('admin_login'))
+    
+    enquiries = []
+    enquiries_file = os.path.join(DATA_DIR, 'enquiries.json')
+    if os.path.exists(enquiries_file):
+        with open(enquiries_file, 'r', encoding='utf-8') as f:
+            enquiries = json.load(f)
+            
+    return render_template('admin/enquiries.html', enquiries=enquiries)
+
+@app.route('/admin/reminder', methods=['POST'])
+def admin_reminder():
+    data = request.get_json()
+    return jsonify({"success": True, "message": f"Follow-up reminder set for {data.get('id')}"})
+
+@app.route('/api/questions', methods=['GET'])
+def get_practice_questions():
+    try:
+        topic = request.args.get('topic', 'Coordinate Geometry')
+        file_path = os.path.join(DATA_DIR, 'math_questions.json')
+        with open(file_path, 'r', encoding='utf-8') as f:
+            q_data = json.load(f)
+            return jsonify(q_data)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 404
+
+@app.route('/api/submit-answer', methods=['POST'])
+def submit_answer():
+    data = request.get_json()
+    q_id = data.get('question_id')
+    answer = data.get('answer', '')
+    
+    # Simple validation using loaded JSON (ideally from DB)
+    path = os.path.join(DATA_DIR, 'math_questions.json')
+    try:
+        with open(path, 'r') as f:
+            q_data = json.load(f)
+            for q in q_data['questions']:
+                if q['id'] == q_id:
+                    is_correct = str(answer).strip().lower() == str(q['answer']).strip().lower()
+                    return jsonify({
+                        "correct": is_correct, 
+                        "feedback": "Correct! " + q['solution'] if is_correct else "Incorrect. Try again!",
+                        "solution": q['solution']
+                    })
+        return jsonify({"error": "Question not found"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 # ─── Run ─────────────────────────────────────────────────────────────────────
 
